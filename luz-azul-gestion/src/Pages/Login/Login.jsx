@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import './Login.css';
+import { API_URLS, apiFetch } from '../../config/api';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({});
+  const [serverError, setServerError] = useState(null);
 
   const validateForm = () => {
     const newErrors = {};
@@ -17,21 +19,29 @@ const Login = () => {
     
     if (!password) {
       newErrors.password = 'La contraseña es requerida';
-    } else if (password.length < 6) {
-      newErrors.password = 'La contraseña debe tener al menos 6 caracteres';
     }
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (validateForm()) {
-      // Aquí iría la lógica de autenticación
-      console.log('Login attempt:', { email, password });
-      alert('Inicio de sesión exitoso (simulado)');
+    setServerError(null);
+
+    if (!validateForm()) return;
+
+    try {
+      const result = await apiFetch(API_URLS.login, {
+        method: 'POST',
+        body: JSON.stringify({ "Email": email, "Password": password }),
+      });
+
+      console.log('Login success', result);
+      alert('Inicio de sesión exitoso');
+    } catch (err) {
+      console.error(err);
+      setServerError('No se pudo iniciar sesión. Verifica tus datos e intenta de nuevo.');
     }
   };
 
@@ -70,6 +80,7 @@ const Login = () => {
           <button type="submit" className="login-button">
             Iniciar Sesión
           </button>
+          {serverError && <p className="error-message">{serverError}</p>}
         </form>
       </div>
     </div>
