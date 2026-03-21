@@ -1,17 +1,35 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import Home from './Pages/Home/Home'
 import Login from './Pages/Login/Login'
+import SelectEstablecimiento from './Pages/SelectEstablecimiento/SelectEstablecimiento'
+import Cookies from 'js-cookie'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [establecimientoSelected, setEstablecimientoSelected] = useState(false);
+
+  useEffect(() => {
+    const guid = Cookies.get('EstablecimientoGUID');
+    if (guid) {
+      setEstablecimientoSelected(true);
+    }
+  }, []);
+
+  const handleEstablecimientoSelected = (establecimiento) => {
+    setEstablecimientoSelected(true);
+    alert(`Establecimiento seleccionado: ${establecimiento.Descripcion}`);
+  };
 
   return (
     <>
-      <Routes>
-        <Route path='/' element={<Login />} />
-        <Route path='/login' element={<Login />} />
-      </Routes>
+      {establecimientoSelected ? (
+        <Routes>
+          <Route path='/' element={<Login />} />
+          <Route path='/login' element={<Login />} />
+        </Routes>
+      ) : (
+        <SelectEstablecimiento onEstablecimientoSelected={handleEstablecimientoSelected} />
+      )}
     </>
   )
 }
