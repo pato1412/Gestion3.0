@@ -4,6 +4,7 @@ import Home from './Pages/Home/Home'
 import Login from './Pages/Login/Login'
 import SelectEstablecimiento from './Pages/SelectEstablecimiento/SelectEstablecimiento'
 import Cookies from 'js-cookie'
+import Sidebar from './components/Sidebar'
 
 function App() {
   const [establecimientoSelected, setEstablecimientoSelected] = useState(false);
@@ -23,10 +24,13 @@ function App() {
   return (
     <>
       {establecimientoSelected ? (
-        <Routes>
-          <Route path='/' element={<Login />} />
-          <Route path='/login' element={<Login />} />
-        </Routes>
+        <>
+          <Sidebar />
+          <Routes>
+            <Route path='/' element={<Home />} />
+            <Route path='/login' element={<Login />} />
+          </Routes>
+        </>
       ) : (
         <SelectEstablecimiento onEstablecimientoSelected={handleEstablecimientoSelected} />
       )}
