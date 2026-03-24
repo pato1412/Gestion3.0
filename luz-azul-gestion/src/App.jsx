@@ -18,14 +18,12 @@ function App() {
 
   const handleEstablecimientoSelected = (establecimiento) => {
     setEstablecimientoSelected(true);
-    alert(`Establecimiento seleccionado: ${establecimiento.Descripcion}`);
   };
 
   return (
     <>
       {establecimientoSelected ? (
         <>
-          <Sidebar />
           <Routes>
             <Route path='/' element={<Home />} />
             <Route path='/login' element={<Login />} />

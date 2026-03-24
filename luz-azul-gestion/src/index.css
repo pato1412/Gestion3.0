@@ -92,3 +92,20 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+
+select {
+  appearance: base-select;
+  /* Add your custom styles below */
+  color: #18181b;
+  background-color: transparent;
+  width: 180px;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #e4e4e7;
+  border-radius: calc(0.5rem - 2px);
+  cursor: pointer;
+}
+
+select::picker(select) {
+  appearance: base-select;
+  /* Styles for the dropdown listbox itself */
+}

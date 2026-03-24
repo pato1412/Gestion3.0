@@ -9,7 +9,7 @@ import { IconContext } from 'react-icons/lib';
 
 const Nav = styled.div`
   background: var(--accent);
-  height: 80px;
+  height: 140px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -53,6 +53,7 @@ const Sidebar = () => {
           <NavIcon to='#'>
             <FaIcons.FaBars onClick={showSidebar} />
           </NavIcon>
+          <h2 style={{ color: '#fff', marginLeft: '1rem' }}>Luz Azul Gestión</h2>
         </Nav>
         <SidebarNav sidebar={sidebar}>
           <SidebarWrap>
