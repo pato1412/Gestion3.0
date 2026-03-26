@@ -4,7 +4,6 @@ import Home from './Pages/Home/Home'
 import Login from './Pages/Login/Login'
 import SelectEstablecimiento from './Pages/SelectEstablecimiento/SelectEstablecimiento'
 import Cookies from 'js-cookie'
-import Sidebar from './components/Sidebar'
 
 function App() {
   const [establecimientoSelected, setEstablecimientoSelected] = useState(false);
@@ -26,6 +25,11 @@ function App() {
         <>
           <Routes>
             <Route path='/' element={<Home />} />
+            <Route path='/pedidos/enviar-pedidos' element={<Home />} />
+            <Route path='/stock/carga-mermas' element={<Home />} />
+            <Route path='/stock/control-inventario' element={<Home />} />
+            <Route path='/stock/carga-planillas' element={<Home />} />
+            <Route path='/configuraciones' element={<Home />} />
             <Route path='/login' element={<Login />} />
           </Routes>
         </>
