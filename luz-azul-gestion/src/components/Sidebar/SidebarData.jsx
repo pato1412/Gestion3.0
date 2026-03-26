@@ -13,7 +13,7 @@ export const SidebarData = [
   {
     title: 'Pedidos',
     path: '#',
-    icon: <IoIcons.IoIosPaper />,
+    icon: <FaIcons.FaDolly />,
     iconClosed: <RiIcons.RiArrowDownSFill />,
     iconOpened: <RiIcons.RiArrowUpSFill />,
 
