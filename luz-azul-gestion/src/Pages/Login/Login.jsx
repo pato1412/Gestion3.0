@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Login.css';
 import { API_URLS, apiFetch } from '../../config/api';
+import { useAuth } from '../../contexts/AuthContext';
 
-const Login = () => {
+const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({});
   const [serverError, setServerError] = useState(null);
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   const validateForm = () => {
     const newErrors = {};
@@ -36,11 +40,17 @@ const Login = () => {
         method: 'POST',
         body: JSON.stringify({ "Email": email, "Password": password }),
       });
-
-      console.log('Login success', result);
-      alert('Inicio de sesión exitoso');
+      console.log('Login result:', result);
+      if (result && result.UsuarioId) {
+        // Asumir que result tiene más datos, como token si existe
+        const userData = { id: result.UsuarioId, email, NombreCompleto: result.NombreCompleto };
+        const token = result.UsuarioId; 
+        login(userData, token);
+        navigate('/'); // Redirigir a home después de login
+      } else {
+        setServerError("Usuario o contraseña incorrectos. Por favor, verifica tus datos e intenta de nuevo.");
+      }
     } catch (err) {
-      console.error(err);
       setServerError('No se pudo iniciar sesión. Verifica tus datos e intenta de nuevo.');
     }
   };
@@ -87,4 +97,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginPage;

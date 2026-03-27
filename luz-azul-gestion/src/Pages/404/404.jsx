@@ -22,7 +22,7 @@ const Page404 = () => {
         
         <h2 className="error-title">¡Página no encontrada!</h2>
         
-        <p className="error-message">
+        <p className="error-message-404">
           Lo sentimos, la página que buscas no existe o ha sido movida.
         </p>
         

@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import * as FaIcons from 'react-icons/fa';
 import * as AiIcons from 'react-icons/ai';
 import { SidebarData } from './SidebarData';
 import { IconContext } from 'react-icons/lib';
 import SubMenu from './SubMenu';
+import { useAuth } from '../../contexts/AuthContext';
 
 const Nav = styled.div`
   background: var(--accent);
@@ -43,8 +44,15 @@ const SidebarWrap = styled.div`
 
 const Sidebar = () => {
   const [sidebar, setSidebar] = useState(false);
+  const { logout } = useAuth();
+  const navigate = useNavigate();
 
   const showSidebar = () => setSidebar(!sidebar);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   return (
     <>
@@ -63,6 +71,11 @@ const Sidebar = () => {
             {SidebarData.map((item, index) => {
               return <SubMenu item={item} key={index} />;
             })}
+            <div style={{ padding: '1rem' }}>
+              <button onClick={handleLogout} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontSize: '1rem' }}>
+                <AiIcons.AiOutlineLogout /> Cerrar Sesión
+              </button>
+            </div>
           </SidebarWrap>
         </SidebarNav>
       </IconContext.Provider>

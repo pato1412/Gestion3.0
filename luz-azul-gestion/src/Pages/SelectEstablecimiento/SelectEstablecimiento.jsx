@@ -32,8 +32,8 @@ const SelectEstablecimiento = ({ onEstablecimientoSelected }) => {
     setSelectedId(id);
     const establecimiento = establecimientos.find(est => est.EstablecimientoId == id);
     if (establecimiento) {
-      Cookies.set('EstablecimientoId', establecimiento.Id, { expires: 7 }); // Expira en 7 días
-      Cookies.set('EstablecimientoGUID', establecimiento.GUID, { expires: 7 });
+      Cookies.set('EstablecimientoId', establecimiento.EstablecimientoIdId, { expires: 7 }); // Expira en 7 días
+      Cookies.set('EstablecimientoGUID', establecimiento.EstablecimientoGUID, { expires: 7 });
       Cookies.set('EstablecimientoNombre', establecimiento.Descripcion, { expires: 7 });
       onEstablecimientoSelected(establecimiento);
     }

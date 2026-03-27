@@ -17,6 +17,11 @@ export async function apiFetch(url, options = {}) {
     },
     ...options,
   });
+   if (response.status === 204) {
+    // Operation was successful, but there is no content to return.
+    // Return null or an empty object/value to continue the promise chain successfully.
+    return null; 
+  }
 
   if (!response.ok) {
     const text = await response.text();
