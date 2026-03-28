@@ -3,6 +3,7 @@ import Cookies from 'js-cookie';
 export const API_URLS = {
   login: import.meta.env.VITE_API_LOGIN_URL,
   getEstablecimientos: import.meta.env.VITE_API_GET_ESTABLECIMIENTOS_URL,
+  InfoEmpresa: import.meta.env.VITE_API_INFO_EMPRESA_URL,
 };
 
 export async function apiFetch(url, options = {}) {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
 import { API_URLS, apiFetch } from '../../config/api';
@@ -9,6 +9,7 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({});
   const [serverError, setServerError] = useState(null);
+  const [razonSocial, setRazonSocial] = useState('');
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -28,6 +29,21 @@ const LoginPage = () => {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+
+  useEffect(() => {
+    const fetchEmpresa = async () => {
+      try {
+        const data = await apiFetch(API_URLS.InfoEmpresa);
+        if (data && data.RazonSocial) {
+          setRazonSocial(data.RazonSocial);
+        }
+      } catch (err) {
+        console.error('Error al obtener datos de la empresa:', err);
+      }
+    };
+
+    fetchEmpresa();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -61,6 +77,9 @@ const LoginPage = () => {
         <img src="/images/logo-small.png" alt="Logo" className="login-logo" />
         <h2>Iniciar Sesión</h2>
         <form onSubmit={handleSubmit} className="login-form">
+          <div className="form-group">
+            <label htmlFor="razonSocial">Empresa: {razonSocial}</label>
+          </div>
           <div className="form-group">
             <label htmlFor="email">Email</label>
             <input
