@@ -7,6 +7,7 @@ import SelectEstablecimiento from './Pages/SelectEstablecimiento/SelectEstableci
 import Cookies from 'js-cookie'
 import { AuthProvider } from './contexts/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
+import NuevoPedido from './Pages/Pedidos/NuevoPedido'
 
 function App() {
   const [establecimientoSelected, setEstablecimientoSelected] = useState(false);
@@ -29,7 +30,7 @@ function App() {
           <Routes>
             <Route path='/login' element={<LoginPage />} />
             <Route path='/' element={<ProtectedRoute><Home /></ProtectedRoute>} />
-            <Route path='/pedidos/enviar-pedidos' element={<ProtectedRoute><Home /></ProtectedRoute>} />
+            <Route path='/pedidos/enviar-pedidos' element={<ProtectedRoute><NuevoPedido /></ProtectedRoute>} />
             <Route path='/stock/carga-mermas' element={<ProtectedRoute><Home /></ProtectedRoute>} />
             <Route path='/stock/control-inventario' element={<ProtectedRoute><Home /></ProtectedRoute>} />
             <Route path='/stock/carga-planillas' element={<ProtectedRoute><Home /></ProtectedRoute>} />

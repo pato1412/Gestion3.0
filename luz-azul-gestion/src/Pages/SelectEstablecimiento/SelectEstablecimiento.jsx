@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { API_URLS, apiFetch } from '../../config/api';
 import Cookies from 'js-cookie';
 import './SelectEstablecimiento.css';
+import Loader from '../../components/Loader/Loader';
 
 const SelectEstablecimiento = ({ onEstablecimientoSelected }) => {
   const [establecimientos, setEstablecimientos] = useState([]);
@@ -39,7 +40,7 @@ const SelectEstablecimiento = ({ onEstablecimientoSelected }) => {
     }
   };
 
-  if (loading) return <div>Cargando establecimientos...</div>;
+  if (loading) return <Loader />;
   if (error) return <div>{error}</div>;
 
   return (

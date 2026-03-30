@@ -7,6 +7,7 @@ import { SidebarData } from './SidebarData';
 import { IconContext } from 'react-icons/lib';
 import SubMenu from './SubMenu';
 import { useAuth } from '../../contexts/AuthContext';
+import SidebarTitle from './SidebarTitle';
 
 const Nav = styled.div`
   background: var(--accent);
@@ -42,7 +43,7 @@ const SidebarWrap = styled.div`
   width: 100%;
 `;
 
-const Sidebar = () => {
+const Sidebar = ({title}) => {
   const [sidebar, setSidebar] = useState(false);
   const { logout } = useAuth();
   const navigate = useNavigate();
@@ -61,7 +62,7 @@ const Sidebar = () => {
           <NavIcon to='#'>
             <FaIcons.FaBars onClick={showSidebar} />
           </NavIcon>
-          <h2 style={{ color: '#fff', marginLeft: '1rem' }}>Luz Azul Gestión</h2>
+          <SidebarTitle title={title} />
         </Nav>
         <SidebarNav sidebar={sidebar}>
           <SidebarWrap>

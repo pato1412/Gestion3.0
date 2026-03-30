@@ -5,10 +5,9 @@ import Sidebar from '../../components/Sidebar/Sidebar';
 const Home = () => {
   return (    
     <>
-      <Sidebar />
+      <Sidebar title="Luz Azul Gestión" />
       <div className='container' >    
-      <h2>Home</h2>
-      <Link to="/login">Ir a Login</Link>    
+      <h2>Pagina de inicio</h2>
     </div>
     </>
   )
