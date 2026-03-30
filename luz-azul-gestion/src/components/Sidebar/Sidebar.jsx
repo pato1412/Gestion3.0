@@ -11,7 +11,7 @@ import SidebarTitle from './SidebarTitle';
 
 const Nav = styled.div`
   background: var(--accent);
-  height: 140px;
+  height: 90px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
