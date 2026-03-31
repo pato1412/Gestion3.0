@@ -7,9 +7,10 @@ import SelectEstablecimiento from './Pages/SelectEstablecimiento/SelectEstableci
 import Cookies from 'js-cookie'
 import { AuthProvider } from './contexts/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
-import NuevoPedido from './Pages/Pedidos/NuevoPedido'
 import ConfigPage from './Pages/Config/ConfigPage'
 import StockPage from './Pages/Stock/StockPage'
+import NewOrder from './Pages/Orders/NewOrder'
+import FrmSheetStock from './Pages/Stock/frmSheetStock'
 
 function App() {
   const [establecimientoSelected, setEstablecimientoSelected] = useState(false);
@@ -32,10 +33,10 @@ function App() {
           <Routes>
             <Route path='/login' element={<LoginPage />} />
             <Route path='/' element={<ProtectedRoute><Home /></ProtectedRoute>} />
-            <Route path='/pedidos/enviar-pedidos' element={<ProtectedRoute><NuevoPedido /></ProtectedRoute>} />
+            <Route path='/pedidos/enviar-pedidos' element={<ProtectedRoute><NewOrder /></ProtectedRoute>} />
             <Route path='/stock/carga-mermas' element={<ProtectedRoute><StockPage /></ProtectedRoute>} />
             <Route path='/stock/control-inventario' element={<ProtectedRoute><StockPage /></ProtectedRoute>} />
-            <Route path='/stock/carga-planillas' element={<ProtectedRoute><StockPage /></ProtectedRoute>} />
+            <Route path='/stock/carga-planillas' element={<ProtectedRoute><FrmSheetStock /></ProtectedRoute>} />
             <Route path='/configuraciones' element={<ProtectedRoute><ConfigPage /></ProtectedRoute>} />
             <Route path='*' element={<Page404 />} />
           </Routes>

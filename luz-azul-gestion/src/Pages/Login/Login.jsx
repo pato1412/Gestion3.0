@@ -56,7 +56,6 @@ const LoginPage = () => {
         method: 'POST',
         body: JSON.stringify({ "Email": email, "Password": password }),
       });
-      console.log('Login result:', result);
       if (result && result.UsuarioId) {
         // Asumir que result tiene más datos, como token si existe
         const userData = { id: result.UsuarioId, email, NombreCompleto: result.NombreCompleto };

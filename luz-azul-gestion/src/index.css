@@ -3,6 +3,9 @@
   --text-h: #08060d;
   --bg: #fff;
   --border: #e5e4e7;
+  --border-orange: #FF9900;
+  --border-blue: #004694;
+  --border-green: #BACD1D;
   --code-bg: #f4f3ec;
   --accent: #004694;
   --accent-bg: rgba(170, 59, 255, 0.1);
@@ -14,6 +17,7 @@
   --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
   --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
+  --bg-claro: #fafafa
 
   font: 18px/145% var(--sans);
   letter-spacing: 0.18px;
@@ -108,4 +112,8 @@ select {
 select::picker(select) {
   appearance: base-select;
   /* Styles for the dropdown listbox itself */
+}
+
+.container {
+  padding-top: 10px;
 }

@@ -1,7 +1,7 @@
 import React from 'react'
 import Sidebar from '../../components/Sidebar/Sidebar'
 
-const NuevoPedido = () => {
+const NewOrder = () => {
   return (
     <>
         <Sidebar title="Nuevo Pedido" />
@@ -10,4 +10,4 @@ const NuevoPedido = () => {
   )
 }
 
-export default NuevoPedido
+export default NewOrder
