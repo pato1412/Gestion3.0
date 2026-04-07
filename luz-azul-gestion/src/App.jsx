@@ -11,6 +11,7 @@ import ConfigPage from './Pages/Config/ConfigPage'
 import StockPage from './Pages/Stock/StockPage'
 import NewOrder from './Pages/Orders/NewOrder'
 import FrmSheetStock from './Pages/Stock/frmSheetStock'
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   const [establecimientoSelected, setEstablecimientoSelected] = useState(false);
