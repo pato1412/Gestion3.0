@@ -7,7 +7,7 @@ export const API_URLS = {
 };
 
 export async function apiFetch(url, options = {}) {
-  const guid = Cookies.get('EstablecimientoGUID') || '50f94dcd6a49db9f55e4bfb662aff6a9'; // fallback
+  const guid = Cookies.get('EstablecimientoGUID'); // fallback
   const response = await fetch(url, {
     mode: 'cors', // petición en modo CORS (necesario para dominios externos desde el navegador)
     headers: {

@@ -30,13 +30,19 @@ const FrmSheetStock = () => {
         fetchProductos();
     }, []);
 
+    const MockGrid = [
+        { ProductoId: '001', Descripcion: 'Cremoso Luz Azul x Kg', StockActual: 100, CantidadContada: 95 },
+        { ProductoId: '002', Descripcion: 'Por Salut Luz Azul x Kg', StockActual: 50, CantidadContada: 50 },
+        { ProductoId: '003', Descripcion: 'Por Salut Sin Sal Descrem Luz Azul x Kg', StockActual: 200, CantidadContada: 190 },
+    ]
+
   return (    
     <>
         <Sidebar title={"Planilla de stock"} />
         <div className='container' >
-            <div className='Container-stock-form'>
+            <div className='Container-stock-form mb-3'>
                 <div className='Container-stock-header'>
-                    <h2>Seleccion de producto</h2>
+                    <h4>Seleccion de producto</h4>
                 </div>
                 <div className='Container-stock-content'>
                     <Row >
@@ -77,6 +83,33 @@ const FrmSheetStock = () => {
                             <Button   variant="success">Ingresar</Button>                   
                         </Col>
                     </Row>
+                </div>
+            </div>
+            <div className='Container-stock-form mb-3'>
+                <div className='Container-stock-header'>
+                    <h4>Planilla de stock</h4>
+                </div>
+                <div className='Container-stock-content'>
+                    <table className="table table-striped">
+                        <thead>
+                            <tr>    
+                                <th>Código</th>
+                                <th>Descripción</th>
+                                <th>Stock Actual</th>
+                                <th>Cantidad Contada</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {MockGrid.map((item, index) => (
+                                <tr key={index}>
+                                    <td>{item.ProductoId}</td>
+                                    <td>{item.Descripcion}</td>
+                                    <td className='text-end' >{item.StockActual}</td>
+                                    <td className='text-end' >{item.CantidadContada}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
             </div>    
         </div>
