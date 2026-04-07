@@ -5,47 +5,13 @@
 }
 
 .Container-stock-header {
-    padding: 5px;
+    padding: 10px;
     border-top: 2px solid var(--border-green);
 }
 
 .Container-stock-content{
   border-top: 2px solid var(--border);
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  height: 120px;
-  gap: 10px;
+  padding: 10px;
 }
 
 
-.stock-item-codigo{
-    background-color: burlywood;
-    padding: 8px;
-}
-
-.stock-item-stock{
-    background-color: aqua;
-    padding: 8px;
-}
-
-.stock-item-cantidad{
-    background-color: lightgray;
-    padding: 8px;
-}
-
-.stock-item-acciones{
-    background-color: rgb(184, 100, 100);
-    padding: 8px;
-}
-
-
-.stock-item-acciones button{
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    color: var(--text-h);
-}

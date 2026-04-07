@@ -116,4 +116,5 @@ select::picker(select) {
 
 .container {
   padding-top: 10px;
+  text-align: left;
 }

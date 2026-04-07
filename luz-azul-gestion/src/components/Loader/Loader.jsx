@@ -1,6 +1,6 @@
 import { Triangle } from 'react-loader-spinner'
 
-const Loader = ({ visible = true }) => {
+const Loader = ({ visible = true, message = "Cargando, por favor espere..." }) => {
   if (!visible) return null
 
   const overlayStyle = {
@@ -43,7 +43,7 @@ const Loader = ({ visible = true }) => {
           wrapperStyle={{}}
           wrapperClass=""
         />
-        <span style={messageStyle}>Cargando, por favor espere...</span>
+        <span style={messageStyle}>{message}</span>
       </div>
     </div>
   )
