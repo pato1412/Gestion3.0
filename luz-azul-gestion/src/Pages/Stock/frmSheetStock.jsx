@@ -1,10 +1,10 @@
-import { FaSearch } from 'react-icons/fa'
+import {FaTrash } from 'react-icons/fa'
 import Sidebar from '../../components/Sidebar/Sidebar'
 import './stock.css'
 import { Link } from 'react-router-dom'
-import { InputGroup, Button, Row, Col, Form } from 'react-bootstrap'
+import { Button, Row, Col, Form } from 'react-bootstrap'
 import { Typeahead } from 'react-bootstrap-typeahead'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { apiFetch } from '../../config/api'
 import Loader from '../../components/Loader/Loader'
 
@@ -13,6 +13,9 @@ const FrmSheetStock = () => {
     const [singleSelections, setSingleSelections] = useState([]);
     const [options, setOptions] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [items, setItems] = useState([]);
+    const inputRefStock = useRef(null);
+    const inputRefCantidad = useRef(null);
 
     useEffect(() => {
         const fetchProductos = async () => {
@@ -20,7 +23,14 @@ const FrmSheetStock = () => {
             try {
                 const data = { Activo: true, TipoProducto: 0, DeVentas: true, DeCompras: true , ResultadosPorPagina : import.meta.env.VITE_ST_RESULTADOS_POR_PAGINA, Pagina: 1 };
                 const productos = await apiFetch(import.meta.env.VITE_API_GET_ALL_PRODUCTOS_URL, { method: 'POST', body: JSON.stringify(data) });
-                setOptions(productos);
+                const formattedProductos = productos.map(producto => ({
+                    ProductoId: producto.ProductoId,
+                    Descripcion: producto.Descripcion,
+                    StockActual: 4,
+                    Cantidades: [],
+                    CantidadContada: 0
+                }));
+                setOptions(formattedProductos);
             } catch (error) {
                 console.error('Error fetching productos:', error);
             } finally {
@@ -28,13 +38,31 @@ const FrmSheetStock = () => {
             }
         };
         fetchProductos();
+
     }, []);
 
-    const MockGrid = [
-        { ProductoId: '001', Descripcion: 'Cremoso Luz Azul x Kg', StockActual: 100, CantidadContada: 95 },
-        { ProductoId: '002', Descripcion: 'Por Salut Luz Azul x Kg', StockActual: 50, CantidadContada: 50 },
-        { ProductoId: '003', Descripcion: 'Por Salut Sin Sal Descrem Luz Azul x Kg', StockActual: 200, CantidadContada: 190 },
-    ]
+
+    const IngresarProducto = () => {
+        if (singleSelections.length > 0) {
+            const productoSeleccionado = singleSelections[0];
+            if (items.some(item => item.ProductoId === productoSeleccionado.ProductoId)) {
+               // Si el producto ya existe, actualizamos las cantidades
+               var itemExistente = items.find(item => item.ProductoId === productoSeleccionado.ProductoId);
+               itemExistente.Cantidades.push(Number(inputRefCantidad.current.value));
+               itemExistente.CantidadContada = itemExistente.Cantidades.reduce((total, cantidad) => total + cantidad, 0);
+               setItems(prevItems => prevItems.map(item => item.ProductoId === itemExistente.ProductoId ? itemExistente : item));    
+            }else {
+                // Si el producto no existe, lo agregamos a la lista
+                productoSeleccionado.Cantidades.push(Number(inputRefCantidad.current.value));
+                productoSeleccionado.CantidadContada = productoSeleccionado.Cantidades.reduce((total, cantidad) => total + cantidad, 0);
+                setItems(prevItems => [...prevItems, productoSeleccionado]);
+            }
+        }
+    }
+
+    const EliminarItem = (item) => {
+        setItems(prevItems => prevItems.filter(i => i.ProductoId !== item.ProductoId));
+    }
 
   return (    
     <>
@@ -42,70 +70,82 @@ const FrmSheetStock = () => {
         <div className='container' >
             <div className='Container-stock-form mb-3'>
                 <div className='Container-stock-header'>
-                    <h4>Seleccion de producto</h4>
+                    <h5>Seleccion de producto</h5>
                 </div>
                 <div className='Container-stock-content'>
                     <Row >
                         <Col xs={12} md={6} className='mb-3'  >
-                            <Form.Label htmlFor="inputPassword5">Codigo</Form.Label>
-                            <Typeahead 
+                            <Form.Label htmlFor="txtCodigo">Codigo</Form.Label>
+                            <Typeahead
+                                id='txtCodigo' 
                                 defaultInputValue=''  
                                 onChange={(singleSelections) => {
                                     setSingleSelections(singleSelections);
-                                    console.log('selected: ', singleSelections);
+                                    inputRefStock.current.value = singleSelections[0]?.StockActual || '0';
                                 }}
                                 options={options} 
                                 selected={singleSelections} 
                                 labelKey={(option) => `${option.ProductoId} ${option.Descripcion}`}
                                 placeholder="Ingrese el codigo del producto"
                             />
-                            <Form.Text id="passwordHelpBlock" muted>
+                            <Form.Text id="txtCodigoHelpBlock" muted>
                                 Por favor, ingrese el código del producto con el scanner o el teclado.
                             </Form.Text>
                         </Col>
                         <Col xs={6} md={2} className='mb-3' >
-                            <Form.Label htmlFor="inputPassword5">Stock</Form.Label>
+                            <Form.Label htmlFor="txtStock">Stock</Form.Label>
                             <Form.Control
+                                ref={inputRefStock}
+                                id='txtStock'
                                 placeholder="Stock actual"
                                 aria-label="Stock actual"
-                                aria-describedby="basic-addon2"
                             />
                         </Col>
                         <Col xs={6} md={2} className='mb-3'>
-                            <Form.Label htmlFor="inputPassword5">Cantidad contada</Form.Label>
+                            <Form.Label htmlFor="txtCantidadContada">Cantidad contada</Form.Label>
                             <Form.Control
-                                placeholder="Stock actual"
-                                aria-label="Stock actual"
-                                aria-describedby="basic-addon2"
+                                ref={inputRefCantidad}
+                                id='txtCantidadContada'
+                                placeholder="Cantidad contada"
+                                aria-label="Cantidad contada"
+                                type='number'                    
                             />
                         </Col>
                         <Col className="mb-3 d-flex d-flex align-items-center" xs={6} md={2}>
-                            <Button   variant="success">Ingresar</Button>                   
+                            <Button onClick={IngresarProducto}   variant="success">Ingresar</Button>                   
                         </Col>
                     </Row>
                 </div>
             </div>
             <div className='Container-stock-form mb-3'>
                 <div className='Container-stock-header'>
-                    <h4>Planilla de stock</h4>
+                    <h5>Planilla de stock</h5>
                 </div>
                 <div className='Container-stock-content'>
                     <table className="table table-striped">
                         <thead>
                             <tr>    
-                                <th>Código</th>
-                                <th>Descripción</th>
-                                <th>Stock Actual</th>
-                                <th>Cantidad Contada</th>
+                                <th className='w-15'>Código</th>
+                                <th  >Descripción</th>
+                                <th className='w-10' >Stock</th>
+                                <th className='w-15'>Cantidades</th>
+                                <th className='w-15'>Cantidad Contada</th>
+                                <th className='w-5' ></th>
                             </tr>
                         </thead>
                         <tbody>
-                            {MockGrid.map((item, index) => (
+                            {items.map((item, index) => (
                                 <tr key={index}>
-                                    <td>{item.ProductoId}</td>
+                                    <td className='text-end w-15' >{item.ProductoId}</td>
                                     <td>{item.Descripcion}</td>
-                                    <td className='text-end' >{item.StockActual}</td>
-                                    <td className='text-end' >{item.CantidadContada}</td>
+                                    <td className='text-end w-10' >{item.StockActual}</td>
+                                    <td className='text-end w-15' >{item.Cantidades.join(', ')}</td>
+                                    <td className='text-end w-15' >{item.CantidadContada}</td>
+                                    <td className='w-5' >
+                                        <Button variant="outline-danger" size="sm" onClick={() => EliminarItem(item)}>
+                                            <FaTrash />
+                                        </Button>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
