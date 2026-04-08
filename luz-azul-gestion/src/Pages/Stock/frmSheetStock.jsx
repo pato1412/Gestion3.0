@@ -57,6 +57,10 @@ const FrmSheetStock = () => {
                 productoSeleccionado.CantidadContada = productoSeleccionado.Cantidades.reduce((total, cantidad) => total + cantidad, 0);
                 setItems(prevItems => [...prevItems, productoSeleccionado]);
             }
+            // Limpiar los campos después de ingresar el producto
+            setSingleSelections([]);
+            inputRefStock.current.value = '';
+            inputRefCantidad.current.value = '';
         }
     }
 
@@ -125,10 +129,9 @@ const FrmSheetStock = () => {
                     <table className="table table-striped">
                         <thead>
                             <tr>    
-                                <th className='w-15'>Código</th>
-                                <th  >Descripción</th>
+                                <th className=''>Producto</th>
                                 <th className='w-10' >Stock</th>
-                                <th className='w-15'>Cantidades</th>
+                                <th className='text-end w-15'>Cantidades</th>
                                 <th className='w-15'>Cantidad Contada</th>
                                 <th className='w-5' ></th>
                             </tr>
@@ -136,8 +139,9 @@ const FrmSheetStock = () => {
                         <tbody>
                             {items.map((item, index) => (
                                 <tr key={index}>
-                                    <td className='text-end w-15' >{item.ProductoId}</td>
-                                    <td>{item.Descripcion}</td>
+                                    <td className='' >
+                                        <Form.Label htmlFor="txtCodigo">{item.ProductoId} - {item.Descripcion}</Form.Label>
+                                    </td>
                                     <td className='text-end w-10' >{item.StockActual}</td>
                                     <td className='text-end w-15' >{item.Cantidades.join(', ')}</td>
                                     <td className='text-end w-15' >{item.CantidadContada}</td>
