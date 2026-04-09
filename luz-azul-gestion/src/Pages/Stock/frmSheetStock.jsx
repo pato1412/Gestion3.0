@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import { Button, Row, Col, Form } from 'react-bootstrap'
 import { Typeahead } from 'react-bootstrap-typeahead'
 import { useState, useEffect, useRef } from 'react'
-import { apiFetch } from '../../config/api'
+import { apiFetch, downloadFile } from '../../config/api'
 import Loader from '../../components/Loader/Loader'
 
 const FrmSheetStock = () => {
@@ -30,6 +30,9 @@ const FrmSheetStock = () => {
                     Cantidades: [],
                     CantidadContada: 0
                 }));
+
+                //luego de obtener los productos, obtenemos el stock actual de cada producto
+
                 setOptions(formattedProductos);
             } catch (error) {
                 console.error('Error fetching productos:', error);
@@ -37,8 +40,8 @@ const FrmSheetStock = () => {
                 setIsLoading(false);
             }
         };
-        fetchProductos();
 
+        fetchProductos();
     }, []);
 
 
@@ -66,6 +69,21 @@ const FrmSheetStock = () => {
 
     const EliminarItem = (item) => {
         setItems(prevItems => prevItems.filter(i => i.ProductoId !== item.ProductoId));
+    }
+
+    const handleDescargar = async () => {
+        try {            
+            const data = items.map(item => ({
+                ProductoId: item.ProductoId,
+                Descripcion: item.Descripcion,
+                StockActual: item.StockActual,
+                Cantidades: item.Cantidades,
+                CantidadContada: item.CantidadContada
+            }));
+            const excelfile = await downloadFile(import.meta.env.VITE_API_EXCEL_URL, "planilla_stock.xlsx", { method: 'POST', body: JSON.stringify(data) });
+        } catch (error) {
+            console.error('Error descargando el archivo:', error);
+        }
     }
 
   return (    
@@ -155,7 +173,12 @@ const FrmSheetStock = () => {
                         </tbody>
                     </table>
                 </div>
-            </div>    
+            </div>
+            <Row >
+                <Col className="mb-3 d-flex d-flex align-items-center justify-content-end" xs={12} md={12}>
+                    <Button onClick={handleDescargar} variant="primary">Guardar planilla</Button>                   
+                </Col>
+            </Row>   
         </div>
         <Loader visible={isLoading} message='Cargando todos los productos de simple tempo' />
     </>

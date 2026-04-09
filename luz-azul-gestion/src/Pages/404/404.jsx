@@ -27,12 +27,12 @@ const Page404 = () => {
         </p>
         
         <div className="button-group">
-          <button className="btn btn-primary" onClick={goHome}>
+          <button className="btn404 btn404-primary" onClick={goHome}>
             <FiHome />
             Ir al Inicio
           </button>
           
-          <button className="btn btn-secondary" onClick={goBack}>
+          <button className="btn404 btn404-secondary" onClick={goBack}>
             <FiArrowLeft />
             Volver Atrás
           </button>

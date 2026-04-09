@@ -11,6 +11,7 @@ import ConfigPage from './Pages/Config/ConfigPage'
 import StockPage from './Pages/Stock/StockPage'
 import NewOrder from './Pages/Orders/NewOrder'
 import FrmSheetStock from './Pages/Stock/frmSheetStock'
+import Footer from './components/Footer/Footer'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-bootstrap-typeahead/css/Typeahead.css'
 
@@ -32,16 +33,19 @@ function App() {
     <AuthProvider>
       {establecimientoSelected ? (
         <>
-          <Routes>
-            <Route path='/login' element={<LoginPage />} />
-            <Route path='/' element={<ProtectedRoute><Home /></ProtectedRoute>} />
-            <Route path='/pedidos/enviar-pedidos' element={<ProtectedRoute><NewOrder /></ProtectedRoute>} />
-            <Route path='/stock/carga-mermas' element={<ProtectedRoute><StockPage /></ProtectedRoute>} />
-            <Route path='/stock/control-inventario' element={<ProtectedRoute><StockPage /></ProtectedRoute>} />
-            <Route path='/stock/carga-planillas' element={<ProtectedRoute><FrmSheetStock /></ProtectedRoute>} />
-            <Route path='/configuraciones' element={<ProtectedRoute><ConfigPage /></ProtectedRoute>} />
-            <Route path='*' element={<Page404 />} />
-          </Routes>
+          <div className="app-main">
+            <Routes>
+              <Route path='/login' element={<LoginPage />} />
+              <Route path='/' element={<ProtectedRoute><Home /></ProtectedRoute>} />
+              <Route path='/pedidos/enviar-pedidos' element={<ProtectedRoute><NewOrder /></ProtectedRoute>} />
+              <Route path='/stock/carga-mermas' element={<ProtectedRoute><StockPage /></ProtectedRoute>} />
+              <Route path='/stock/control-inventario' element={<ProtectedRoute><StockPage /></ProtectedRoute>} />
+              <Route path='/stock/carga-planillas' element={<ProtectedRoute><FrmSheetStock /></ProtectedRoute>} />
+              <Route path='/configuraciones' element={<ProtectedRoute><ConfigPage /></ProtectedRoute>} />
+              <Route path='*' element={<Page404 />} />
+            </Routes>
+          </div>
+          <Footer />
         </>
       ) : (
         <SelectEstablecimiento onEstablecimientoSelected={handleEstablecimientoSelected} />

@@ -34,3 +34,41 @@ export async function apiFetch(url, options = {}) {
 
   return response.json();
 }
+
+
+export const downloadFile = async (url,fileName,  options = {}) => {
+  try {
+    const guid = Cookies.get('EstablecimientoGUID'); // fallback
+    const response = await fetch(url, {
+      mode: 'cors', // petición en modo CORS (necesario para dominios externos desde el navegador)
+      headers: {
+        'Content-Type': 'application/json',
+        'EstablecimientoGUID': guid,
+        'Access-Control-Allow-Origin': '*', // Permitir solicitudes desde cualquier origen
+        ...options.headers,
+      },
+      ...options,
+    });
+
+    if (!response.ok) throw new Error('Network response was not ok');
+
+    // 1. Convert the response to a Blob
+    const blob = await response.blob();
+
+    // 2. Create a temporary URL for the Blob
+    const blobUrl = window.URL.createObjectURL(blob);
+
+    // 3. Create a hidden <a> element and trigger click
+    const link = document.createElement('a');
+    link.href = blobUrl;
+    link.setAttribute('download', fileName || 'download-file');
+    document.body.appendChild(link);
+    link.click();
+
+    // 4. Clean up: remove the link and revoke the URL
+    link.parentNode.removeChild(link);
+    window.URL.revokeObjectURL(blobUrl);
+  } catch (error) {
+    console.error('Download failed:', error);
+  }
+};
