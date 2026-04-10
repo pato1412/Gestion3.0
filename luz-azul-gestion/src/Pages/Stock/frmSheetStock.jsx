@@ -7,6 +7,7 @@ import { Typeahead } from 'react-bootstrap-typeahead'
 import { useState, useEffect, useRef } from 'react'
 import { apiFetch, downloadFile } from '../../config/api'
 import Loader from '../../components/Loader/Loader'
+import SelectDeposito from '../SelectDeposito/SelectDeposito'
 
 const FrmSheetStock = () => {
 
@@ -16,6 +17,11 @@ const FrmSheetStock = () => {
     const [items, setItems] = useState([]);
     const inputRefStock = useRef(null);
     const inputRefCantidad = useRef(null);
+    const [DepositoSelected, setDepositoSelected] = useState(false);
+
+    const handleDepositoSelected = (deposito) => {
+        setDepositoSelected(true);
+    };
 
     useEffect(() => {
         const fetchProductos = async () => {
@@ -90,11 +96,13 @@ const FrmSheetStock = () => {
     <>
         <Sidebar title={"Planilla de stock"} />
         <div className='container' >
-            <div className='Container-stock-form mb-3'>
-                <div className='Container-stock-header'>
-                    <h5>Seleccion de producto</h5>
-                </div>
-                <div className='Container-stock-content'>
+            {DepositoSelected ? (
+                <>
+                <div className='Container-stock-form mb-3'>
+                    <div className='Container-stock-header'>
+                        <h5>Seleccion de producto</h5>
+                    </div>
+                    <div className='Container-stock-content'>
                     <Row >
                         <Col xs={12} md={6} className='mb-3'  >
                             <Form.Label htmlFor="txtCodigo">Codigo</Form.Label>
@@ -179,6 +187,10 @@ const FrmSheetStock = () => {
                     <Button onClick={handleDescargar} variant="primary">Guardar planilla</Button>                   
                 </Col>
             </Row>   
+            </>
+            )   : (
+              <SelectDeposito onDepositoSelected={handleDepositoSelected} />  
+            )}
         </div>
         <Loader visible={isLoading} message='Cargando todos los productos de simple tempo' />
     </>
