@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Route, Routes } from 'react-router-dom'
+import { useNavigate, Route, Routes } from 'react-router-dom'
 import Home from './Pages/Home/Home'
 import LoginPage from './Pages/Login/Login'
 import Page404 from './Pages/404/404'
@@ -15,9 +15,12 @@ import Footer from './components/Footer/Footer'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-bootstrap-typeahead/css/Typeahead.css'
 import { DepositoProvider } from './contexts/DepositoContext'
+import SelectDeposito from './Pages/SelectDeposito/SelectDeposito'
 
 function App() {
   const [establecimientoSelected, setEstablecimientoSelected] = useState(false);
+  const [depositoSelected, setDepositoSelected] = useState();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const guid = Cookies.get('EstablecimientoGUID');
@@ -26,9 +29,25 @@ function App() {
     }
   }, []);
 
+  useEffect(() => {
+    const Deposito =Cookies.get('DepositoData')
+    const DepositoNombre = Deposito ? JSON.parse(Deposito).Descripcion : 'No seleccionado'; 
+    if (DepositoNombre) {
+      setDepositoSelected(DepositoNombre);
+    }
+  }, []);
+
+
   const handleEstablecimientoSelected = (establecimiento) => {
     setEstablecimientoSelected(true);
   };
+
+  const handleDepositoSelected = (deposito) => {
+    setDepositoSelected(deposito.Descripcion);
+    // Handle deposito selection logic here
+    navigate('/');
+  };
+
 
   return (
     <AuthProvider>
@@ -37,6 +56,7 @@ function App() {
           <div className="app-main">
             <Routes>
               <Route path='/login' element={<LoginPage />} />
+              <Route path='/select-deposito' element={<DepositoProvider><SelectDeposito onDepositoSelected={handleDepositoSelected} /></DepositoProvider>} />
               <Route path='/' element={<ProtectedRoute><Home /></ProtectedRoute>} />
               <Route path='/configuraciones' element={<ProtectedRoute><ConfigPage /></ProtectedRoute>} />
 
@@ -49,7 +69,7 @@ function App() {
               <Route path='*' element={<Page404 />} />
             </Routes>
           </div>
-          <Footer />
+          <Footer depositoNombre={depositoSelected} />
         </>
       ) : (
         <SelectEstablecimiento onEstablecimientoSelected={handleEstablecimientoSelected} />
