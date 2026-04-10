@@ -7,7 +7,6 @@ import { Typeahead } from 'react-bootstrap-typeahead'
 import { useState, useEffect, useRef } from 'react'
 import { apiFetch, downloadFile } from '../../config/api'
 import Loader from '../../components/Loader/Loader'
-import SelectDeposito from '../SelectDeposito/SelectDeposito'
 
 const FrmSheetStock = () => {
 
@@ -17,11 +16,6 @@ const FrmSheetStock = () => {
     const [items, setItems] = useState([]);
     const inputRefStock = useRef(null);
     const inputRefCantidad = useRef(null);
-    const [DepositoSelected, setDepositoSelected] = useState(false);
-
-    const handleDepositoSelected = (deposito) => {
-        setDepositoSelected(true);
-    };
 
     useEffect(() => {
         const fetchProductos = async () => {
@@ -96,8 +90,6 @@ const FrmSheetStock = () => {
     <>
         <Sidebar title={"Planilla de stock"} />
         <div className='container' >
-            {DepositoSelected ? (
-                <>
                 <div className='Container-stock-form mb-3'>
                     <div className='Container-stock-header'>
                         <h5>Seleccion de producto</h5>
@@ -186,11 +178,7 @@ const FrmSheetStock = () => {
                 <Col className="mb-3 d-flex d-flex align-items-center justify-content-end" xs={12} md={12}>
                     <Button onClick={handleDescargar} variant="primary">Guardar planilla</Button>                   
                 </Col>
-            </Row>   
-            </>
-            )   : (
-              <SelectDeposito onDepositoSelected={handleDepositoSelected} />  
-            )}
+            </Row>
         </div>
         <Loader visible={isLoading} message='Cargando todos los productos de simple tempo' />
     </>

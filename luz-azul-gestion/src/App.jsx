@@ -14,6 +14,7 @@ import FrmSheetStock from './Pages/Stock/frmSheetStock'
 import Footer from './components/Footer/Footer'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-bootstrap-typeahead/css/Typeahead.css'
+import { DepositoProvider } from './contexts/DepositoContext'
 
 function App() {
   const [establecimientoSelected, setEstablecimientoSelected] = useState(false);
@@ -37,11 +38,14 @@ function App() {
             <Routes>
               <Route path='/login' element={<LoginPage />} />
               <Route path='/' element={<ProtectedRoute><Home /></ProtectedRoute>} />
-              <Route path='/pedidos/enviar-pedidos' element={<ProtectedRoute><NewOrder /></ProtectedRoute>} />
-              <Route path='/stock/carga-mermas' element={<ProtectedRoute><StockPage /></ProtectedRoute>} />
-              <Route path='/stock/control-inventario' element={<ProtectedRoute><StockPage /></ProtectedRoute>} />
-              <Route path='/stock/carga-planillas' element={<ProtectedRoute><FrmSheetStock /></ProtectedRoute>} />
               <Route path='/configuraciones' element={<ProtectedRoute><ConfigPage /></ProtectedRoute>} />
+
+              {/* Rutas protegidas que requieren autenticación y selección de depósito */}              
+              <Route path='/pedidos/enviar-pedidos' element={<ProtectedRoute><DepositoProvider><NewOrder /></DepositoProvider></ProtectedRoute>} />
+              <Route path='/stock/carga-mermas' element={<ProtectedRoute><DepositoProvider><StockPage /></DepositoProvider></ProtectedRoute>} />
+              <Route path='/stock/control-inventario' element={<ProtectedRoute><DepositoProvider><StockPage /></DepositoProvider></ProtectedRoute>} />
+              <Route path='/stock/carga-planillas' element={<ProtectedRoute><DepositoProvider><FrmSheetStock /></DepositoProvider></ProtectedRoute>} />
+
               <Route path='*' element={<Page404 />} />
             </Routes>
           </div>
