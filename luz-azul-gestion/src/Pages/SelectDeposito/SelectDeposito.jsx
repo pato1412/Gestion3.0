@@ -3,12 +3,16 @@ import { API_URLS, apiFetch } from '../../config/api';
 import Cookies from 'js-cookie';
 import Loader from '../../components/Loader/Loader';
 import './SelectDeposito.css';
+import { useDeposito } from '../../contexts/DepositoContext';
 
-const SelectDeposito = ({ onDepositoSelected }) => {
+const SelectDeposito = () => {
   const [depositos, setDepositos] = useState([]);
   const [selectedId, setSelectedId] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  /* Obtenemos la función para actualizar el depósito seleccionado desde el contexto */
+  const {handleDepositoSelected} = useDeposito();
 
   useEffect(() => {
     const fetchDepositos = async () => {
@@ -44,7 +48,8 @@ const SelectDeposito = ({ onDepositoSelected }) => {
     if (deposito) {
       Cookies.set('DepositoId', deposito.DepositoId , { expires: 7 });
       Cookies.set('DepositoData', JSON.stringify(deposito), { expires: 7 });
-      if (onDepositoSelected) onDepositoSelected(deposito);
+      /* Si el componente padre pasó una función para manejar la selección, la llamamos con el depósito seleccionado */
+      if (handleDepositoSelected) handleDepositoSelected(deposito);
     }
   };
 
@@ -52,8 +57,8 @@ const SelectDeposito = ({ onDepositoSelected }) => {
   if (error) return <div>{error}</div>;
 
   return (
-    <div className="establecimiento-container">
-      <div className="establecimiento-card">
+    <div className="deposito-container">
+      <div className="deposito-card">
         <img src="/images/logo-small.png" alt="Logo" className="login-logo" />
         <h2>Selecciona un Depósito</h2>
         <select value={selectedId} onChange={handleSelect}>

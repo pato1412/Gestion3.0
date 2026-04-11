@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
-import SelectDeposito from '../Pages/SelectDeposito/SelectDeposito';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const DepositoContext = createContext();
 
@@ -16,6 +16,8 @@ export const DepositoProvider = ({ children }) => {
   const [DepositoId, setDepositoId] = useState(null);
   const [Deposito, setDeposito] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     // Verificar si hay un token o sesión guardada
@@ -30,19 +32,26 @@ export const DepositoProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
+  const handleDepositoSelected = (deposito) => {
+    setDeposito(deposito);
+    // Recarga la página para que los cambios se reflejen en todos los componentes
+    if (location.pathname !== '/select-deposito') {
+      navigate(0); // Recarga la página
+    } else {
+      navigate(-1); // Redirige a la página anterior si estamos en la selección de depósito para evitar recargar esa página innecesariamente
+    } 
+  }
+
   const value = {
     DepositoId,    
     Deposito,
     loading,
+    handleDepositoSelected,
   };
-
-  const handleDepositoSelected = (deposito) => {
-    setDeposito(deposito);
-  }
 
   return (    
     <DepositoContext.Provider value={value}>
-        {Deposito === null && !loading ? <SelectDeposito onDepositoSelected={handleDepositoSelected}   /> : children}
+      {children}
     </DepositoContext.Provider>
   );
 };

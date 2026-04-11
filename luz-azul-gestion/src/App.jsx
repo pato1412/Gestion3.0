@@ -16,10 +16,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-bootstrap-typeahead/css/Typeahead.css'
 import { DepositoProvider } from './contexts/DepositoContext'
 import SelectDeposito from './Pages/SelectDeposito/SelectDeposito'
+import ProtectedDeposito from './components/ProtectedDeposito'
 
 function App() {
   const [establecimientoSelected, setEstablecimientoSelected] = useState(false);
-  const [depositoSelected, setDepositoSelected] = useState();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,23 +29,9 @@ function App() {
     }
   }, []);
 
-  useEffect(() => {
-    const Deposito =Cookies.get('DepositoData')
-    const DepositoNombre = Deposito ? JSON.parse(Deposito).Descripcion : 'No seleccionado'; 
-    if (DepositoNombre) {
-      setDepositoSelected(DepositoNombre);
-    }
-  }, []);
-
 
   const handleEstablecimientoSelected = (establecimiento) => {
     setEstablecimientoSelected(true);
-  };
-
-  const handleDepositoSelected = (deposito) => {
-    setDepositoSelected(deposito.Descripcion);
-    // Handle deposito selection logic here
-    navigate('/');
   };
 
 
@@ -53,23 +39,25 @@ function App() {
     <AuthProvider>
       {establecimientoSelected ? (
         <>
-          <div className="app-main">
-            <Routes>
-              <Route path='/login' element={<LoginPage />} />
-              <Route path='/select-deposito' element={<DepositoProvider><SelectDeposito onDepositoSelected={handleDepositoSelected} /></DepositoProvider>} />
-              <Route path='/' element={<ProtectedRoute><Home /></ProtectedRoute>} />
-              <Route path='/configuraciones' element={<ProtectedRoute><ConfigPage /></ProtectedRoute>} />
+          <DepositoProvider >
+            <div className="app-main">
+              <Routes>
+                <Route path='/login' element={<LoginPage />} />
+                <Route path='/select-deposito' element={<SelectDeposito />} />
+                <Route path='/' element={<ProtectedRoute><Home /></ProtectedRoute>} />
+                <Route path='/configuraciones' element={<ProtectedRoute><ConfigPage /></ProtectedRoute>} />
 
-              {/* Rutas protegidas que requieren autenticación y selección de depósito */}              
-              <Route path='/pedidos/enviar-pedidos' element={<ProtectedRoute><DepositoProvider><NewOrder /></DepositoProvider></ProtectedRoute>} />
-              <Route path='/stock/carga-mermas' element={<ProtectedRoute><DepositoProvider><StockPage /></DepositoProvider></ProtectedRoute>} />
-              <Route path='/stock/control-inventario' element={<ProtectedRoute><DepositoProvider><StockPage /></DepositoProvider></ProtectedRoute>} />
-              <Route path='/stock/carga-planillas' element={<ProtectedRoute><DepositoProvider><FrmSheetStock /></DepositoProvider></ProtectedRoute>} />
+                {/* Rutas protegidas que requieren autenticación y selección de depósito */}              
+                <Route path='/pedidos/enviar-pedidos' element={<ProtectedRoute><ProtectedDeposito><NewOrder /></ProtectedDeposito></ProtectedRoute>} />
+                <Route path='/stock/carga-mermas' element={<ProtectedRoute><ProtectedDeposito><StockPage /></ProtectedDeposito></ProtectedRoute>} />
+                <Route path='/stock/control-inventario' element={<ProtectedRoute><ProtectedDeposito><StockPage /></ProtectedDeposito></ProtectedRoute>} />
+                <Route path='/stock/carga-planillas' element={<ProtectedRoute><ProtectedDeposito><FrmSheetStock /></ProtectedDeposito></ProtectedRoute>} />
 
-              <Route path='*' element={<Page404 />} />
-            </Routes>
-          </div>
-          <Footer depositoNombre={depositoSelected} />
+                <Route path='*' element={<Page404 />} />
+              </Routes>
+            </div>
+            <Footer />
+          </DepositoProvider>   
         </>
       ) : (
         <SelectEstablecimiento onEstablecimientoSelected={handleEstablecimientoSelected} />

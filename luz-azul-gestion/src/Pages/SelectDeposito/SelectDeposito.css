@@ -1,4 +1,4 @@
-.establecimiento-container {
+.deposito-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -7,7 +7,7 @@
   padding: 20px;
 }
 
-.establecimiento-card {
+.deposito-card {
   background: var(--bg);
   border: 1px solid var(--border);
   border-radius: 12px;
@@ -17,7 +17,7 @@
   max-width: 400px;
 }
 
-.establecimiento-card h2 {
+.deposito-card h2 {
   color: var(--text-h);
   text-align: center;
   margin-bottom: 2rem;
@@ -25,7 +25,7 @@
   font-weight: 600;
 }
 
-.establecimiento-card select {
+.deposito-card select {
   width: 100%;
   padding: 0.75rem 1rem;
   border-radius: 8px;
