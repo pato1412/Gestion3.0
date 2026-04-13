@@ -33,7 +33,12 @@ export const DepositoProvider = ({ children }) => {
   }, []);
 
   const handleDepositoSelected = (deposito) => {
+    /* Guardamos el depósito seleccionado en cookies para que esté disponible en toda la aplicación, incluso después de recargar la página */
+    Cookies.set('DepositoId', deposito.DepositoId , { expires: 7 });
+    Cookies.set('DepositoData', JSON.stringify(deposito), { expires: 7 });
+
     setDeposito(deposito);
+    setDepositoId(deposito.DepositoId);
     // Recarga la página para que los cambios se reflejen en todos los componentes
     if (location.pathname !== '/select-deposito') {
       navigate(0); // Recarga la página

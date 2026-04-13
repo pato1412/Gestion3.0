@@ -46,8 +46,6 @@ const SelectDeposito = () => {
     setSelectedId(id);
     const deposito = depositos.find((dep) => String(dep.DepositoId) === String(id));
     if (deposito) {
-      Cookies.set('DepositoId', deposito.DepositoId , { expires: 7 });
-      Cookies.set('DepositoData', JSON.stringify(deposito), { expires: 7 });
       /* Si el componente padre pasó una función para manejar la selección, la llamamos con el depósito seleccionado */
       if (handleDepositoSelected) handleDepositoSelected(deposito);
     }
