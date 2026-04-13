@@ -35,16 +35,6 @@ export const SidebarData = [
 
     subNav: [
       {
-        title: 'Control de inventario',
-        path: '/stock/control-inventario',
-        icon: <IoIcons.IoIosPaper />
-      },
-      {
-        title: 'Carga de mermas',
-        path: '/stock/carga-mermas',
-        icon: <IoIcons.IoIosPaper />
-      },
-      {
         title: 'Carga de planillas',
         path: '/stock/carga-planillas',
         icon: <IoIcons.IoIosPaper />

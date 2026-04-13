@@ -7,6 +7,8 @@ import { Typeahead } from 'react-bootstrap-typeahead'
 import { useState, useEffect, useRef } from 'react'
 import { apiFetch, downloadFile } from '../../config/api'
 import Loader from '../../components/Loader/Loader'
+import { useDeposito } from '../../contexts/DepositoContext'
+import { API_URLS } from '../../config/api'
 
 const FrmSheetStock = () => {
 
@@ -16,23 +18,47 @@ const FrmSheetStock = () => {
     const [items, setItems] = useState([]);
     const inputRefStock = useRef(null);
     const inputRefCantidad = useRef(null);
+    const { DepositoId } = useDeposito();
 
     useEffect(() => {
         const fetchProductos = async () => {
             setIsLoading(true);
             try {
                 const data = { Activo: true, TipoProducto: 0, DeVentas: true, DeCompras: true , ResultadosPorPagina : import.meta.env.VITE_ST_RESULTADOS_POR_PAGINA, Pagina: 1 };
-                const productos = await apiFetch(import.meta.env.VITE_API_GET_ALL_PRODUCTOS_URL, { method: 'POST', body: JSON.stringify(data) });
+                const productos = await apiFetch( API_URLS.GetAllProductos, { method: 'POST', body: JSON.stringify(data) });
                 const formattedProductos = productos.map(producto => ({
                     ProductoId: producto.ProductoId,
                     Descripcion: producto.Descripcion,
-                    StockActual: 4,
+                    StockActual: 0,
                     Cantidades: [],
                     CantidadContada: 0
                 }));
 
-                //luego de obtener los productos, obtenemos el stock actual de cada producto
 
+                /* Determino cuantas páginas de productos hay que consultar para obtener el stock de cada producto, y luego itero sobre cada página consultando el stock de los productos que corresponda a esa página */
+                let paginas = Math.ceil(formattedProductos.length / import.meta.env.VITE_ST_RESULTADOS_POR_PAGINA_STOCK);
+                let paginaActual = 1;
+
+                while (paginaActual < paginas) {
+                    let sliceProductos = formattedProductos.slice((paginaActual - 1) * import.meta.env.VITE_ST_RESULTADOS_POR_PAGINA_STOCK, paginaActual * import.meta.env.VITE_ST_RESULTADOS_POR_PAGINA_STOCK);
+                    try {
+                        const stockData = await apiFetch(API_URLS.GetStockByProductosDepositoId, { method: 'POST', body: JSON.stringify({ ProductosIds: sliceProductos.map(p => p.ProductoId), DepositoId: DepositoId, ResultadosPorPagina: import.meta.env.VITE_ST_RESULTADOS_POR_PAGINA_STOCK, Pagina: paginaActual })});
+                        if (stockData && Array.isArray(stockData)) {
+                            stockData.forEach(stockItem => {
+                                const idx = formattedProductos.findIndex(p => p.ProductoId === stockItem.ProductoId);
+                                if (idx !== -1) {
+                                    formattedProductos[idx].StockActual = stockItem.Stock || 0;
+                                }
+                            });
+                        }
+                    } catch (error) {
+                        console.error(`Error fetching stock for producto en la pagina ${paginaActual}:`, error);
+                    }
+                    paginaActual++;
+                } 
+                debugger;
+
+                //luego de obtener los productos, obtenemos el stock actual de cada producto
                 setOptions(formattedProductos);
             } catch (error) {
                 console.error('Error fetching productos:', error);

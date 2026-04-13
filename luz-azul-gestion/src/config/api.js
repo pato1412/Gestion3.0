@@ -1,10 +1,12 @@
 import Cookies from 'js-cookie';
 
 export const API_URLS = {
-  login: import.meta.env.VITE_API_LOGIN_URL,
-  getEstablecimientos: import.meta.env.VITE_API_GET_ESTABLECIMIENTOS_URL,
-  getDepositosUsuario: import.meta.env.VITE_API_GET_DEPOSITOS_USUARIO_URL,
-  InfoEmpresa: import.meta.env.VITE_API_INFO_EMPRESA_URL,
+  login: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_LOGIN_URL,
+  getEstablecimientos: import.meta.env.VITE_API_DOMAIN +import.meta.env.VITE_API_GET_ESTABLECIMIENTOS_URL,
+  getDepositosUsuario: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_GET_DEPOSITOS_USUARIO_URL,
+  InfoEmpresa: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_INFO_EMPRESA_URL,
+  GetAllProductos: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_GET_ALL_PRODUCTOS_URL,
+  GetStockByProductosDepositoId: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_GET_STOCK_PRODUCTO_URL, 
 };
 
 export async function apiFetch(url, options = {}) {
