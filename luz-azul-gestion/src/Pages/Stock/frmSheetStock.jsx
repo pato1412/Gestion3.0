@@ -2,7 +2,7 @@ import {FaTrash } from 'react-icons/fa'
 import Sidebar from '../../components/Sidebar/Sidebar'
 import './stock.css'
 import { Link } from 'react-router-dom'
-import { Button, Row, Col, Form } from 'react-bootstrap'
+import { Button, Row, Col, Form, ProgressBar } from 'react-bootstrap'
 import { Typeahead } from 'react-bootstrap-typeahead'
 import { useState, useEffect, useRef } from 'react'
 import { apiFetch, downloadFile } from '../../config/api'
@@ -16,6 +16,8 @@ const FrmSheetStock = () => {
     const [options, setOptions] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [items, setItems] = useState([]);
+    const [progress, setProgress] = useState(0);
+    const [messageLoader, setMessageLoader] = useState("Cargando, por favor espere...");
     const inputRefStock = useRef(null);
     const inputRefCantidad = useRef(null);
     const { DepositoId } = useDeposito();
@@ -23,6 +25,8 @@ const FrmSheetStock = () => {
     useEffect(() => {
         const fetchProductos = async () => {
             setIsLoading(true);
+            setMessageLoader("Cargando todos los productos de simple tempo...");
+            setProgress(0);
             try {
                 const data = { Activo: true, TipoProducto: 0, DeVentas: true, DeCompras: true , ResultadosPorPagina : import.meta.env.VITE_ST_RESULTADOS_POR_PAGINA, Pagina: 1 };
                 const productos = await apiFetch( API_URLS.GetAllProductos, { method: 'POST', body: JSON.stringify(data) });
@@ -36,10 +40,10 @@ const FrmSheetStock = () => {
 
 
                 /* Determino cuantas páginas de productos hay que consultar para obtener el stock de cada producto, y luego itero sobre cada página consultando el stock de los productos que corresponda a esa página */
+                setMessageLoader("Cargando stock de simple tempo...");
                 let paginas = Math.ceil(formattedProductos.length / import.meta.env.VITE_ST_RESULTADOS_POR_PAGINA_STOCK);
-                let paginaActual = 1;
 
-                while (paginaActual < paginas) {
+                for (let paginaActual = 1; paginaActual <= paginas; paginaActual++) {
                     let sliceProductos = formattedProductos.slice((paginaActual - 1) * import.meta.env.VITE_ST_RESULTADOS_POR_PAGINA_STOCK, paginaActual * import.meta.env.VITE_ST_RESULTADOS_POR_PAGINA_STOCK);
                     try {
                         const stockData = await apiFetch(API_URLS.GetStockByProductosDepositoId, { method: 'POST', body: JSON.stringify({ ProductosIds: sliceProductos.map(p => p.ProductoId), DepositoId: DepositoId, ResultadosPorPagina: import.meta.env.VITE_ST_RESULTADOS_POR_PAGINA_STOCK, Pagina: paginaActual })});
@@ -54,9 +58,8 @@ const FrmSheetStock = () => {
                     } catch (error) {
                         console.error(`Error fetching stock for producto en la pagina ${paginaActual}:`, error);
                     }
-                    paginaActual++;
-                } 
-                debugger;
+                    setProgress((paginaActual / paginas) * 100);
+                }
 
                 //luego de obtener los productos, obtenemos el stock actual de cada producto
                 setOptions(formattedProductos);
@@ -64,6 +67,7 @@ const FrmSheetStock = () => {
                 console.error('Error fetching productos:', error);
             } finally {
                 setIsLoading(false);
+                setProgress(100);
             }
         };
 
@@ -206,7 +210,7 @@ const FrmSheetStock = () => {
                 </Col>
             </Row>
         </div>
-        <Loader visible={isLoading} message='Cargando todos los productos de simple tempo' />
+        <Loader visible={isLoading} message={messageLoader} ShowProgress={true} progress={progress} />
     </>
   )
 }

@@ -1,6 +1,7 @@
 import { Triangle } from 'react-loader-spinner'
+import { ProgressBar } from 'react-bootstrap';
 
-const Loader = ({ visible = true, message = "Cargando, por favor espere..." }) => {
+const Loader = ({ visible = true, message = "Cargando, por favor espere...", ShowProgress = false, progress = 0 }) => {
   if (!visible) return null
 
   const overlayStyle = {
@@ -43,7 +44,8 @@ const Loader = ({ visible = true, message = "Cargando, por favor espere..." }) =
           wrapperStyle={{}}
           wrapperClass=""
         />
-        <span style={messageStyle}>{message}</span>
+        <span style={messageStyle}>{message}</span>        
+        {ShowProgress && <div style={{ width: '100%', maxWidth: '400px' }}><ProgressBar now={progress} label={`${Math.round(progress)}%`} /></div>}          
       </div>
     </div>
   )
