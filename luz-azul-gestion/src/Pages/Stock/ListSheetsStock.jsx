@@ -76,8 +76,8 @@ const ListSheetsStock = () => {
                 <thead>
                   <tr>
                     <th>Usuario</th>
-                    <th>FechaInicio</th>
-                    <th>FechaFin</th>
+                    <th>Fecha Inicio</th>
+                    <th>Fecha Fin</th>
                     <th>Deposito</th>
                     <th>Observaciones</th>
                   </tr>

@@ -52,7 +52,7 @@ function App() {
                 <Route path='/pedidos/enviar-pedidos' element={<ProtectedRoute><ProtectedDeposito><NewOrder /></ProtectedDeposito></ProtectedRoute>} />
                 <Route path='/stock/carga-mermas' element={<ProtectedRoute><ProtectedDeposito><StockPage /></ProtectedDeposito></ProtectedRoute>} />
                 <Route path='/stock/control-inventario' element={<ProtectedRoute><ProtectedDeposito><StockPage /></ProtectedDeposito></ProtectedRoute>} />
-                <Route path='/stock/carga-planillas' element={<ProtectedRoute><ProtectedDeposito><FrmSheetStock /></ProtectedDeposito></ProtectedRoute>} />
+                <Route path='/stock/nueva-planilla' element={<ProtectedRoute><ProtectedDeposito><FrmSheetStock /></ProtectedDeposito></ProtectedRoute>} />
                 <Route path='/stock/listar-planillas' element={<ProtectedRoute><ProtectedDeposito><ListSheetsStock /></ProtectedDeposito></ProtectedRoute>} />
 
                 <Route path='*' element={<Page404 />} />

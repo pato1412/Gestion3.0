@@ -78,18 +78,29 @@ const FrmSheetStock = () => {
     const IngresarProducto = () => {
         if (singleSelections.length > 0) {
             const productoSeleccionado = singleSelections[0];
+            const cantidad = Number(inputRefCantidad.current.value);
+
             if (items.some(item => item.ProductoId === productoSeleccionado.ProductoId)) {
-               // Si el producto ya existe, actualizamos las cantidades
-               var itemExistente = items.find(item => item.ProductoId === productoSeleccionado.ProductoId);
-               itemExistente.Cantidades.push(Number(inputRefCantidad.current.value));
-               itemExistente.CantidadContada = itemExistente.Cantidades.reduce((total, cantidad) => total + cantidad, 0);
-               setItems(prevItems => prevItems.map(item => item.ProductoId === itemExistente.ProductoId ? itemExistente : item));    
-            }else {
-                // Si el producto no existe, lo agregamos a la lista
-                productoSeleccionado.Cantidades.push(Number(inputRefCantidad.current.value));
-                productoSeleccionado.CantidadContada = productoSeleccionado.Cantidades.reduce((total, cantidad) => total + cantidad, 0);
-                setItems(prevItems => [...prevItems, productoSeleccionado]);
+                // Si el producto ya existe, actualizamos las cantidades sin mutar el objeto original
+                setItems(prevItems => prevItems.map(item => {
+                    if (item.ProductoId !== productoSeleccionado.ProductoId) return item;
+                    const nuevasCantidades = [...item.Cantidades, cantidad];
+                    return {
+                        ...item,
+                        Cantidades: nuevasCantidades,
+                        CantidadContada: nuevasCantidades.reduce((total, cantidad) => total + cantidad, 0)
+                    };
+                }));
+            } else {
+                // Si el producto no existe, lo agregamos como una copia independiente
+                const nuevoItem = {
+                    ...productoSeleccionado,
+                    Cantidades: [cantidad],
+                    CantidadContada: cantidad
+                };
+                setItems(prevItems => [...prevItems, nuevoItem]);
             }
+
             // Limpiar los campos después de ingresar el producto
             setSingleSelections([]);
             inputRefStock.current.value = '';
@@ -179,7 +190,6 @@ const FrmSheetStock = () => {
                             <tr>    
                                 <th className=''>Producto</th>
                                 <th className='w-10' >Stock</th>
-                                <th className='text-end w-15'>Cantidades</th>
                                 <th className='w-15'>Cantidad Contada</th>
                                 <th className='w-5' ></th>
                             </tr>
@@ -191,8 +201,22 @@ const FrmSheetStock = () => {
                                         <Form.Label htmlFor="txtCodigo">{item.ProductoId} - {item.Descripcion}</Form.Label>
                                     </td>
                                     <td className='text-end w-10' >{item.StockActual}</td>
-                                    <td className='text-end w-15' >{item.Cantidades.join(', ')}</td>
-                                    <td className='text-end w-15' >{item.CantidadContada}</td>
+                                    <td className='text-end w-15' >
+                                        <div className='cantidades-container'>
+                                            {item.Cantidades.length > 1 && (
+                                            <div className='cantidades-item'>
+                                                {item.Cantidades.map((cantidad, i) => (
+                                                    <div key={i} >
+                                                        {cantidad}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                            )}
+                                            <div className='cantidades-total'>
+                                                {item.CantidadContada}
+                                            </div> 
+                                        </div>
+                                    </td>
                                     <td className='w-5' >
                                         <Button variant="outline-danger" size="sm" onClick={() => EliminarItem(item)}>
                                             <FaTrash />
