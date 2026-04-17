@@ -7,6 +7,7 @@ import { Typeahead } from 'react-bootstrap-typeahead'
 import { useState, useEffect, useRef } from 'react'
 import { apiFetch, downloadFile } from '../../config/api'
 import Loader from '../../components/Loader/Loader'
+import ShowError from '../../components/ShowError/ShowError'
 import { useDeposito } from '../../contexts/DepositoContext'
 import { API_URLS } from '../../config/api'
 
@@ -17,6 +18,8 @@ const FrmSheetStock = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [items, setItems] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+    const [showError, setShowError] = useState(false);
     const [progress, setProgress] = useState(0);
     const [messageLoader, setMessageLoader] = useState("Cargando, por favor espere...");
     const inputRefStock = useRef(null);
@@ -57,7 +60,7 @@ const FrmSheetStock = () => {
                             });
                         }
                     } catch (error) {
-                        console.error(`Error fetching stock for producto en la pagina ${paginaActual}:`, error);
+                        showErrorAlert(`Error cargando stock de producto en la página ${paginaActual}: ${getErrorMessage(error)}`);
                     }
                     setProgress((paginaActual / paginas) * 100);
                 }
@@ -65,7 +68,7 @@ const FrmSheetStock = () => {
                 //luego de obtener los productos, obtenemos el stock actual de cada producto
                 setOptions(formattedProductos);
             } catch (error) {
-                console.error('Error fetching productos:', error);
+                showErrorAlert(`Error cargando productos: ${getErrorMessage(error)}`);
             } finally {
                 setIsLoading(false);
                 setProgress(100);
@@ -80,6 +83,11 @@ const FrmSheetStock = () => {
         if (singleSelections.length > 0) {
             const productoSeleccionado = singleSelections[0];
             const cantidad = Number(inputRefCantidad.current.value);
+
+            if( cantidad <= 0) {
+                showErrorAlert("La cantidad ingresada debe ser mayor a cero.");
+                return;
+            }
 
             if (items.some(item => item.ProductoId === productoSeleccionado.ProductoId)) {
                 // Si el producto ya existe, actualizamos las cantidades sin mutar el objeto original
@@ -113,6 +121,22 @@ const FrmSheetStock = () => {
         setItems(prevItems => prevItems.filter(i => i.ProductoId !== item.ProductoId));
     }
 
+    const getErrorMessage = (error) => {
+        if (!error) return 'Error inesperado';
+        if (typeof error === 'string') return error;
+        if (error.message) return error.message;
+        try {
+            return JSON.stringify(error);
+        } catch {
+            return 'Error inesperado';
+        }
+    }
+
+    const showErrorAlert = (error) => {
+        setErrorMessage(getErrorMessage(error));
+        setShowError(true);
+    }
+
     const handleDescargar = async () => {
         try {            
             const data = items.map(item => ({
@@ -124,7 +148,7 @@ const FrmSheetStock = () => {
             }));
             const excelfile = await downloadFile(import.meta.env.VITE_API_EXCEL_URL, "planilla_stock.xlsx", { method: 'POST', body: JSON.stringify(data) });
         } catch (error) {
-            console.error('Error descargando el archivo:', error);
+            showErrorAlert(`Error descargando el archivo: ${getErrorMessage(error)}`);
         }
     }
 
@@ -138,6 +162,11 @@ const FrmSheetStock = () => {
     <>
         <Sidebar title={"Planilla de stock"} />
         <div className='container' >
+            <ShowError
+                message={errorMessage}
+                show={showError}
+                onClose={() => setShowError(false)}
+            />
                 <div className='Container-stock-form mb-3'>
                     <div className='Container-stock-header'>
                         <h5>Seleccion de producto</h5>
