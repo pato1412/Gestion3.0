@@ -16,6 +16,7 @@ const FrmSheetStock = () => {
     const [options, setOptions] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [items, setItems] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
     const [progress, setProgress] = useState(0);
     const [messageLoader, setMessageLoader] = useState("Cargando, por favor espere...");
     const inputRefStock = useRef(null);
@@ -127,6 +128,12 @@ const FrmSheetStock = () => {
         }
     }
 
+    const filteredItems = items.filter(item => {
+        const term = searchTerm.trim().toLowerCase();
+        if (!term) return true;
+        return item.ProductoId.toString().includes(term) || item.Descripcion.toLowerCase().includes(term);
+    });
+
   return (    
     <>
         <Sidebar title={"Planilla de stock"} />
@@ -185,6 +192,17 @@ const FrmSheetStock = () => {
                     <h5>Planilla de stock</h5>
                 </div>
                 <div className='Container-stock-content'>
+                    <Row className='mb-3'>
+                        <Col xs={12} md={6}>
+                            <Form.Control
+                                id="txtBuscar"
+                                type="text"
+                                placeholder="Buscar por código o descripción"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                        </Col>
+                    </Row>
                     <table className="table table-striped">
                         <thead>
                             <tr>    
@@ -195,7 +213,7 @@ const FrmSheetStock = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {items.map((item, index) => (
+                            {filteredItems.map((item, index) => (
                                 <tr key={index}>
                                     <td className='' >
                                         <Form.Label htmlFor="txtCodigo">{item.ProductoId} - {item.Descripcion}</Form.Label>
