@@ -36,7 +36,7 @@ export const SidebarData = [
     subNav: [
       {
         title: 'Carga de planillas',
-        path: '/stock/carga-planillas',
+        path: '/stock/listar-planillas',
         icon: <IoIcons.IoIosPaper />
       }
     ]

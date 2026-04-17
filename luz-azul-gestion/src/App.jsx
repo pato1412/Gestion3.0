@@ -17,6 +17,7 @@ import 'react-bootstrap-typeahead/css/Typeahead.css'
 import { DepositoProvider } from './contexts/DepositoContext'
 import SelectDeposito from './Pages/SelectDeposito/SelectDeposito'
 import ProtectedDeposito from './components/ProtectedDeposito'
+import ListSheetsStock from './Pages/Stock/ListSheetsStock'
 
 function App() {
   const [establecimientoSelected, setEstablecimientoSelected] = useState(false);
@@ -52,6 +53,7 @@ function App() {
                 <Route path='/stock/carga-mermas' element={<ProtectedRoute><ProtectedDeposito><StockPage /></ProtectedDeposito></ProtectedRoute>} />
                 <Route path='/stock/control-inventario' element={<ProtectedRoute><ProtectedDeposito><StockPage /></ProtectedDeposito></ProtectedRoute>} />
                 <Route path='/stock/carga-planillas' element={<ProtectedRoute><ProtectedDeposito><FrmSheetStock /></ProtectedDeposito></ProtectedRoute>} />
+                <Route path='/stock/listar-planillas' element={<ProtectedRoute><ProtectedDeposito><ListSheetsStock /></ProtectedDeposito></ProtectedRoute>} />
 
                 <Route path='*' element={<Page404 />} />
               </Routes>

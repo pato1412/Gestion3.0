@@ -7,6 +7,8 @@ export const API_URLS = {
   InfoEmpresa: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_INFO_EMPRESA_URL,
   GetAllProductos: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_GET_ALL_PRODUCTOS_URL,
   GetStockByProductosDepositoId: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_GET_STOCK_PRODUCTO_URL, 
+  GetExcelStock: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_EXCEL_URL,
+  GetPlanillasInventario: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_GET_PLANILLAS_INVENTARIO_URL,
 };
 
 export async function apiFetch(url, options = {}) {
@@ -75,3 +77,17 @@ export const downloadFile = async (url,fileName,  options = {}) => {
     console.error('Download failed:', error);
   }
 };
+
+export const GetDepositosUsuario = async () => {
+      const userData = Cookies.get('userData');
+      if (!userData) {
+        return;
+      }
+      const CookieData = JSON.parse(userData);
+      const url = API_URLS.getDepositosUsuario.replace('{usuarioId}', CookieData.id); 
+      const data = await apiFetch(url, {
+        method: 'GET',
+      });
+      return Array.isArray(data) ? data : [];
+};
+
