@@ -62,11 +62,11 @@ const ModalPrompt = ({
           </Form.Group>
         )}
       </Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={onHide}>
+      <Modal.Footer className='justify-content-between'  >
+        <Button style={{ width: 'auto' }} variant="secondary" onClick={onHide}>
           Cerrar
         </Button>
-        <Button variant="primary" onClick={handleConfirm}>
+        <Button style={{ width: 'auto' }} variant="primary" onClick={handleConfirm}>
           Continuar
         </Button>
       </Modal.Footer>

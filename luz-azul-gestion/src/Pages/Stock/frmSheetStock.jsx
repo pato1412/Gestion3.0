@@ -1,7 +1,7 @@
 import {FaTrash } from 'react-icons/fa'
 import Sidebar from '../../components/Sidebar/Sidebar'
 import './stock.css'
-import { Link } from 'react-router-dom'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { Button, Row, Col, Form, ProgressBar } from 'react-bootstrap'
 import { Typeahead } from 'react-bootstrap-typeahead'
 import { useState, useEffect, useRef } from 'react'
@@ -30,6 +30,8 @@ const FrmSheetStock = () => {
     const { DepositoId } = useDeposito();
     const { openModal } = useModal();
     const {user} = useAuth();
+    const navigate = useNavigate();
+    
 
     let dateStart = new Date();
 
@@ -188,7 +190,6 @@ const FrmSheetStock = () => {
                 Observaciones: observaciones,
             };
 
-            console.log("Data a enviar para guardar planilla:", data);
             const response = await apiFetch(API_URLS.NewPlanillaInventario, { method: 'POST', body: JSON.stringify(data)});
             if (response && response > 0) {
                 const planillaId = response;
@@ -200,7 +201,9 @@ const FrmSheetStock = () => {
                 }));
                 console.log("Detalles a enviar para guardar planilla:", detallesData);
                 //await apiFetch(API_URLS.NewPlanillaInventario + '/detalles', { method: 'POST', body: JSON.stringify(detallesData)});
-                //openModal("Planilla guardada", "La planilla de stock se ha guardado correctamente.");
+                openModal("Planilla guardada", "La planilla de stock se ha guardado correctamente.", () => {
+                    navigate("/stock/listar-planillas");
+                });
             }else{
                 ShowErrorAlert("No se pudo guardar la planilla de stock. Intente nuevamente.");
             }
