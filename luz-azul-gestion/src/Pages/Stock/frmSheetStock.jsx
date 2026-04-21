@@ -9,6 +9,7 @@ import { apiFetch, downloadFile } from '../../config/api'
 import Loader from '../../components/Loader/Loader'
 import ShowError from '../../components/ShowError/ShowError'
 import { useDeposito } from '../../contexts/DepositoContext'
+import { useModal } from '../../contexts/ModalContext'
 import { API_URLS } from '../../config/api'
 
 const FrmSheetStock = () => {
@@ -25,6 +26,8 @@ const FrmSheetStock = () => {
     const inputRefStock = useRef(null);
     const inputRefCantidad = useRef(null);
     const { DepositoId } = useDeposito();
+    const { openModal } = useModal();
+    let dateStart = new Date();
 
     useEffect(() => {
         const fetchProductos = async () => {
@@ -72,6 +75,7 @@ const FrmSheetStock = () => {
             } finally {
                 setIsLoading(false);
                 setProgress(100);
+                dateStart = Date.now();
             }
         };
 
@@ -152,6 +156,33 @@ const FrmSheetStock = () => {
         }
     }
 
+    const handleGuardarPlanilla = async () => {
+        console.log("Guardando planilla con los siguientes datos");
+
+        try {
+            const data = items.map(item => ({
+                Usuario: item.ProductoId,
+                FechaInicio: dateStart,
+                FechaFin: Date.now(),
+                DepositoId: DepositoId,
+                EstablecimientoId: item.CantidadContada
+            }));
+            
+            openModal(
+                "Planilla Guardada",
+                "La planilla de stock ha sido guardada exitosamente",
+                () => {
+                    console.log("Confirmado");
+                }
+            );
+
+        }  catch (error) {
+            showErrorAlert(`Error guardando la planilla: ${getErrorMessage(error)}`);
+        } finally {            
+            setIsLoading(false);
+        }   
+    };
+
     const filteredItems = items.filter(item => {
         const term = searchTerm.trim().toLowerCase();
         if (!term) return true;
@@ -166,7 +197,8 @@ const FrmSheetStock = () => {
                 message={errorMessage}
                 show={showError}
                 onClose={() => setShowError(false)}
-            />
+            />  
+                <p className='text-muted text-end'>Fecha inicio: {dateStart.getDate() }/{dateStart.getMonth() + 1}/{dateStart.getFullYear() } - {dateStart.getHours()}:{dateStart.getMinutes()}</p>
                 <div className='Container-stock-form mb-3'>
                     <div className='Container-stock-header'>
                         <h5>Seleccion de producto</h5>
@@ -277,7 +309,7 @@ const FrmSheetStock = () => {
             </div>
             <Row >
                 <Col className="mb-3 d-flex d-flex align-items-center justify-content-end" xs={12} md={12}>
-                    <Button onClick={handleDescargar} variant="primary">Guardar planilla</Button>                   
+                    <Button onClick={handleGuardarPlanilla} variant="primary">Guardar planilla</Button>                   
                 </Col>
             </Row>
         </div>

@@ -15,9 +15,11 @@ import Footer from './components/Footer/Footer'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-bootstrap-typeahead/css/Typeahead.css'
 import { DepositoProvider } from './contexts/DepositoContext'
+import { ModalProvider } from './contexts/ModalContext'
 import SelectDeposito from './Pages/SelectDeposito/SelectDeposito'
 import ProtectedDeposito from './components/ProtectedDeposito'
 import ListSheetsStock from './Pages/Stock/ListSheetsStock'
+import GlobalModal from './components/GlobalModal/GlobalModal'
 
 function App() {
   const [establecimientoSelected, setEstablecimientoSelected] = useState(false);
@@ -38,32 +40,35 @@ function App() {
 
   return (
     <AuthProvider>
-      {establecimientoSelected ? (
-        <>
-          <DepositoProvider >
-            <div className="app-main">
-              <Routes>
-                <Route path='/login' element={<LoginPage />} />
-                <Route path='/select-deposito' element={<SelectDeposito />} />
-                <Route path='/' element={<ProtectedRoute><Home /></ProtectedRoute>} />
-                <Route path='/configuraciones' element={<ProtectedRoute><ConfigPage /></ProtectedRoute>} />
+      <ModalProvider>
+        {establecimientoSelected ? (
+          <>
+            <DepositoProvider >
+              <div className="app-main">
+                <Routes>
+                  <Route path='/login' element={<LoginPage />} />
+                  <Route path='/select-deposito' element={<SelectDeposito />} />
+                  <Route path='/' element={<ProtectedRoute><Home /></ProtectedRoute>} />
+                  <Route path='/configuraciones' element={<ProtectedRoute><ConfigPage /></ProtectedRoute>} />
 
-                {/* Rutas protegidas que requieren autenticación y selección de depósito */}              
-                <Route path='/pedidos/enviar-pedidos' element={<ProtectedRoute><ProtectedDeposito><NewOrder /></ProtectedDeposito></ProtectedRoute>} />
-                <Route path='/stock/carga-mermas' element={<ProtectedRoute><ProtectedDeposito><StockPage /></ProtectedDeposito></ProtectedRoute>} />
-                <Route path='/stock/control-inventario' element={<ProtectedRoute><ProtectedDeposito><StockPage /></ProtectedDeposito></ProtectedRoute>} />
-                <Route path='/stock/nueva-planilla' element={<ProtectedRoute><ProtectedDeposito><FrmSheetStock /></ProtectedDeposito></ProtectedRoute>} />
-                <Route path='/stock/listar-planillas' element={<ProtectedRoute><ProtectedDeposito><ListSheetsStock /></ProtectedDeposito></ProtectedRoute>} />
+                  {/* Rutas protegidas que requieren autenticación y selección de depósito */}              
+                  <Route path='/pedidos/enviar-pedidos' element={<ProtectedRoute><ProtectedDeposito><NewOrder /></ProtectedDeposito></ProtectedRoute>} />
+                  <Route path='/stock/carga-mermas' element={<ProtectedRoute><ProtectedDeposito><StockPage /></ProtectedDeposito></ProtectedRoute>} />
+                  <Route path='/stock/control-inventario' element={<ProtectedRoute><ProtectedDeposito><StockPage /></ProtectedDeposito></ProtectedRoute>} />
+                  <Route path='/stock/nueva-planilla' element={<ProtectedRoute><ProtectedDeposito><FrmSheetStock /></ProtectedDeposito></ProtectedRoute>} />
+                  <Route path='/stock/listar-planillas' element={<ProtectedRoute><ProtectedDeposito><ListSheetsStock /></ProtectedDeposito></ProtectedRoute>} />
 
-                <Route path='*' element={<Page404 />} />
-              </Routes>
-            </div>
-            <Footer />
-          </DepositoProvider>   
-        </>
-      ) : (
-        <SelectEstablecimiento onEstablecimientoSelected={handleEstablecimientoSelected} />
-      )}
+                  <Route path='*' element={<Page404 />} />
+                </Routes>
+              </div>
+              <Footer />
+            </DepositoProvider>
+            <GlobalModal />
+          </>
+        ) : (
+          <SelectEstablecimiento onEstablecimientoSelected={handleEstablecimientoSelected} />
+        )}
+      </ModalProvider>
     </AuthProvider>
   )
 }

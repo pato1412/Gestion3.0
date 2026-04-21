@@ -9,6 +9,7 @@ export const API_URLS = {
   GetStockByProductosDepositoId: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_GET_STOCK_PRODUCTO_URL, 
   GetExcelStock: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_EXCEL_URL,
   GetPlanillasInventario: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_GET_PLANILLAS_INVENTARIO_URL,
+  NewPlanillaInventario: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_NEW_PLANILLA_INVENTARIO_URL,
 };
 
 export async function apiFetch(url, options = {}) {
