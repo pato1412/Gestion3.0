@@ -11,6 +11,8 @@ import ShowError from '../../components/ShowError/ShowError'
 import { useDeposito } from '../../contexts/DepositoContext'
 import { useModal } from '../../contexts/ModalContext'
 import { API_URLS } from '../../config/api'
+import { useAuth } from '../../contexts/AuthContext'
+import Cookies from 'js-cookie'
 
 const FrmSheetStock = () => {
 
@@ -27,7 +29,8 @@ const FrmSheetStock = () => {
     const inputRefCantidad = useRef(null);
     const { DepositoId } = useDeposito();
     const { openModal } = useModal();
-    
+    const {user} = useAuth();
+
     let dateStart = new Date();
 
     useEffect(() => {
@@ -76,7 +79,6 @@ const FrmSheetStock = () => {
             } finally {
                 setIsLoading(false);
                 setProgress(100);
-                dateStart = Date.now();
             }
         };
 
@@ -158,34 +160,56 @@ const FrmSheetStock = () => {
     }
 
     const handleGuardarPlanilla = async () => {
-        console.log("Guardando planilla con los siguientes datos");
-
-        try {
-            const data = items.map(item => ({
-                Usuario: item.ProductoId,
-                FechaInicio: dateStart,
-                FechaFin: Date.now(),
-                DepositoId: DepositoId,
-                EstablecimientoId: item.CantidadContada
-            }));
-            
             openModal(
                 "Guardar planilla de stock",
                 "Desea guardar la planilla de stock? Ingrese una observación si lo desea.",
                 (valor) => {
-                    console.log("Confirmado con valor:", valor);
+                    fetchPlanilla(valor);
                 },
                 true,
                 "Observacion (opcional)",
                 ""
-            );
-
-        }  catch (error) {
-            showErrorAlert(`Error guardando la planilla: ${getErrorMessage(error)}`);
-        } finally {            
-            setIsLoading(false);
-        }   
+            );        
     };
+
+    const fetchPlanilla = async (observaciones) => {
+        setIsLoading(true);
+        setMessageLoader("Cargando planilla de stock...");
+
+        try {
+            const EstablecimientoId = Cookies.get('EstablecimientoId');
+            let dateFin = new Date();
+            const data = {
+                Usuario: user.NombreCompleto,
+                FechaInicio: dateStart,
+                FechaFin:  dateFin,
+                DepositoId: DepositoId,
+                EstablecimientoId: EstablecimientoId,
+                Observaciones: observaciones,
+            };
+
+            console.log("Data a enviar para guardar planilla:", data);
+            const response = await apiFetch(API_URLS.NewPlanillaInventario, { method: 'POST', body: JSON.stringify(data)});
+            if (response && response > 0) {
+                const planillaId = response;
+                const detallesData = items.map(item => ({
+                    PlanillaInventarioId: planillaId,
+                    ProductoId: item.ProductoId,
+                    CantidadContada: item.CantidadContada,
+                    StockActual: item.StockActual
+                }));
+                console.log("Detalles a enviar para guardar planilla:", detallesData);
+                //await apiFetch(API_URLS.NewPlanillaInventario + '/detalles', { method: 'POST', body: JSON.stringify(detallesData)});
+                //openModal("Planilla guardada", "La planilla de stock se ha guardado correctamente.");
+            }else{
+                ShowErrorAlert("No se pudo guardar la planilla de stock. Intente nuevamente.");
+            }
+        } catch (error) {
+            showErrorAlert(`Error cargando la planilla: ${getErrorMessage(error)}`);
+        } finally {
+            setIsLoading(false);
+        }
+    }
 
     const filteredItems = items.filter(item => {
         const term = searchTerm.trim().toLowerCase();
