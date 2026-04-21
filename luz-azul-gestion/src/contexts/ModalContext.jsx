@@ -8,14 +8,20 @@ export const ModalProvider = ({ children }) => {
     title: 'Modal title',
     body: 'Modal body',
     onConfirm: null,
+    showInput: false,
+    inputPlaceholder: 'Ingrese un valor',
+    inputLabel: 'Valor:'
   });
 
-  const openModal = (title = 'Modal title', body = 'Modal body', onConfirm = null) => {
+  const openModal = (title = 'Modal title', body = 'Modal body', onConfirm = null, showInput = false, inputPlaceholder = 'Ingrese un valor', inputLabel = 'Valor:') => {
     setModalState({
       show: true,
       title,
       body,
       onConfirm,
+      showInput,
+      inputPlaceholder,
+      inputLabel
     });
   };
 
@@ -26,9 +32,9 @@ export const ModalProvider = ({ children }) => {
     }));
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = (value) => {
     if (modalState.onConfirm) {
-      modalState.onConfirm();
+      modalState.onConfirm(value);
     }
     closeModal();
   };

@@ -27,6 +27,7 @@ const FrmSheetStock = () => {
     const inputRefCantidad = useRef(null);
     const { DepositoId } = useDeposito();
     const { openModal } = useModal();
+    
     let dateStart = new Date();
 
     useEffect(() => {
@@ -169,11 +170,14 @@ const FrmSheetStock = () => {
             }));
             
             openModal(
-                "Planilla Guardada",
-                "La planilla de stock ha sido guardada exitosamente",
-                () => {
-                    console.log("Confirmado");
-                }
+                "Guardar planilla de stock",
+                "Desea guardar la planilla de stock? Ingrese una observación si lo desea.",
+                (valor) => {
+                    console.log("Confirmado con valor:", valor);
+                },
+                true,
+                "Observacion (opcional)",
+                ""
             );
 
         }  catch (error) {

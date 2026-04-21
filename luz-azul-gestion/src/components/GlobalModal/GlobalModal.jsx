@@ -11,6 +11,9 @@ const GlobalModal = () => {
       title={modalState.title}
       body={modalState.body}
       onConfirm={handleConfirm}
+      showInput={modalState.showInput}
+      inputPlaceholder={modalState.inputPlaceholder}
+      inputLabel={modalState.inputLabel}
     />
   );
 };
