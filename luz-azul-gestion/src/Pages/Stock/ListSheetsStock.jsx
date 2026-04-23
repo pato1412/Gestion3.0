@@ -4,6 +4,9 @@ import Sidebar from '../../components/Sidebar/Sidebar'
 import Loader from '../../components/Loader/Loader'
 import { apiFetch, API_URLS, GetDepositosUsuario } from '../../config/api'
 import './stock.css'
+import { Button } from 'react-bootstrap'
+import {FaTrash } from 'react-icons/fa'
+import { useModal } from '../../contexts/ModalContext'
 
 const formatDateTime = (value) => {
   if (!value) return ''
@@ -17,13 +20,14 @@ const formatDateTime = (value) => {
   const hours = pad(date.getHours())
   const minutes = pad(date.getMinutes())
 
-  return `${day}/${month}/${year} ${hours}:${minutes}`
+  return `${day}/${month} ${hours}:${minutes}`
 }
 
 const ListSheetsStock = () => {
   const [planillas, setPlanillas] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(null)
+  const { openModal } = useModal();
 
   useEffect(() => {
     const fetchPlanillas = async () => {
@@ -58,6 +62,24 @@ const ListSheetsStock = () => {
     fetchPlanillas()
   }, [])
 
+  const handleDeletePlanilla = async (planillaId) => {
+    openModal(
+      'Eliminar Planilla',
+      '¿Está seguro que desea eliminar esta planilla de inventario? Esta acción no se puede deshacer.',
+       async (value) => {
+        // Lógica para eliminar la planilla
+        const data = { InventarioId: planillaId};
+        const response = await apiFetch( API_URLS.DeletePlanillaInventario, { method: 'POST', body: JSON.stringify(data) });
+        if (response && response > 0) {
+          setPlanillas(prev => prev.filter(p => p.InventarioId !== planillaId));          
+        } else {
+          console.error('Error al eliminar la planilla:', planillaId);
+          setError('No se pudo eliminar la planilla. Intente nuevamente más tarde.');
+        }
+      }
+    );
+  }
+
   return (
     <>
       <Sidebar title={'Planillas de inventario'} />
@@ -76,10 +98,10 @@ const ListSheetsStock = () => {
                 <thead>
                   <tr>
                     <th>Usuario</th>
-                    <th>Fecha Inicio</th>
-                    <th>Fecha Fin</th>
+                    <th>Fecha</th>
                     <th>Deposito</th>
                     <th>Observaciones</th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -93,10 +115,18 @@ const ListSheetsStock = () => {
                     planillas.map((planilla) => (
                       <tr key={planilla.InventarioId} >
                         <td>{planilla.Usuario ?? ''}</td>
-                        <td>{formatDateTime(planilla.FechaInicio)}</td>
-                        <td>{formatDateTime(planilla.FechaFin)}</td>
+                        <td>
+                          Inicio: {formatDateTime(planilla.FechaInicio)}
+                          <br />
+                          Fin: {formatDateTime(planilla.FechaFin)}
+                        </td>
                         <td>{planilla.DepositoNombre ?? ''}</td>
                         <td>{planilla.Observaciones ?? ''}</td>
+                        <td>
+                          <Button variant="outline-danger" size="sm" onClick={() => handleDeletePlanilla(planilla.InventarioId)}>
+                            <FaTrash />
+                          </Button>
+                        </td>
                       </tr>
                     ))
                   )}
