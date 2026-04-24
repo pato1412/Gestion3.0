@@ -140,7 +140,7 @@ const ListSheetsStock = () => {
                         <td>{planilla.DepositoNombre ?? ''}</td>
                         <td>{planilla.Observaciones ?? ''}</td>
                         <td>
-                          <Nav className="justify-content-center" style={{ gap: '10px' }}>
+                          <Nav className="justify-content-center" style={{ gap: '10px', minWidth: '80px' }}>
                             <NavItem>
                               <Button variant="outline-success" size="sm" onClick={() => handleDescargar(planilla.InventarioId)}>
                                 <FaDownload />
