@@ -146,20 +146,6 @@ const FrmSheetStock = () => {
         setShowError(true);
     }
 
-    const handleDescargar = async () => {
-        try {            
-            const data = items.map(item => ({
-                ProductoId: item.ProductoId,
-                Descripcion: item.Descripcion,
-                StockActual: item.StockActual,
-                Cantidades: item.Cantidades,
-                CantidadContada: item.CantidadContada
-            }));
-            const excelfile = await downloadFile(import.meta.env.VITE_API_EXCEL_URL, "planilla_stock.xlsx", { method: 'POST', body: JSON.stringify(data) });
-        } catch (error) {
-            showErrorAlert(`Error descargando el archivo: ${getErrorMessage(error)}`);
-        }
-    }
 
     const handleGuardarPlanilla = async () => {
             openModal(
@@ -191,21 +177,25 @@ const FrmSheetStock = () => {
             };
 
             const response = await apiFetch(API_URLS.NewPlanillaInventario, { method: 'POST', body: JSON.stringify(data)});
-            if (response && response > 0) {
-                const planillaId = response;
+            if (response && response.bok === true) {
+                const planillaId = response.id;
                 const detallesData = items.map(item => ({
-                    PlanillaInventarioId: planillaId,
+                    InventarioId: planillaId,
                     ProductoId: item.ProductoId,
+                    Cantidades: JSON.stringify(item.Cantidades),
                     CantidadContada: item.CantidadContada,
-                    StockActual: item.StockActual
+                    Stock: item.StockActual
                 }));
-                console.log("Detalles a enviar para guardar planilla:", detallesData);
-                //await apiFetch(API_URLS.NewPlanillaInventario + '/detalles', { method: 'POST', body: JSON.stringify(detallesData)});
-                openModal("Planilla guardada", "La planilla de stock se ha guardado correctamente.", () => {
-                    navigate("/stock/listar-planillas");
-                });
+                const detalleResponse = await apiFetch(API_URLS.NewPlanillaInventarioDetalle , { method: 'POST', body: JSON.stringify(detallesData)});                
+                if (detalleResponse && detalleResponse.bok === true) {
+                    openModal("Planilla guardada", "La planilla de stock se ha guardado correctamente.", () => {
+                        navigate("/stock/listar-planillas");
+                    });
+                }else{
+                    showErrorAlert("No se pudieron guardar los detalles de la planilla de stock. Intente nuevamente.");
+                }
             }else{
-                ShowErrorAlert("No se pudo guardar la planilla de stock. Intente nuevamente.");
+                showErrorAlert("No se pudo guardar la planilla de stock. Intente nuevamente.");
             }
         } catch (error) {
             showErrorAlert(`Error cargando la planilla: ${getErrorMessage(error)}`);

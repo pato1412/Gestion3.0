@@ -10,7 +10,9 @@ export const API_URLS = {
   GetExcelStock: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_EXCEL_URL,
   GetPlanillasInventario: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_GET_PLANILLAS_INVENTARIO_URL,
   NewPlanillaInventario: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_NEW_PLANILLA_INVENTARIO_URL,
+  NewPlanillaInventarioDetalle: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_NEW_PLANILLA_INVENTARIO_DETALLE_URL,
   DeletePlanillaInventario: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_DELETE_PLANILLA_INVENTARIO_URL,
+  DownloadPlanillaInventario: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_EXCEL_URL,
 };
 
 export async function apiFetch(url, options = {}) {

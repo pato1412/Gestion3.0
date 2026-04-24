@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Sidebar from '../../components/Sidebar/Sidebar'
 import Loader from '../../components/Loader/Loader'
-import { apiFetch, API_URLS, GetDepositosUsuario } from '../../config/api'
+import { apiFetch, API_URLS, GetDepositosUsuario, downloadFile } from '../../config/api'
 import './stock.css'
-import { Button } from 'react-bootstrap'
-import {FaTrash } from 'react-icons/fa'
+import { Button, Nav, NavItem } from 'react-bootstrap'
+import {FaTrash, FaDownload } from 'react-icons/fa'
 import { useModal } from '../../contexts/ModalContext'
 
 const formatDateTime = (value) => {
@@ -70,7 +70,8 @@ const ListSheetsStock = () => {
         // Lógica para eliminar la planilla
         const data = { InventarioId: planillaId};
         const response = await apiFetch( API_URLS.DeletePlanillaInventario, { method: 'POST', body: JSON.stringify(data) });
-        if (response && response > 0) {
+        debugger;
+        if (response && response.bok === true) {
           setPlanillas(prev => prev.filter(p => p.InventarioId !== planillaId));          
         } else {
           console.error('Error al eliminar la planilla:', planillaId);
@@ -79,6 +80,22 @@ const ListSheetsStock = () => {
       }
     );
   }
+
+  const handleDescargar = async (planillaId) => {
+        try {            
+            const data = [{
+                ProductoId: "001",
+                Descripcion: "Prueba de producto",
+                StockActual: 10,
+                Cantidades: 14,
+                CantidadContada: 14
+            }];
+            const excelfile = await downloadFile(API_URLS.DownloadPlanillaInventario, "planilla_stock.xlsx", { method: 'POST', body: JSON.stringify(data) });
+        } catch (error) {
+            setError(`Error descargando el archivo: ${error.message}`);
+     }
+   }
+
 
   return (
     <>
@@ -123,9 +140,18 @@ const ListSheetsStock = () => {
                         <td>{planilla.DepositoNombre ?? ''}</td>
                         <td>{planilla.Observaciones ?? ''}</td>
                         <td>
-                          <Button variant="outline-danger" size="sm" onClick={() => handleDeletePlanilla(planilla.InventarioId)}>
-                            <FaTrash />
-                          </Button>
+                          <Nav className="justify-content-center" style={{ gap: '10px' }}>
+                            <NavItem>
+                              <Button variant="outline-success" size="sm" onClick={() => handleDescargar(planilla.InventarioId)}>
+                                <FaDownload />
+                              </Button>
+                            </NavItem>  
+                            <NavItem>
+                              <Button variant="outline-danger" size="sm" onClick={() => handleDeletePlanilla(planilla.InventarioId)}>
+                                <FaTrash />
+                              </Button>
+                           </NavItem>  
+                          </Nav> 
                         </td>
                       </tr>
                     ))
