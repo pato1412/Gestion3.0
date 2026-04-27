@@ -30,3 +30,16 @@
 .cantidades-total {
   font-weight: bold;
 }
+
+
+@media (max-width: 576px) {
+    .xs-hide {
+        display: none !important;
+    }
+}
+
+@media (min-width: 576px) {
+    .xs-show {
+        display: none !important;
+    }
+}

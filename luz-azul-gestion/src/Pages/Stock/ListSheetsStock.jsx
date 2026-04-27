@@ -26,11 +26,13 @@ const formatDateTime = (value) => {
 const ListSheetsStock = () => {
   const [planillas, setPlanillas] = useState([])
   const [isLoading, setIsLoading] = useState(false)
+  const [MessageLoading, setMessageLoading] = useState('')
   const [error, setError] = useState(null)
   const { openModal } = useModal();
 
   useEffect(() => {
     const fetchPlanillas = async () => {
+      setMessageLoading('Cargando planillas...')
       setIsLoading(true)
       setError(null)
       try {
@@ -56,6 +58,7 @@ const ListSheetsStock = () => {
         setError('No se pudieron cargar las planillas. Intente nuevamente más tarde.')
       } finally {
         setIsLoading(false)
+        setMessageLoading('')
       }
     }
 
@@ -70,7 +73,6 @@ const ListSheetsStock = () => {
         // Lógica para eliminar la planilla
         const data = { InventarioId: planillaId};
         const response = await apiFetch( API_URLS.DeletePlanillaInventario, { method: 'POST', body: JSON.stringify(data) });
-        debugger;
         if (response && response.bok === true) {
           setPlanillas(prev => prev.filter(p => p.InventarioId !== planillaId));          
         } else {
@@ -82,19 +84,20 @@ const ListSheetsStock = () => {
   }
 
   const handleDescargar = async (planillaId) => {
-        try {            
-            const data = [{
-                ProductoId: "001",
-                Descripcion: "Prueba de producto",
-                StockActual: 10,
-                Cantidades: 14,
-                CantidadContada: 14
-            }];
-            const excelfile = await downloadFile(API_URLS.DownloadPlanillaInventario, "planilla_stock.xlsx", { method: 'POST', body: JSON.stringify(data) });
-        } catch (error) {
-            setError(`Error descargando el archivo: ${error.message}`);
-     }
-   }
+    try {            
+      setMessageLoading('Generando archivo excel...')
+      setIsLoading(true)
+
+      const config = {id: planillaId, NombreArchivo: `planilla_stock_${planillaId}.xlsx`};
+      const excelfile = await downloadFile(API_URLS.DownloadPlanillaInventario, config.NombreArchivo, { method: 'POST', body: JSON.stringify(config) });
+
+    } catch (error) {
+      setError(`Error descargando el archivo: ${error.message}`);
+    } finally {
+      setIsLoading(false);
+      setMessageLoading("");
+    }
+  }
 
 
   return (
@@ -114,9 +117,9 @@ const ListSheetsStock = () => {
               <table className='table table-striped'>
                 <thead>
                   <tr>
-                    <th>Usuario</th>
-                    <th>Fecha</th>
-                    <th>Deposito</th>
+                    <th className='xs-hide' >Usuario</th>
+                    <th ><span className='xs-hide' >Fecha</span><span className='xs-show' >Planilla</span></th>
+                    <th className='xs-hide' >Deposito</th>
                     <th>Observaciones</th>
                     <th></th>
                   </tr>
@@ -131,13 +134,17 @@ const ListSheetsStock = () => {
                   ) : (
                     planillas.map((planilla) => (
                       <tr key={planilla.InventarioId} >
-                        <td>{planilla.Usuario ?? ''}</td>
+                        <td className='xs-hide' >{planilla.Usuario ?? ''}</td>
                         <td>
+                          <div className='xs-show'>
+                            Usuario: {planilla.Usuario ?? ''}<br />
+                            Deposito: {planilla.DepositoNombre ?? ''}<br />
+                          </div>
                           Inicio: {formatDateTime(planilla.FechaInicio)}
                           <br />
                           Fin: {formatDateTime(planilla.FechaFin)}
                         </td>
-                        <td>{planilla.DepositoNombre ?? ''}</td>
+                        <td className='xs-hide' >{planilla.DepositoNombre ?? ''}</td>
                         <td>{planilla.Observaciones ?? ''}</td>
                         <td>
                           <Nav className="justify-content-center" style={{ gap: '10px', minWidth: '80px' }}>
@@ -162,7 +169,7 @@ const ListSheetsStock = () => {
           </div>
         </div>
       </div>
-      <Loader visible={isLoading} message='Cargando planillas de inventario...' ShowProgress={false} />
+      <Loader visible={isLoading} message={MessageLoading} ShowProgress={false} />
     </>
   )
 }
