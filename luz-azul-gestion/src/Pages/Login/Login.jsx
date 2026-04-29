@@ -3,6 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import './Login.css';
 import { API_URLS, apiFetch } from '../../config/api';
 import { useAuth } from '../../contexts/AuthContext';
+import {Row, Badge, Button } from 'react-bootstrap';
+import Cookies from 'js-cookie';
+import { FaArrowsAltV } from 'react-icons/fa';
+import { useModal } from '../../contexts/ModalContext';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -11,6 +15,7 @@ const LoginPage = () => {
   const [serverError, setServerError] = useState(null);
   const [razonSocial, setRazonSocial] = useState('');
   const { login } = useAuth();
+  const { openModal } = useModal();
   const navigate = useNavigate();
 
   const validateForm = () => {
@@ -70,6 +75,15 @@ const LoginPage = () => {
     }
   };
 
+  const handleChangeEmpresa = () => {
+      openModal('Cambiar Empresa', '¿Desea cambiar de empresa? Se cerrará la sesión actual y se eliminará la selección de establecimiento.', async (value) => {
+        // Lógica para cerrar sesión y eliminar cookies
+        Cookies.remove('EstablecimientoGUID');
+        Cookies.remove('EstablecimientoNombre');
+        window.location.reload();
+      });
+  };
+
   return (
     <div className="login-container">
       <div className="login-card">
@@ -77,7 +91,7 @@ const LoginPage = () => {
         <h2>Iniciar Sesión</h2>
         <form onSubmit={handleSubmit} className="login-form">
           <div className="form-group">
-            <label htmlFor="razonSocial">Empresa: {razonSocial}</label>
+            <label htmlFor="razonSocial"><a href='#' style={{textDecoration:'none'}}  onClick={handleChangeEmpresa} >Empresa: {razonSocial} </a></label>
           </div>
           <div className="form-group">
             <label htmlFor="email">Email</label>
