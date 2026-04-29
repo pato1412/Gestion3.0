@@ -31,6 +31,16 @@
   font-weight: bold;
 }
 
+.item-inventario {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.item-inventario span {
+  font-size: 0.9rem;
+  font-weight: bold;
+}
 
 @media (max-width: 576px) {
     .xs-hide {

@@ -120,7 +120,7 @@ const ListSheetsStock = () => {
                     <th className='xs-hide' >Usuario</th>
                     <th ><span className='xs-hide' >Fecha</span><span className='xs-show' >Planilla</span></th>
                     <th className='xs-hide' >Deposito</th>
-                    <th>Observaciones</th>
+                    <th style={{maxWidth:'200px'}} >Observaciones</th>
                     <th></th>
                   </tr>
                 </thead>
@@ -137,15 +137,20 @@ const ListSheetsStock = () => {
                         <td className='xs-hide' >{planilla.Usuario ?? ''}</td>
                         <td>
                           <div className='xs-show'>
-                            Usuario: {planilla.Usuario ?? ''}<br />
-                            Deposito: {planilla.DepositoNombre ?? ''}<br />
+                            <div className='item-inventario' ><span>Usuario:</span> {planilla.Usuario ?? ''}</div>
+                            <div className='item-inventario' ><span>Deposito:</span> {planilla.DepositoNombre ?? ''}</div>
+                            <div className='item-inventario' ><span>Inicio:</span> {formatDateTime(planilla.FechaInicio)}</div>
+                            <div className='item-inventario' ><span>Fin:</span> {formatDateTime(planilla.FechaFin)}</div>
+                            <div className='item-inventario' ><span>Observaciones:</span> {planilla.Observaciones ?? ''}</div>
                           </div>
-                          Inicio: {formatDateTime(planilla.FechaInicio)}
-                          <br />
-                          Fin: {formatDateTime(planilla.FechaFin)}
+                          <div className='xs-hide'>
+                            Inicio: {formatDateTime(planilla.FechaInicio)}
+                            <br />
+                            Fin: {formatDateTime(planilla.FechaFin)}
+                          </div>
                         </td>
                         <td className='xs-hide' >{planilla.DepositoNombre ?? ''}</td>
-                        <td>{planilla.Observaciones ?? ''}</td>
+                        <td style={{maxWidth:'200px'}} className='xs-hide' >{planilla.Observaciones ?? ''}</td>
                         <td>
                           <Nav className="justify-content-center" style={{ gap: '10px', minWidth: '80px' }}>
                             <NavItem>

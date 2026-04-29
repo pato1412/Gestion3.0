@@ -27,6 +27,7 @@ const FrmSheetStock = () => {
     const [messageLoader, setMessageLoader] = useState("Cargando, por favor espere...");
     const inputRefStock = useRef(null);
     const inputRefCantidad = useRef(null);
+    const inputRefCodigo = useRef(null);
     const { DepositoId } = useDeposito();
     const { openModal } = useModal();
     const {user} = useAuth();
@@ -123,6 +124,7 @@ const FrmSheetStock = () => {
             setSingleSelections([]);
             inputRefStock.current.value = '';
             inputRefCantidad.current.value = '';
+            inputRefCodigo.current.focus();
         }
     }
 
@@ -229,6 +231,7 @@ const FrmSheetStock = () => {
                         <Col xs={12} md={6} className='mb-3'  >
                             <Form.Label htmlFor="txtCodigo">Codigo</Form.Label>
                             <Typeahead
+                                ref={inputRefCodigo}
                                 id='txtCodigo' 
                                 defaultInputValue=''  
                                 onChange={(singleSelections) => {
@@ -251,6 +254,7 @@ const FrmSheetStock = () => {
                                 id='txtStock'
                                 placeholder="Stock actual"
                                 aria-label="Stock actual"
+                                disabled
                             />
                         </Col>
                         <Col xs={6} md={2} className='mb-3'>
