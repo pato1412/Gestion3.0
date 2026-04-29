@@ -129,7 +129,28 @@ const FrmSheetStock = () => {
     }
 
     const EliminarItem = (item) => {
-        setItems(prevItems => prevItems.filter(i => i.ProductoId !== item.ProductoId));
+        const isLastQuantity = item.Cantidades.length === 1;
+        const message = isLastQuantity ? 
+            `¿Está seguro que desea eliminar el producto ${item.Descripcion} de la planilla?` :
+            `¿Está seguro que desea eliminar la última cantidad del producto ${item.Descripcion}?`;
+        openModal(
+            "Eliminar",
+            message,
+            () => {
+                if (isLastQuantity) {
+                    setItems(prevItems => prevItems.filter(i => i.ProductoId !== item.ProductoId));
+                } else {
+                    setItems(prevItems => prevItems.map(i => {
+                        if (i.ProductoId !== item.ProductoId) return i;
+                        const nuevasCantidades = i.Cantidades.slice(0, -1);
+                        return {
+                            ...i,
+                            Cantidades: nuevasCantidades,
+                            CantidadContada: nuevasCantidades.reduce((total, cantidad) => total + cantidad, 0)
+                        };
+                    }));
+                }
+            });
     }
 
     const getErrorMessage = (error) => {
