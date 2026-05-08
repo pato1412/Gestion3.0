@@ -42,7 +42,7 @@ const FrmSheetStock = () => {
             setMessageLoader("Cargando todos los productos de simple tempo...");
             setProgress(0);
             try {
-                const data = { Activo: true, TipoProducto: 0, DeVentas: true, DeCompras: true , ResultadosPorPagina : import.meta.env.VITE_ST_RESULTADOS_POR_PAGINA, Pagina: 1 };
+                const data = { Activo: true, TipoProducto: 0, DeVentas: true, DeCompras: false , ResultadosPorPagina : import.meta.env.VITE_ST_RESULTADOS_POR_PAGINA, Pagina: 1 };
                 const productos = await apiFetch( API_URLS.GetAllProductos, { method: 'POST', body: JSON.stringify(data) });
                 const formattedProductos = productos.map(producto => ({
                     ProductoId: producto.ProductoId,
@@ -88,6 +88,37 @@ const FrmSheetStock = () => {
         fetchProductos();
     }, []);
 
+    useEffect(() => {
+        const handleBeforeUnload = (event) => {
+            if (items.length > 0) {
+                event.preventDefault();
+                event.returnValue = '';
+            }
+        };
+
+        const handleReloadShortcut = (event) => {
+            const isReloadKey = event.key === 'F5' || ((event.key === 'r' || event.key === 'R') && (event.ctrlKey || event.metaKey));
+            if (!isReloadKey || items.length === 0) return;
+
+            event.preventDefault();
+            openModal(
+                'Confirmar recarga',
+                'Hay datos cargados en la planilla. Si recarga la página, volverá a cargar todo y perderá los datos no guardados. ¿Desea continuar?',
+                () => {
+                    window.removeEventListener('beforeunload', handleBeforeUnload);
+                    window.location.reload();
+                }
+            );
+        };
+
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        window.addEventListener('keydown', handleReloadShortcut);
+
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+            window.removeEventListener('keydown', handleReloadShortcut);
+        };
+    }, [items, openModal]);
 
     const IngresarProducto = () => {
         if (singleSelections.length > 0) {
@@ -285,7 +316,8 @@ const FrmSheetStock = () => {
                                 id='txtCantidadContada'
                                 placeholder="Cantidad contada"
                                 aria-label="Cantidad contada"
-                                type='number'                    
+                                type='number'
+                                maxLength={15}                    
                             />
                         </Col>
                         <Col className="mb-3 d-flex d-flex align-items-center" xs={6} md={2}>
