@@ -25,6 +25,7 @@ const FrmSheetStock = () => {
     const [showError, setShowError] = useState(false);
     const [progress, setProgress] = useState(0);
     const [messageLoader, setMessageLoader] = useState("Cargando, por favor espere...");
+    const [lastSavedTime, setLastSavedTime] = useState(null);
     const inputRefStock = useRef(null);
     const inputRefCantidad = useRef(null);
     const inputRefCodigo = useRef(null);
@@ -35,6 +36,37 @@ const FrmSheetStock = () => {
     
 
     let dateStart = new Date();
+
+    useEffect(() => {
+        // Restaurar items desde cookie si existen (asociados al DepositoId actual)
+        if (DepositoId) {
+            const cookieKey = `planillaItems_${DepositoId}`;
+            const savedItems = Cookies.get(cookieKey);
+            if (savedItems) {
+                try {
+                    const parsedItems = JSON.parse(savedItems);
+                    setItems(parsedItems);
+                    const savedTime = Cookies.get(`planillaItemsTime_${DepositoId}`);
+                    if (savedTime) {
+                        setLastSavedTime(new Date(savedTime));
+                    }
+                } catch (error) {
+                    console.error('Error restaurando items desde cookie:', error);
+                }
+            }
+        }
+    }, [DepositoId]);
+
+    // Guardar items en cookie cada vez que cambien (asociados al DepositoId actual)
+    useEffect(() => {
+        if (items.length > 0 && DepositoId) {
+            const now = new Date();
+            const cookieKey = `planillaItems_${DepositoId}`;
+            Cookies.set(cookieKey, JSON.stringify(items), { expires: 1 });
+            Cookies.set(`planillaItemsTime_${DepositoId}`, now.toISOString(), { expires: 1 });
+            setLastSavedTime(now);
+        }
+    }, [items, DepositoId]);
 
     useEffect(() => {
         const fetchProductos = async () => {
@@ -242,6 +274,9 @@ const FrmSheetStock = () => {
                 }));
                 const detalleResponse = await apiFetch(API_URLS.NewPlanillaInventarioDetalle , { method: 'POST', body: JSON.stringify(detallesData)});                
                 if (detalleResponse && detalleResponse.bok === true) {
+                    // Limpiar cookies después de guardar exitosamente (asociadas al DepositoId actual)
+                    Cookies.remove(`planillaItems_${DepositoId}`);
+                    Cookies.remove(`planillaItemsTime_${DepositoId}`);
                     openModal("Planilla guardada", "La planilla de stock se ha guardado correctamente.", () => {
                         navigate("/stock/listar-planillas");
                     });
@@ -273,7 +308,14 @@ const FrmSheetStock = () => {
                 show={showError}
                 onClose={() => setShowError(false)}
             />  
-                <p className='text-muted text-end'>Fecha inicio: {dateStart.getDate() }/{dateStart.getMonth() + 1}/{dateStart.getFullYear() } - {dateStart.getHours()}:{dateStart.getMinutes()}</p>
+                <p className='text-muted text-end'>
+                    Fecha inicio: {dateStart.getDate() }/{dateStart.getMonth() + 1}/{dateStart.getFullYear() } - {dateStart.getHours()}:{dateStart.getMinutes()}
+                    {lastSavedTime && (
+                        <span className='ms-3'>
+                            | Autoguardado: {lastSavedTime.getDate()}/{lastSavedTime.getMonth() + 1}/{lastSavedTime.getFullYear()} - {lastSavedTime.getHours()}:{String(lastSavedTime.getMinutes()).padStart(2, '0')}
+                        </span>
+                    )}
+                </p>
                 <div className='Container-stock-form mb-3'>
                     <div className='Container-stock-header'>
                         <h5>Seleccion de producto</h5>
