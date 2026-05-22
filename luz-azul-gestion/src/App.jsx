@@ -20,54 +20,41 @@ import SelectDeposito from './Pages/SelectDeposito/SelectDeposito'
 import ProtectedDeposito from './components/ProtectedDeposito'
 import ListSheetsStock from './Pages/Stock/ListSheetsStock'
 import GlobalModal from './components/GlobalModal/GlobalModal'
+import { useEstablecimiento } from './contexts/EstablecimientoContext';
 
 function App() {
-  const [establecimientoSelected, setEstablecimientoSelected] = useState(false);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const guid = Cookies.get('EstablecimientoGUID');
-    if (guid) {
-      setEstablecimientoSelected(true);
-    }
-  }, []);
-
-
-  const handleEstablecimientoSelected = (establecimiento) => {
-    setEstablecimientoSelected(true);
-  };
-
-
+  const { establecimiento, loading } = useEstablecimiento();
+  
   return (
     <AuthProvider>
       <ModalProvider>
-        {establecimientoSelected ? (
-          <>
-            <DepositoProvider >
-              <div className="app-main">
-                <Routes>
-                  <Route path='/login' element={<LoginPage />} />
-                  <Route path='/select-deposito' element={<SelectDeposito />} />
-                  <Route path='/' element={<ProtectedRoute><Home /></ProtectedRoute>} />
-                  <Route path='/configuraciones' element={<ProtectedRoute><ConfigPage /></ProtectedRoute>} />
+          {establecimiento ? (
+            <>
+              <DepositoProvider >
+                <div className="app-main">
+                  <Routes>
+                    <Route path='/login' element={<LoginPage />} />
+                    <Route path='/select-deposito' element={<SelectDeposito />} />
+                    <Route path='/' element={<ProtectedRoute><Home /></ProtectedRoute>} />
+                    <Route path='/configuraciones' element={<ProtectedRoute><ConfigPage /></ProtectedRoute>} />
 
-                  {/* Rutas protegidas que requieren autenticación y selección de depósito */}              
-                  <Route path='/pedidos/enviar-pedidos' element={<ProtectedRoute><ProtectedDeposito><NewOrder /></ProtectedDeposito></ProtectedRoute>} />
-                  <Route path='/stock/carga-mermas' element={<ProtectedRoute><ProtectedDeposito><StockPage /></ProtectedDeposito></ProtectedRoute>} />
-                  <Route path='/stock/control-inventario' element={<ProtectedRoute><ProtectedDeposito><StockPage /></ProtectedDeposito></ProtectedRoute>} />
-                  <Route path='/stock/nueva-planilla' element={<ProtectedRoute><ProtectedDeposito><FrmSheetStock /></ProtectedDeposito></ProtectedRoute>} />
-                  <Route path='/stock/listar-planillas' element={<ProtectedRoute><ProtectedDeposito><ListSheetsStock /></ProtectedDeposito></ProtectedRoute>} />
+                    {/* Rutas protegidas que requieren autenticación y selección de depósito */}              
+                    <Route path='/pedidos/enviar-pedidos' element={<ProtectedRoute><ProtectedDeposito><NewOrder /></ProtectedDeposito></ProtectedRoute>} />
+                    <Route path='/stock/carga-mermas' element={<ProtectedRoute><ProtectedDeposito><StockPage /></ProtectedDeposito></ProtectedRoute>} />
+                    <Route path='/stock/control-inventario' element={<ProtectedRoute><ProtectedDeposito><StockPage /></ProtectedDeposito></ProtectedRoute>} />
+                    <Route path='/stock/nueva-planilla' element={<ProtectedRoute><ProtectedDeposito><FrmSheetStock /></ProtectedDeposito></ProtectedRoute>} />
+                    <Route path='/stock/listar-planillas' element={<ProtectedRoute><ProtectedDeposito><ListSheetsStock /></ProtectedDeposito></ProtectedRoute>} />
 
-                  <Route path='*' element={<Page404 />} />
-                </Routes>
-              </div>
-              <Footer />
-            </DepositoProvider>
-            <GlobalModal />
-          </>
-        ) : (
-          <SelectEstablecimiento onEstablecimientoSelected={handleEstablecimientoSelected} />
-        )}
+                    <Route path='*' element={<Page404 />} />
+                  </Routes>
+                </div>
+                <Footer />
+              </DepositoProvider>
+              <GlobalModal />
+            </>
+          ) : (
+            <SelectEstablecimiento  />
+          )}
       </ModalProvider>
     </AuthProvider>
   )

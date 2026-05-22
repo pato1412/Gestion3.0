@@ -7,6 +7,7 @@ import {Row, Badge, Button } from 'react-bootstrap';
 import Cookies from 'js-cookie';
 import { FaArrowsAltV } from 'react-icons/fa';
 import { useModal } from '../../contexts/ModalContext';
+import { useEstablecimiento } from '../../contexts/EstablecimientoContext';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -17,6 +18,7 @@ const LoginPage = () => {
   const { login } = useAuth();
   const { openModal } = useModal();
   const navigate = useNavigate();
+  const { clearCookies } = useEstablecimiento();
 
   const validateForm = () => {
     const newErrors = {};
@@ -78,8 +80,7 @@ const LoginPage = () => {
   const handleChangeEmpresa = () => {
       openModal('Cambiar Empresa', '¿Desea cambiar de empresa? Se cerrará la sesión actual y se eliminará la selección de establecimiento.', async (value) => {
         // Lógica para cerrar sesión y eliminar cookies
-        Cookies.remove('EstablecimientoGUID');
-        Cookies.remove('EstablecimientoNombre');
+        clearCookies()
         window.location.reload();
       });
   };

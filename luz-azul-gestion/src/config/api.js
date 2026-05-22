@@ -15,7 +15,8 @@ export const API_URLS = {
 };
 
 export async function apiFetch(url, options = {}) {
-  const guid = Cookies.get('EstablecimientoGUID'); // fallback
+  const EstablecimientoData = Cookies.get('EstablecimientoData'); // fallback
+  const guid = (EstablecimientoData) ? JSON.parse(EstablecimientoData).EstablecimientoGUID : null; // fallback
   const response = await fetch(url, {
     mode: 'cors', // petición en modo CORS (necesario para dominios externos desde el navegador)
     headers: {
@@ -46,7 +47,8 @@ export async function apiFetch(url, options = {}) {
 
 export const downloadFile = async (url,fileName,  options = {}) => {
   try {
-    const guid = Cookies.get('EstablecimientoGUID'); // fallback
+    const EstablecimientoData = Cookies.get('EstablecimientoData'); // fallback
+    const guid = (EstablecimientoData) ? JSON.parse(EstablecimientoData).EstablecimientoGUID : null; // fallback
     const response = await fetch(url, {
       mode: 'cors', // petición en modo CORS (necesario para dominios externos desde el navegador)
       headers: {
