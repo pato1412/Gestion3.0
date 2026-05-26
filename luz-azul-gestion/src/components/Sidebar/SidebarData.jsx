@@ -3,50 +3,65 @@ import * as FaIcons from 'react-icons/fa';
 import * as AiIcons from 'react-icons/ai';
 import * as IoIcons from 'react-icons/io';
 import * as RiIcons from 'react-icons/ri';
-import { useAuth } from '../../contexts/AuthContext';
+import { useEstablecimiento } from '../../contexts/EstablecimientoContext';
 
+export const SidebarData = () =>{
+  const { establecimiento } = useEstablecimiento();
 
-export const SidebarData = [
-  {
-    title: 'Inicio',
-    path: '/',
-    icon: <AiIcons.AiFillHome />
-  },
-  {
-    title: 'Pedidos',
-    path: '#',
-    icon: <FaIcons.FaDolly />,
-    iconClosed: <RiIcons.RiArrowDownSFill />,
-    iconOpened: <RiIcons.RiArrowUpSFill />,
+  const Items = [];
+    Items.push(
+    {
+      title: 'Inicio',
+      path: '/',
+      icon: <AiIcons.AiFillHome />
+    });
 
-    subNav: [
+    Items.push(
       {
-        title: 'Enviar Pedidos',
-        path: '/pedidos/enviar-pedidos',
-        icon: <IoIcons.IoIosPaper />,
-        cName: 'sub-nav'
-      }
-    ]
-  },
-  {
-    title: 'Stock',
-    path: '#',
-    icon: <FaIcons.FaBoxOpen />,
-    iconClosed: <RiIcons.RiArrowDownSFill />,
-    iconOpened: <RiIcons.RiArrowUpSFill />,
+        title: 'Pedidos',
+        path: '#',
+        icon: <FaIcons.FaDolly />,
+        iconClosed: <RiIcons.RiArrowDownSFill />,
+        iconOpened: <RiIcons.RiArrowUpSFill />,
 
-    subNav: [
-      {
-        title: 'Carga de planillas',
-        path: '/stock/listar-planillas',
-        icon: <IoIcons.IoIosPaper />
-      }
-    ]
- 
-  },
-  {
-    title: 'Configuraciones',
-    path: '/configuraciones',
-    icon: <IoIcons.IoMdSettings />
-  }
-];
+      subNav: [
+        {
+          title: 'Enviar Pedidos',
+          path: '/pedidos/enviar-pedidos',
+          icon: <IoIcons.IoIosPaper />,
+          cName: 'sub-nav'
+        }
+      ]
+    });
+
+    Items.push({
+      title: 'Stock',
+      path: '#',
+      icon: <FaIcons.FaBoxOpen />,
+      iconClosed: <RiIcons.RiArrowDownSFill />,
+      iconOpened: <RiIcons.RiArrowUpSFill />,
+
+      subNav: [
+        {
+          title: 'Carga de planillas',
+          path: '/stock/listar-planillas',
+          icon: <IoIcons.IoIosPaper />
+        }
+      ]
+  
+    });
+    
+    if (establecimiento && establecimiento.EstablecimientoId === parseInt(import.meta.env.VITE_ST_ESTABLECIMIENTO_ID_EZEIZA)) 
+    {
+      Items.push(
+        {
+          title: 'Notificaciones',
+          path: '/notificaciones/listar-notificaciones',
+          icon: <IoIcons.IoMdNotifications />
+        }
+      );
+    }   
+
+    return Items;
+} 
+

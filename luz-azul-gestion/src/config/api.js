@@ -12,6 +12,8 @@ export const API_URLS = {
   NewPlanillaInventarioDetalle: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_NEW_PLANILLA_INVENTARIO_DETALLE_URL,
   DeletePlanillaInventario: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_DELETE_PLANILLA_INVENTARIO_URL,
   DownloadPlanillaInventario: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_DOWLOAD_PLANILLA_INVENTARIO_URL,
+  GetNotificaciones: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_GET_NOTIFICACIONES_URL,
+  EliminarNotificacion: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_ELIMINAR_NOTIFICACION_URL
 };
 
 export async function apiFetch(url, options = {}) {

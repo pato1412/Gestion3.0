@@ -1,0 +1,66 @@
+.Container-notifications-form {
+    background-color: var(--bg-claro);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.Container-notifications-header {
+  padding: 10px;
+  border-top: 2px solid var(--border-lightred);
+}
+
+.Container-notifications-header h5 {
+  margin: 0;
+  color: #333;
+  font-weight: 600;
+}
+
+.Container-notifications-content {
+  border-top: 2px solid var(--border);
+  padding: 10px;
+}
+
+.item-notification {
+  padding: 8px 0;
+  font-size: 14px;
+}
+
+.item-notification span {
+  color: #666;
+  font-weight: 500;
+  margin-right: 5px;
+}
+
+.notification-thumbnail {
+  object-fit: cover;
+  border: 1px solid #e0e0e0;
+}
+
+/* Estilos responsive para dispositivos pequeños */
+@media (max-width: 768px) {
+  .Container-notifications-form {
+    padding: 15px;
+  }
+
+  .item-notification {
+    font-size: 13px;
+  }
+
+  .xs-show {
+    display: block;
+  }
+
+  .xs-hide {
+    display: none;
+  }
+}
+
+@media (min-width: 769px) {
+  .xs-show {
+    display: none;
+  }
+
+  .xs-hide {
+    display: table-cell;
+  }
+}

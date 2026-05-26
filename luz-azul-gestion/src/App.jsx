@@ -21,6 +21,7 @@ import ProtectedDeposito from './components/ProtectedDeposito'
 import ListSheetsStock from './Pages/Stock/ListSheetsStock'
 import GlobalModal from './components/GlobalModal/GlobalModal'
 import { useEstablecimiento } from './contexts/EstablecimientoContext';
+import ListNotifications from './Pages/Notifications/ListNotifications';
 
 function App() {
   const { establecimiento, loading } = useEstablecimiento();
@@ -44,6 +45,7 @@ function App() {
                     <Route path='/stock/control-inventario' element={<ProtectedRoute><ProtectedDeposito><StockPage /></ProtectedDeposito></ProtectedRoute>} />
                     <Route path='/stock/nueva-planilla' element={<ProtectedRoute><ProtectedDeposito><FrmSheetStock /></ProtectedDeposito></ProtectedRoute>} />
                     <Route path='/stock/listar-planillas' element={<ProtectedRoute><ProtectedDeposito><ListSheetsStock /></ProtectedDeposito></ProtectedRoute>} />
+                    <Route path='/notificaciones/listar-notificaciones' element={<ProtectedRoute><ProtectedDeposito><ListNotifications /></ProtectedDeposito></ProtectedRoute>} />
 
                     <Route path='*' element={<Page404 />} />
                   </Routes>

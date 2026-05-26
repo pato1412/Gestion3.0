@@ -55,6 +55,8 @@ const Sidebar = ({title}) => {
     navigate('/login');
   };
 
+  const SidebarItems = SidebarData();
+
   return (
     <>
       <IconContext.Provider value={{ color: '#fff' }}>
@@ -69,7 +71,7 @@ const Sidebar = ({title}) => {
             <NavIcon to='#'>
               <AiIcons.AiOutlineClose onClick={showSidebar} />
             </NavIcon>
-            {SidebarData.map((item, index) => {
+            {SidebarItems.map((item, index) => {
               return <SubMenu item={item} key={index} />;
             })}
             <div style={{ padding: '1rem' }}>
