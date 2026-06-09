@@ -43,14 +43,19 @@ export const SidebarData = () =>{
 
       subNav: [
         {
-          title: 'Carga de planillas',
+          title: 'Carga de inventario',
           path: '/stock/listar-planillas',
           icon: <IoIcons.IoIosPaper />
+        },
+        {
+          title: 'Carga de mermas',
+          path: '/stock/listar-mermas',
+          icon: <IoIcons.IoIosPaper />
         }
-      ]
-  
+      ]  
     });
-    
+     
+
     if (establecimiento && establecimiento.EstablecimientoId === parseInt(import.meta.env.VITE_ST_ESTABLECIMIENTO_ID_EZEIZA)) 
     {
       Items.push(

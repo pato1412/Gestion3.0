@@ -4,6 +4,11 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+.Container-mermas-header {
+    padding: 10px;
+    border-top: 2px solid var(--border-orange);
+}
+
 .Container-stock-header {
     padding: 10px;
     border-top: 2px solid var(--border-green);
@@ -40,6 +45,16 @@
 .item-inventario span {
   font-size: 0.9rem;
   font-weight: bold;
+}
+
+.nav-tabs .nav-item .nav-link{
+  color: var(--text-color);
+}
+
+.nav-tabs .active{
+  background-color: var(--border-orange) !important;
+  border-bottom-color: var(--border-orange) !important;
+  color: #fff !important;
 }
 
 @media (max-width: 576px) {
