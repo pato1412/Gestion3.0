@@ -29,39 +29,61 @@ const ListMermas = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [MessageLoading, setMessageLoading] = useState('')
   const [error, setError] = useState(null)
+  const [conceptos, setConceptos] = useState([]);
   const { openModal } = useModal();
 
     useEffect(() => {
         const fetchPlanillas = async () => {
-        setMessageLoading('Cargando planillas...')
-        setIsLoading(true)
-        setError(null)
-        try {
-            const data = await apiFetch(API_URLS.GetPlanillasInventario)
+          setMessageLoading('Cargando planillas...')
+          setIsLoading(true)
+          setError(null)
+          try {
+              const data = await apiFetch(API_URLS.GetPlanillasMermas)
 
-            /* COnsultamos los depósitos del usuario para mostrar el nombre del depósito en la tabla de planillas */
-            const Depositos = await GetDepositosUsuario();
+              /* COnsultamos los depósitos del usuario para mostrar el nombre del depósito en la tabla de planillas */
+              const Depositos = await GetDepositosUsuario();
 
-            if (Depositos && Array.isArray(Depositos) && Depositos.length > 0) {
+              /* COnsultamos los conceptos para mostrar el nombre del concepto en la tabla de planillas */
+              const conceptosAPI = await apiFetch( API_URLS.GetConceptosMermas, { method: 'GET'});
 
-            for (var n = 0; n < data.length; n++) {
-                const planilla = data[n];
-                const deposito = Depositos.find(d => d.DepositoId === planilla.DepositoId);
-                if (deposito) {
-                planilla.DepositoNombre = deposito.Descripcion;
+              if (Depositos && Array.isArray(Depositos) && Depositos.length > 0) {
+
+                for (var n = 0; n < data.length; n++) {
+                    const planilla = data[n];
+                    const deposito = Depositos.find(d => d.DepositoId === planilla.DepositoId);
+                    if (deposito) {
+                    planilla.DepositoNombre = deposito.Descripcion;
+                    }
+                    const Concepto = conceptosAPI.find(c => c.ConfigId === planilla.ConfigId);
+                    if (Concepto) {
+                      planilla.Concepto = Concepto.Descripcion;
+                    }
                 }
-            }
-            }
+              }
+              setPlanillas(Array.isArray(data) ? data : [])
+          } catch (err) {
+              console.error('Error al cargar planillas de mermas:', err)
+              setError('No se pudieron cargar las planillas. Intente nuevamente más tarde.')
+          } finally {
+              setIsLoading(false)
+              setMessageLoading('')
+          }
+        }
 
-            setPlanillas(Array.isArray(data) ? data : [])
-        } catch (err) {
-            console.error('Error al cargar planillas de inventario:', err)
-            setError('No se pudieron cargar las planillas. Intente nuevamente más tarde.')
-        } finally {
-            setIsLoading(false)
-            setMessageLoading('')
-        }
-        }
+        const fetchConceptos = async () => {
+            setIsLoading(true);
+            setMessageLoading("Cargando todos los Conceptos...");
+            try {
+                const conceptosAPI = await apiFetch( API_URLS.GetConceptosMermas, { method: 'GET'});
+                setConceptos(conceptosAPI);
+                console.log('Conceptos cargados:', conceptosAPI);
+            } catch (error) {
+                showErrorAlert(`Error cargando conceptos: ${getErrorMessage(error)}`);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
 
         fetchPlanillas()
     }, [])
@@ -120,6 +142,7 @@ const ListMermas = () => {
                     <th className='xs-hide' >Usuario</th>
                     <th ><span className='xs-hide' >Fecha</span><span className='xs-show' >Planilla</span></th>
                     <th className='xs-hide' >Deposito</th>
+                    <th className='xs-hide' >Concepto</th>
                     <th style={{maxWidth:'200px'}} >Observaciones</th>
                     <th></th>
                   </tr>
@@ -139,6 +162,7 @@ const ListMermas = () => {
                           <div className='xs-show'>
                             <div className='item-inventario' ><span>Usuario:</span> {planilla.Usuario ?? ''}</div>
                             <div className='item-inventario' ><span>Deposito:</span> {planilla.DepositoNombre ?? ''}</div>
+                            <div className='item-inventario' ><span>Concepto:</span> {planilla.Concepto ?? ''}</div>
                             <div className='item-inventario' ><span>Inicio:</span> {formatDateTime(planilla.FechaInicio)}</div>
                             <div className='item-inventario' ><span>Fin:</span> {formatDateTime(planilla.FechaFin)}</div>
                             <div className='item-inventario' ><span>Observaciones:</span> {planilla.Observaciones ?? ''}</div>
@@ -150,6 +174,7 @@ const ListMermas = () => {
                           </div>
                         </td>
                         <td className='xs-hide' >{planilla.DepositoNombre ?? ''}</td>
+                        <td className='xs-hide' >{planilla.Concepto ?? ''}</td>
                         <td style={{maxWidth:'200px'}} className='xs-hide' >{planilla.Observaciones ?? ''}</td>
                         <td>
                           <Nav className="justify-content-center" style={{ gap: '10px', minWidth: '80px' }}>

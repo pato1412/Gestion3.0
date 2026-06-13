@@ -36,7 +36,7 @@ export const EstablecimientoProvider = ({ children }) => {
     }, []);
 
     const fetchEstablecimientos = async () => {
-        console.log('fetchEstablecimientos - Iniciando carga de establecimientos...'); // Debug
+        //console.log('fetchEstablecimientos - Iniciando carga de establecimientos...'); // Debug
       try {
         const data = await apiFetch(API_URLS.getEstablecimientos, {
         method: 'POST'
@@ -44,7 +44,7 @@ export const EstablecimientoProvider = ({ children }) => {
         setEstablecimientos(data); // Asumiendo que data es un array de objetos con Id, GUID, Nombre, etc.
       } catch (err) {
         setError('Error al cargar establecimientos');
-        console.error('Error al cargar establecimientos:', err);
+       // console.error('Error al cargar establecimientos:', err);
       } finally {
         setLoading(false);
       }

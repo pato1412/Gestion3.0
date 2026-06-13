@@ -26,19 +26,18 @@ const frmMermas = () => {
     const [progress, setProgress] = useState(0);
     const [messageLoader, setMessageLoader] = useState("Cargando, por favor espere...");
     const [lastSavedTime, setLastSavedTime] = useState(null);
-    const inputRefStock = useRef(null);
     const inputRefCantidad = useRef(null);
     const inputRefCodigo = useRef(null);
+    const inputRefConcepto = useRef(null);
     const { DepositoId } = useDeposito();
     const { openModal } = useModal();
     const {user} = useAuth();
     const navigate = useNavigate();
-    const [currentConcepto, setCurrentConcepto] = useState(5);
+    const [currentConcepto, setCurrentConcepto] = useState(0);
     const [conceptos, setConceptos] = useState([]);
     
     const handleSelectConceptos = (eventKey) =>{
-            //alert(`selected ${eventKey}`);
-            setCurrentConcepto(eventKey);
+                setCurrentConcepto(eventKey.target.value);
             };
     
     let dateStart = new Date();
@@ -186,7 +185,6 @@ const frmMermas = () => {
 
             // Limpiar los campos después de ingresar el producto
             setSingleSelections([]);
-            inputRefStock.current.value = '';
             inputRefCantidad.current.value = '';
             inputRefCodigo.current.focus();
         }
@@ -231,10 +229,15 @@ const frmMermas = () => {
     const showErrorAlert = (error) => {
         setErrorMessage(getErrorMessage(error));
         setShowError(true);
+
     }
 
 
     const handleGuardarPlanilla = async () => {
+            if (currentConcepto == "0" || currentConcepto === null || currentConcepto === undefined) {
+                showErrorAlert("Debe seleccionar un concepto para guardar la planilla de mermas.");
+                return;
+            }
             openModal(
                 "Guardar planilla de mermas",
                 "Desea guardar la planilla de mermas? Ingrese una observación si lo desea.",
@@ -261,9 +264,10 @@ const frmMermas = () => {
                 DepositoId: DepositoId,
                 EstablecimientoId: EstablecimientoId,
                 Observaciones: observaciones,
+                ConfigId: currentConcepto
             };
 
-            const response = await apiFetch(API_URLS.NewPlanillaInventario, { method: 'POST', body: JSON.stringify(data)});
+            const response = await apiFetch(API_URLS.NewPlanillaMermas, { method: 'POST', body: JSON.stringify(data)});
             if (response && response.bok === true) {
                 const planillaId = response.id;
                 const detallesData = items.map(item => ({
@@ -304,11 +308,6 @@ const frmMermas = () => {
     <>
         <Sidebar title={"Planilla de mermas"} />
         <div className='container' >
-            <ShowError
-                message={errorMessage}
-                show={showError}
-                onClose={() => setShowError(false)}
-            />  
                 <p className='text-muted text-end'>
                     Fecha inicio: {dateStart.getDate() }/{dateStart.getMonth() + 1}/{dateStart.getFullYear() } - {dateStart.getHours()}:{dateStart.getMinutes()}
                     {lastSavedTime && (
@@ -318,15 +317,32 @@ const frmMermas = () => {
                     )}
                 </p>
                 <div className='Container-stock-form mb-3'>                
-                    <Nav justify variant="tabs" activeKey={currentConcepto} onSelect={handleSelectConceptos}>
-                        {conceptos.map(concepto => (
-                            <Nav.Item key={concepto.ConfigId}>
-                                <Nav.Link eventKey={concepto.ConfigId} >
-                                    {concepto.Descripcion}
-                                </Nav.Link>
-                            </Nav.Item>
-                        ))}
-                    </Nav>
+                    <div className='Container-mermas-header'>
+                        <h5>Seleccion de concepto</h5>
+                    </div>
+                    <div className='Container-stock-content'>
+                        <Row>
+                            <Col xs={12} md={6} className='mb-3'  >
+                                <Form.Select
+                                    ref={inputRefConcepto}
+                                    id='txtConcepto'
+                                    placeholder="Seleccione un concepto"
+                                    onChange={handleSelectConceptos}
+                                      >
+                                    <option key="0" value="0">
+                                        Seleccione un concepto
+                                    </option>
+                                    {conceptos.map((concepto) => (
+                                        <option key={concepto.ConfigId} value={concepto.ConfigId}>
+                                            {concepto.Descripcion}
+                                        </option>
+                                    ))}
+                                </Form.Select>
+                            </Col>
+                        </Row>
+                    </div>
+                </div>
+                <div className='Container-stock-form mb-3'>                
                     <div className='Container-mermas-header'>
                         <h5>Seleccion de producto</h5>
                     </div>
@@ -340,7 +356,6 @@ const frmMermas = () => {
                                 defaultInputValue=''  
                                 onChange={(singleSelections) => {
                                     setSingleSelections(singleSelections);
-                                    inputRefStock.current.value = singleSelections[0]?.StockActual || '0';
                                 }}
                                 options={options} 
                                 selected={singleSelections} 
@@ -351,7 +366,7 @@ const frmMermas = () => {
                                 Por favor, ingrese el código del producto con el scanner o el teclado.
                             </Form.Text>
                         </Col>
-                        <Col xs={6} md={2} className='mb-3'>
+                        <Col xs={6} md={3} className='mb-3'>
                             <Form.Label htmlFor="txtCantidadContada">Cantidad</Form.Label>
                             <Form.Control
                                 ref={inputRefCantidad}
@@ -362,7 +377,7 @@ const frmMermas = () => {
                                 maxLength={15}                    
                             />
                         </Col>
-                        <Col className="mb-3 d-flex d-flex align-items-center" xs={6} md={2}>
+                        <Col className="mb-3 d-flex d-flex align-items-center" xs={6} md={3}>
                             <Button onClick={IngresarProducto}   variant="success">Ingresar</Button>                   
                         </Col>
                     </Row>
@@ -430,6 +445,11 @@ const frmMermas = () => {
                     <Button onClick={handleGuardarPlanilla} variant="primary">Guardar planilla</Button>                   
                 </Col>
             </Row>
+            <ShowError
+                message={errorMessage}
+                show={showError}
+                onClose={() => setShowError(false)}
+            />  
         </div>
         <Loader visible={isLoading} message={messageLoader} ShowProgress={true} progress={progress} />
     </>

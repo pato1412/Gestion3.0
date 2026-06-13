@@ -47,15 +47,10 @@
   font-weight: bold;
 }
 
-.nav-tabs .nav-item .nav-link{
-  color: var(--text-color);
+.form-select option{
+  color: var(--text);
 }
 
-.nav-tabs .active{
-  background-color: var(--border-orange) !important;
-  border-bottom-color: var(--border-orange) !important;
-  color: #fff !important;
-}
 
 @media (max-width: 576px) {
     .xs-hide {
