@@ -120,7 +120,7 @@ const ListSheetsStock = () => {
                     <th className='xs-hide' >Usuario</th>
                     <th ><span className='xs-hide' >Fecha</span><span className='xs-show' >Planilla</span></th>
                     <th className='xs-hide' >Deposito</th>
-                    <th style={{maxWidth:'200px'}} >Observaciones</th>
+                    <th style={{maxWidth:'200px'}} className='xs-hide' >Observaciones</th>
                     <th></th>
                   </tr>
                 </thead>

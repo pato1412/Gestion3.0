@@ -5,7 +5,7 @@ import Loader from '../../components/Loader/Loader'
 import { apiFetch, API_URLS, GetDepositosUsuario } from '../../config/api'
 import './stock.css'
 import { Button, Nav, NavItem } from 'react-bootstrap'
-import {FaTrash, FaDownload } from 'react-icons/fa'
+import {FaTrash, FaDownload, FaEye } from 'react-icons/fa'
 import { useModal } from '../../contexts/ModalContext'
 
 
@@ -40,10 +40,10 @@ const ListMermas = () => {
           try {
               const data = await apiFetch(API_URLS.GetPlanillasMermas)
 
-              /* COnsultamos los depósitos del usuario para mostrar el nombre del depósito en la tabla de planillas */
+              /* Consultamos los depósitos del usuario para mostrar el nombre del depósito en la tabla de planillas */
               const Depositos = await GetDepositosUsuario();
 
-              /* COnsultamos los conceptos para mostrar el nombre del concepto en la tabla de planillas */
+              /* Consultamos los conceptos para mostrar el nombre del concepto en la tabla de planillas */
               const conceptosAPI = await apiFetch( API_URLS.GetConceptosMermas, { method: 'GET'});
 
               if (Depositos && Array.isArray(Depositos) && Depositos.length > 0) {
@@ -106,21 +106,6 @@ const ListMermas = () => {
         );
     }
 
-    const handleDescargar = async (planillaId) => {
-        try {            
-        setMessageLoading('Generando archivo excel...')
-        setIsLoading(true)
-
-        const config = {id: planillaId, NombreArchivo: `planilla_stock_${planillaId}.xlsx`};
-        const excelfile = await downloadFile(API_URLS.DownloadPlanillaInventario, config.NombreArchivo, { method: 'POST', body: JSON.stringify(config) });
-
-        } catch (error) {
-        setError(`Error descargando el archivo: ${error.message}`);
-        } finally {
-        setIsLoading(false);
-        setMessageLoading("");
-        }
-    }
 
     return (
     <>
@@ -143,7 +128,7 @@ const ListMermas = () => {
                     <th ><span className='xs-hide' >Fecha</span><span className='xs-show' >Planilla</span></th>
                     <th className='xs-hide' >Deposito</th>
                     <th className='xs-hide' >Concepto</th>
-                    <th style={{maxWidth:'200px'}} >Observaciones</th>
+                    <th style={{maxWidth:'200px'}} className='xs-hide' >Observaciones</th>
                     <th></th>
                   </tr>
                 </thead>
@@ -179,8 +164,8 @@ const ListMermas = () => {
                         <td>
                           <Nav className="justify-content-center" style={{ gap: '10px', minWidth: '80px' }}>
                             <NavItem>
-                              <Button variant="outline-success" size="sm" onClick={() => handleDescargar(planilla.InventarioId)}>
-                                <FaDownload />
+                              <Button variant="outline-success" size="sm" as={Link} to={`/stock/planilla-mermas/${planilla.InventarioId}`}>
+                                <FaEye />
                               </Button>
                             </NavItem>  
                             <NavItem>

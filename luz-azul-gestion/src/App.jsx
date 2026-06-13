@@ -24,6 +24,7 @@ import { useEstablecimiento } from './contexts/EstablecimientoContext';
 import ListNotifications from './Pages/Notifications/ListNotifications';
 import ListMermas from './Pages/Stock/ListMermas'
 import FrmSheetMermas from './Pages/Stock/frmMermas'
+import ViewMermas from './Pages/Stock/viewMermas'
 
 function App() {
   const { establecimiento, loading } = useEstablecimiento();
@@ -50,7 +51,7 @@ function App() {
                     <Route path='/stock/listar-mermas' element={<ProtectedRoute><ProtectedDeposito><ListMermas /></ProtectedDeposito></ProtectedRoute>} />
                     <Route path='/notificaciones/listar-notificaciones' element={<ProtectedRoute><ProtectedDeposito><ListNotifications /></ProtectedDeposito></ProtectedRoute>} />
                     <Route path='/stock/nueva-planilla-mermas' element={<ProtectedRoute><ProtectedDeposito><FrmSheetMermas /></ProtectedDeposito></ProtectedRoute>} />
-
+                    <Route path='/stock/planilla-mermas/:id' element={<ProtectedRoute><ProtectedDeposito><ViewMermas /></ProtectedDeposito></ProtectedRoute>} />  
                     <Route path='*' element={<Page404 />} />
                   </Routes>
                 </div>
