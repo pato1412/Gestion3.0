@@ -154,12 +154,12 @@ const ListSheetsStock = () => {
                         <td>
                           <Nav className="justify-content-center" style={{ gap: '10px', minWidth: '80px' }}>
                             <NavItem>
-                              <Button variant="outline-success" size="sm" onClick={() => handleDescargar(planilla.InventarioId)}>
+                              <Button title='Descargar' variant="outline-success" size="sm" onClick={() => handleDescargar(planilla.InventarioId)}>
                                 <FaDownload />
                               </Button>
                             </NavItem>  
                             <NavItem>
-                              <Button variant="outline-danger" size="sm" onClick={() => handleDeletePlanilla(planilla.InventarioId)}>
+                              <Button title='Eliminar' variant="outline-danger" size="sm" onClick={() => handleDeletePlanilla(planilla.InventarioId)}>
                                 <FaTrash />
                               </Button>
                            </NavItem>  

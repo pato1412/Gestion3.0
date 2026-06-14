@@ -164,12 +164,12 @@ const ListMermas = () => {
                         <td>
                           <Nav className="justify-content-center" style={{ gap: '10px', minWidth: '80px' }}>
                             <NavItem>
-                              <Button variant="outline-success" size="sm" as={Link} to={`/stock/planilla-mermas/${planilla.InventarioId}`}>
+                              <Button title='Ver detalle'  variant="outline-success" size="sm" as={Link} to={`/stock/planilla-mermas/${planilla.InventarioId}`}>
                                 <FaEye />
                               </Button>
                             </NavItem>  
                             <NavItem>
-                              <Button variant="outline-danger" size="sm" onClick={() => handleDeletePlanilla(planilla.InventarioId)}>
+                              <Button title='Eliminar' variant="outline-danger" size="sm" onClick={() => handleDeletePlanilla(planilla.InventarioId)}>
                                 <FaTrash />
                               </Button>
                            </NavItem>  

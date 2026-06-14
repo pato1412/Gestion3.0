@@ -283,7 +283,7 @@ const frmMermas = () => {
                     Cookies.remove(`planillaItems_${DepositoId}`);
                     Cookies.remove(`planillaItemsTime_${DepositoId}`);
                     openModal("Planilla guardada", "La planilla de mermas se ha guardado correctamente.", () => {
-                        navigate("/stock/listar-planillas");
+                        navigate("/stock/listar-mermas");
                     });
                 }else{
                     showErrorAlert("No se pudieron guardar los detalles de la planilla de mermas. Intente nuevamente.");
