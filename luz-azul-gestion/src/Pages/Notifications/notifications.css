@@ -19,6 +19,22 @@
   border-top: 2px solid var(--border);
   padding: 10px;
 }
+  
+.Container-notifications-content .form-check {
+  padding-left: 0;
+}
+
+.Container-notifications-content .form-check-label {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 0;
+  word-break: break-word;
+}
+
+.border-top {
+  border-top: 1px solid var(--border) !important;
+  padding-top: 12px !important;
+}
 
 .item-notification {
   padding: 8px 0;

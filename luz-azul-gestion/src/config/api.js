@@ -18,6 +18,7 @@ export const API_URLS = {
   GetPlanillasMermas: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_GET_PLANILLAS_MERMAS_URL,
   GetConceptosMermas: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_GET_CONCEPTOS_MERMAS_URL,
   GetNotificaciones: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_GET_NOTIFICACIONES_URL,
+  InsertNotificaciones: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_INSERT_NOTIFICACION_URL,  
   EliminarNotificacion: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_ELIMINAR_NOTIFICACION_URL
 };
 

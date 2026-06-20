@@ -6,6 +6,7 @@ import { Button, Nav, NavItem } from 'react-bootstrap'
 import { FaTrash } from 'react-icons/fa'
 import { useModal } from '../../contexts/ModalContext'
 import './notifications.css'
+import { Link } from 'react-router-dom'
 
 const formatDateTime = (value) => {
   if (!value) return ''
@@ -54,7 +55,6 @@ const ListNotifications = () => {
       'Eliminar Notificación',
       '¿Está seguro que desea eliminar esta notificación? Esta acción no se puede deshacer.',
       async (value) => {
-        debugger;
         try {
           const data = { DocumentoId: notificacionId };
           const response = await apiFetch(API_URLS.EliminarNotificacion, { method: 'POST', body: JSON.stringify(data) });
@@ -79,6 +79,9 @@ const ListNotifications = () => {
         <div className='Container-notifications-form mb-3'>
           <div className='Container-notifications-header d-flex align-items-center justify-content-between'>
             <h5>Notificaciones</h5>
+            <Link to='/notificaciones/nueva-notificacion' className='btn btn-primary'>
+              Nueva Notificacion
+            </Link>            
           </div>
           <div className='Container-notifications-content'>
             {error && <div className='alert alert-danger'>{error}</div>}
