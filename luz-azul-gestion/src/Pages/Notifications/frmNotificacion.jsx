@@ -15,6 +15,7 @@ const FrmNotificacion = () => {
   const [MessageLoader, setMessageLoader] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [showError, setShowError] = useState(false);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
   const { openModal } = useModal();
   const [dateStart, setDateStart] = useState('');
   const [dateEnd, setDateEnd] = useState('');
@@ -23,6 +24,7 @@ const FrmNotificacion = () => {
   const refDescripcion = useRef(null);
   const refImageURL = useRef(null);
   const refLinkURL = useRef(null);
+  const refFileInput = useRef(null);
   const [establecimientos, setEstablecimientos] = useState([]);
   const [selectedEstablecimientos, setSelectedEstablecimientos] = useState([]);
   const navigate = useNavigate();
@@ -64,6 +66,74 @@ const FrmNotificacion = () => {
         setShowError(true);
     }
 
+    const generateGUID = () => {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    };
+
+    const handleUploadImage = async () => {
+        const file = refFileInput.current?.files?.[0];
+        
+        if (!file) {
+            showErrorAlert('Por favor selecciona un archivo');
+            return;
+        }
+
+        // Validar tipo de archivo
+        const allowedTypes = ['image/jpeg', 'image/png'];
+        if (!allowedTypes.includes(file.type)) {
+            showErrorAlert('Solo se permiten archivos JPG y PNG');
+            return;
+        }
+
+        // Validar tamaño (máximo 5MB)
+        const maxSize = 5 * 1024 * 1024; // 5MB
+        if (file.size > maxSize) {
+            showErrorAlert('El archivo no debe superar 5MB');
+            return;
+        }
+
+        setIsUploadingImage(true);
+        try {
+            const guid = generateGUID();
+            const fileExtension = file.type === 'image/jpeg' ? '.jpg' : '.png';
+            const fileName = `${guid}${fileExtension}`;
+
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('fileName', fileName);
+
+            const response = await fetch(API_URLS.UploadNotificationImage, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'EstablecimientoGUID': JSON.parse(localStorage.getItem('EstablecimientoData') || '{}').EstablecimientoGUID || ''
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error al subir la imagen: ${response.statusText}`);
+            }
+
+            const result = await response.json();
+            
+            if (result.success && result.imageUrl) {
+                refImageURL.current.value = result.imageUrl;
+                openModal('Éxito', 'Imagen subida correctamente');
+                // Limpiar el input file
+                refFileInput.current.value = '';
+            } else {
+                showErrorAlert(result.message || 'No se pudo subir la imagen');
+            }
+        } catch (error) {
+            showErrorAlert(`Error al subir la imagen: ${getErrorMessage(error)}`);
+        } finally {
+            setIsUploadingImage(false);
+        }
+    };
+
 
   const handleSelectAllEstablecimientos = () => {
     const allIds = establecimientos.map(est => est.EstablecimientoId.toString());
@@ -94,23 +164,19 @@ const FrmNotificacion = () => {
             FechaHasta: dateEnd,
             Establecimientos: arrayDeEstablecimientos
           };
-          console.log(newNotification)
           const detalleResponse = await apiFetch(API_URLS.InsertNotificaciones , { method: 'POST', body: JSON.stringify(newNotification)});                
-          console.log(detalleResponse)
           if (detalleResponse && detalleResponse.bok === true) {
             openModal("Notificacion Generada", "La notificacion se ha generado correctamente.", () => {
               navigate("/notificaciones/listar-notificaciones");
             });
           }else{
-            showErrorAlert("No se pudieron guardar los detalles de la planilla de mermas. Intente nuevamente.");
+            showErrorAlert("No se pudieron guardar los detalles de la notificacion. Intente nuevamente.");
           }
         } catch (error) {
             showErrorAlert(`Error cargando la planilla: ${getErrorMessage(error)}`);
         } finally {
             setIsLoading(false);
-        }
-
-    
+        }    
   };
 
   return (
@@ -150,9 +216,32 @@ const FrmNotificacion = () => {
               <Row className='mb-3'>
                 <Form.Group controlId="formImageURL" className='col-md-6'>
                   <Form.Label>Imagen URL</Form.Label>
-                  <Form.Control ref={refImageURL} type="text" placeholder="Ingrese la URL de la imagen" />
+                  <div className='d-flex gap-2'>
+                    <Form.Control 
+                      ref={refImageURL} 
+                      type="text" 
+                      placeholder="Ingrese la URL de la imagen" 
+                      className='flex-grow-1'
+                    />
+                    <Button 
+                      variant="outline-secondary" 
+                      size="sm"
+                      onClick={() => refFileInput.current?.click()}
+                      disabled={isUploadingImage}
+                      className='text-nowrap'
+                    >
+                      {isUploadingImage ? 'Subiendo...' : 'Subir archivo'}
+                    </Button>
+                  </div>
+                  <input 
+                    ref={refFileInput}
+                    type="file" 
+                    accept=".jpg,.jpeg,.png,image/jpeg,image/png"
+                    style={{ display: 'none' }}
+                    onChange={handleUploadImage}
+                  />
                   <Form.Text id="txtCodigoHelpBlock" muted>
-                       El formato aceptado es: JPG y PNG.
+                       El formato aceptado es: JPG y PNG. (Máximo 5MB)
                   </Form.Text>
                 </Form.Group>
                 <Form.Group controlId="formLinkURL" className='col-md-6'>
