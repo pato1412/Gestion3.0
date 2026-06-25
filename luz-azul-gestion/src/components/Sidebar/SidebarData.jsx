@@ -16,24 +16,6 @@ export const SidebarData = () =>{
       icon: <AiIcons.AiFillHome />
     });
 
-    Items.push(
-      {
-        title: 'Pedidos',
-        path: '#',
-        icon: <FaIcons.FaDolly />,
-        iconClosed: <RiIcons.RiArrowDownSFill />,
-        iconOpened: <RiIcons.RiArrowUpSFill />,
-
-      subNav: [
-        {
-          title: 'Enviar Pedidos',
-          path: '/pedidos/enviar-pedidos',
-          icon: <IoIcons.IoIosPaper />,
-          cName: 'sub-nav'
-        }
-      ]
-    });
-
     Items.push({
       title: 'Stock',
       path: '#',

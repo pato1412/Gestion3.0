@@ -19,7 +19,7 @@ const FrmNotificacion = () => {
   const { openModal } = useModal();
   const [dateStart, setDateStart] = useState(new Date());
   const [dateEnd, setDateEnd] = useState('');
-  const [category, setCategory] = useState('general');
+  const [category, setCategory] = useState('logistica');
   const refTitulo = useRef(null);
   const refDescripcion = useRef(null);
   const refImageURL = useRef(null);

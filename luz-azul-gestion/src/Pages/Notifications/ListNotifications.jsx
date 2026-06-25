@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 import Sidebar from '../../components/Sidebar/Sidebar'
 import Loader from '../../components/Loader/Loader'
 import { apiFetch, API_URLS } from '../../config/api'
-import { Button, Nav, NavItem } from 'react-bootstrap'
-import { FaTrash } from 'react-icons/fa'
+import { Accordion, Button, Nav, NavItem } from 'react-bootstrap'
+import { FaTrash, FaEye } from 'react-icons/fa'
 import { useModal } from '../../contexts/ModalContext'
 import './notifications.css'
 import { Link } from 'react-router-dom'
@@ -29,15 +29,28 @@ const ListNotifications = () => {
   const [MessageLoading, setMessageLoading] = useState('')
   const [error, setError] = useState(null)
   const { openModal } = useModal();
+  const [establecimientos, setEstablecimientos] = useState([]);
 
   useEffect(() => {
-    const fetchNotificaciones = async () => {
+    const fetchNotificaciones = async (establecimientosData) => {
       setMessageLoading('Cargando notificaciones...')
       setIsLoading(true)
       setError(null)
       try {
         const data = await apiFetch(API_URLS.GetNotificaciones)
+
+        data.forEach(notificacion => {
+          notificacion.Establecimientos.map(establecimiento => {
+            const establecimientoEncontrado = establecimientosData.find(d => d.EstablecimientoId === establecimiento.EstablecimientoId);
+            if (establecimientoEncontrado) {
+              establecimiento.Descripcion = establecimientoEncontrado.Descripcion;
+            }
+          });
+        });
+
         setNotificaciones(Array.isArray(data) ? data : [])
+        console.log('Notificaciones cargadas:', data)
+
       } catch (err) {
         console.error('Error al cargar notificaciones:', err)
         setError('No se pudieron cargar las notificaciones. Intente nuevamente más tarde.')
@@ -47,7 +60,25 @@ const ListNotifications = () => {
       }
     }
 
-    fetchNotificaciones()
+        const fetchEstablecimientos = async () => {
+            setIsLoading(true);
+            setMessageLoading("Cargando todos los establecimientos...");
+            try {
+                const data = {};
+                const establecimientos = await apiFetch( API_URLS.getEstablecimientos, { method: 'POST', body: JSON.stringify(data) });
+
+                setEstablecimientos(establecimientos);
+
+                fetchNotificaciones(establecimientos); // Llamamos a fetchNotificaciones pasando los establecimientos obtenidos
+            } catch (error) {
+                showErrorAlert(`Error cargando establecimientos: ${getErrorMessage(error)}`);
+            } finally {
+                setIsLoading(false);
+                setMessageLoading('');
+             }
+        };
+
+        fetchEstablecimientos();
   }, [])
 
   const handleDeleteNotificacion = async (notificacionId) => {
@@ -70,6 +101,57 @@ const ListNotifications = () => {
         }
       }
     );
+  }
+
+  const handleViewNotificacion = (notificacionId) => {
+    const notificacion = notificaciones.find(n => n.NotificacionId === notificacionId)
+
+    if (!notificacion) {
+      setError('No se encontró la notificación seleccionada.')
+      return
+    }
+
+    const establecimientosRelacionados = Array.isArray(notificacion.Establecimientos)
+      ? notificacion.Establecimientos
+      : []
+
+    openModal(
+      `Detalle de notificación: ${notificacion.Titulo ?? ''}`,
+      (
+        <Accordion defaultActiveKey='0' alwaysOpen>
+          <Accordion.Item eventKey='0'>
+            <Accordion.Header>
+              Establecimientos relacionados ({establecimientosRelacionados.length})
+            </Accordion.Header>
+            <Accordion.Body>
+              {establecimientosRelacionados.length === 0 ? (
+                <div className='text-muted'>No hay establecimientos asociados a esta notificación.</div>
+              ) : (
+                <div className='table-responsive'>
+                  <table className='table table-sm table-striped mb-0'>
+                    <thead>
+                      <tr>
+                        <th>Establecimiento</th>
+                        <th>Fecha de visualización</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {establecimientosRelacionados.map((establecimiento, index) => (
+                        <tr key={`${establecimiento.EstablecimientoId ?? 'establecimiento'}-${index}`}>
+                          <td>{establecimiento.Descripcion ?? `ID: ${establecimiento.EstablecimientoId ?? '-'}`}</td>
+                          <td>{establecimiento.FechaVisualizacion ? formatDateTime(establecimiento.FechaVisualizacion) : 'Sin visualizar'}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </Accordion.Body>
+          </Accordion.Item>
+        </Accordion>
+      ),
+      () => {}
+    )
   }
 
   return (
@@ -161,6 +243,15 @@ const ListNotifications = () => {
                         </td>
                         <td>
                           <Nav className="justify-content-center" style={{ gap: '10px', minWidth: '80px' }}>
+                            <NavItem>
+                              <Button 
+                                variant="outline-success" 
+                                size="sm" 
+                                onClick={() => handleViewNotificacion(notificacion.NotificacionId)}
+                              >
+                                <FaEye />
+                              </Button>
+                            </NavItem>
                             <NavItem>
                               <Button 
                                 variant="outline-danger" 
