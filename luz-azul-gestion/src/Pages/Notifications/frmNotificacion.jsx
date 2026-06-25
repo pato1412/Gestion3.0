@@ -17,7 +17,7 @@ const FrmNotificacion = () => {
   const [showError, setShowError] = useState(false);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const { openModal } = useModal();
-  const [dateStart, setDateStart] = useState('');
+  const [dateStart, setDateStart] = useState(new Date());
   const [dateEnd, setDateEnd] = useState('');
   const [category, setCategory] = useState('general');
   const refTitulo = useRef(null);
@@ -145,6 +145,7 @@ const FrmNotificacion = () => {
   };
 
   const handleGuardarNotificacion = async() => {
+    if (validateForm() === true){
         setIsLoading(true);
         setMessageLoader("Generando notificacion...");
         try{
@@ -177,7 +178,44 @@ const FrmNotificacion = () => {
         } finally {
             setIsLoading(false);
         }    
+    }
   };
+
+  const validateForm = () => {
+    if (refTitulo.current.value === ""){
+      showErrorAlert("Debe ingresar un titulo para la notificacion");
+      return false;
+    }
+    if (refDescripcion.current.value === ""){
+      showErrorAlert("Debe ingresar un Descripcion para la notificacion");
+      return false;
+    }
+    if (refLinkURL.current.value === ""){
+      showErrorAlert("Debe ingresar un Link para la notificacion");
+      return false;
+    }
+    if (refImageURL.current.value === ""){
+      showErrorAlert("Debe ingresar un Imagen para la notificacion");
+      return false;
+    }
+    if (dateStart === ""){
+      showErrorAlert("Debe ingresar una Fecha desde para la notificacion");
+      return false;
+    }
+    if (dateEnd === ""){
+      showErrorAlert("Debe ingresar una Fecha hasta para la notificacion");
+      return false;
+    }
+
+    if (selectedEstablecimientos.length == 0){
+      showErrorAlert("Debe seleccionar al menos un establecimiento para la notificacion");
+      return false;
+    }
+
+    return true;    
+  }
+
+
 
   return (
     <>
@@ -197,7 +235,7 @@ const FrmNotificacion = () => {
                 <Form.Group controlId="formCategory" className='col-md-6'>
                   <Form.Label>Categoría</Form.Label>
                   <Form.Select aria-label="Default select example" value={category} onChange={(e) => setCategory(e.target.value)} >
-                    <option value="general">General</option>
+                    <option value="logistica">Logistica y productos</option>
                     <option value="marketing">Marketing</option>
                     <option value="sistemas">Sistemas</option>
                   </Form.Select>
@@ -252,7 +290,7 @@ const FrmNotificacion = () => {
               <Row className='mb-3'>
                 <Form.Group controlId="formDate" className='col-md-6'> 
                   <Form.Label>Fecha Desde</Form.Label>
-                  <DatePicker 
+                  <DatePicker
                   showTimeSelect
                   timeFormat="HH:mm"
                   timeIntervals={30}
@@ -265,7 +303,7 @@ const FrmNotificacion = () => {
                 </Form.Group>
                 <Form.Group controlId="formDateEnd" className='col-md-6'>
                   <Form.Label>Fecha Hasta</Form.Label>
-                  <DatePicker 
+                  <DatePicker
                   showTimeSelect
                   timeFormat="HH:mm"
                   timeIntervals={30}
@@ -331,6 +369,11 @@ const FrmNotificacion = () => {
               ))}
             </div>
           </div>
+            <ShowError
+                message={errorMessage}
+                show={showError}
+                onClose={() => setShowError(false)}
+            />  
           <Row >
             <Col className="mb-3 d-flex d-flex align-items-center justify-content-end" xs={12} md={12}>
                 <Button onClick={handleGuardarNotificacion} variant="primary">Guardar notificación</Button>                   
