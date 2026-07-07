@@ -33,10 +33,33 @@ export const SidebarData = () =>{
           title: 'Carga de mermas',
           path: '/stock/listar-mermas',
           icon: <IoIcons.IoIosPaper />
+        },
+        {
+          title: 'Orden de producción',
+          path: 'https://app.simpletempo.com/inventory/ProductionOrders/ProductionOrders/Create',
+          icon: <IoIcons.IoIosPaper />,
+          external: true
         }
       ]  
     });
      
+    Items.push({
+      title: 'Configuraciones',
+      path: '#',
+      icon: <FaIcons.FaTools />,
+      iconClosed: <RiIcons.RiArrowDownSFill />,
+      iconOpened: <RiIcons.RiArrowUpSFill />,
+
+      subNav: [
+        {
+          title: 'Administrar Flyers',
+          path: 'https://flyers.luz-azul.com.ar/?EstablecimientoGUID=' + establecimiento.EstablecimientoGUID,
+          external: true,
+          icon: <FaIcons.FaImage />
+        }
+      ]  
+    });
+
 
     if (establecimiento && establecimiento.EstablecimientoId === parseInt(import.meta.env.VITE_ST_ESTABLECIMIENTO_ID_EZEIZA)) 
     {

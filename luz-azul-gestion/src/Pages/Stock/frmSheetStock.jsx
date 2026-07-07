@@ -299,6 +299,73 @@ const FrmSheetStock = () => {
         return item.ProductoId.toString().includes(term) || item.Descripcion.toLowerCase().includes(term);
     });
 
+    const handleSeleccionarCaja = async () => {
+            openModal(
+                "Seleccionar caja de luz azul",
+                "Por favor escanee la caja de luz azul.",
+                (valor) => {
+                    AnalizarCaja(valor);
+                },
+                true,
+                "0000-0000-0000",
+                ""
+            );        
+    };
+
+    const AnalizarCaja = async (codigoCaja) => {
+        debugger;
+        if (!codigoCaja || codigoCaja.trim() === '') {
+            showErrorAlert("Debe ingresar un código de caja válido.");
+            return;
+        }else{ 
+            if(codigoCaja.length !== 12 ) {
+                showErrorAlert("El código de caja debe tener 12 caracteres.");
+                return;
+            }else{
+                let codigoProducto = codigoCaja.substring(1, 4);
+                let cantidad = codigoCaja.substring(4, 8);
+                if (isNaN(cantidad) || cantidad <= 0) {
+                    showErrorAlert("La cantidad en el código de caja no es válida.");
+                    return;
+                }else{
+                    cantidad = Number(cantidad) / 100; // Convertir a número y dividir por 100 para obtener la cantidad real
+                    // Buscar el producto en las opciones
+                    const productoSeleccionado = options.find(option => option.ProductoId === codigoProducto);
+                    if (!productoSeleccionado) {
+                        showErrorAlert(`No se encontró un producto con el código ${codigoProducto}.`);
+                        return;
+                    }else{
+                        // Si el producto ya existe, actualizamos las cantidades sin mutar el objeto original
+                        setItems(prevItems => {
+                            const existingItem = prevItems.find(item => item.ProductoId === productoSeleccionado.ProductoId);
+                            if (existingItem) {
+                                const nuevasCantidades = [...existingItem.Cantidades, Number(cantidad)];
+                                return prevItems.map(item => {
+                                    if (item.ProductoId !== productoSeleccionado.ProductoId) return item;
+                                    return {
+                                        ...item,
+                                        Cantidades: nuevasCantidades,
+                                        CantidadContada: nuevasCantidades.reduce((total, cantidad) => total + cantidad, 0)
+                                    };  
+                                });
+                            }else{
+                                // Si el producto no existe, lo agregamos como una copia independiente
+                                const nuevoItem = {
+                                    ...productoSeleccionado,
+                                    Cantidades: [Number(cantidad)],
+                                    CantidadContada: Number(cantidad)
+                                };
+                                return [...prevItems, nuevoItem];
+                            }
+                        });
+                    }
+                }
+            }
+        }
+        console.log("Analizando caja de luz azul: " + codigoCaja);
+    }
+
+
   return (    
     <>
         <Sidebar title={"Planilla de stock"} />
@@ -338,7 +405,8 @@ const FrmSheetStock = () => {
                                 placeholder="Ingrese el codigo del producto"
                             />
                             <Form.Text id="txtCodigoHelpBlock" muted>
-                                Por favor, ingrese el código del producto con el scanner o el teclado.
+                                Por favor, ingrese el código del producto con el scanner o el teclado.<br/>
+                                Si desea seleccionar una caja de luz azul, <a href="#" onClick={handleSeleccionarCaja} >haga clic aqui</a>.
                             </Form.Text>
                         </Col>
                         <Col xs={6} md={2} className='mb-3' >

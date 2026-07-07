@@ -11,7 +11,25 @@ const SidebarLink = styled(Link)`
   list-style: none;
   height: 60px;
   text-decoration: none;
-  font-size: 18px;
+  font-size: 14px;
+
+  &:hover {
+    background: #252831;
+    border-left: 4px solid #632ce4;
+    cursor: pointer;
+  }
+`;
+
+const ExternalSidebarLink = styled.a`
+  display: flex;
+  color: #e1e9fc;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  list-style: none;
+  height: 60px;
+  text-decoration: none;
+  font-size: 14px;
 
   &:hover {
     background: #252831;
@@ -32,7 +50,7 @@ const DropdownLink = styled(Link)`
   align-items: center;
   text-decoration: none;
   color: #f5f5f5;
-  font-size: 18px;
+  font-size: 14px;
 
   &:hover {
     background: #632ce4;
@@ -40,14 +58,39 @@ const DropdownLink = styled(Link)`
   }
 `;
 
+const ExternalDropdownLink = styled.a`
+  background: #414757;
+  height: 60px;
+  padding-left: 3rem;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #f5f5f5;
+  font-size: 14px;
+
+  &:hover {
+    background: #632ce4;
+    cursor: pointer;
+  }
+`;
+
+const externalLinkProps = {
+  target: '_blank',
+  rel: 'noopener noreferrer'
+};
+
 const SubMenu = ({ item }) => {
   const [subnav, setSubnav] = useState(false);
 
   const showSubnav = () => setSubnav(!subnav);
+  const MenuLink = item.external ? ExternalSidebarLink : SidebarLink;
 
   return (
     <>
-      <SidebarLink to={item.path} onClick={item.subNav && showSubnav}>
+      <MenuLink
+        {...(item.external ? { href: item.path, ...externalLinkProps } : { to: item.path })}
+        onClick={item.subNav && showSubnav}
+      >
         <div>
           {item.icon}
           <SidebarLabel>{item.title}</SidebarLabel>
@@ -59,14 +102,19 @@ const SubMenu = ({ item }) => {
             ? item.iconClosed
             : null}
         </div>
-      </SidebarLink>
+      </MenuLink>
       {subnav &&
         item.subNav.map((item, index) => {
+          const DropdownMenuLink = item.external ? ExternalDropdownLink : DropdownLink;
+
           return (
-            <DropdownLink to={item.path} key={index}>
+            <DropdownMenuLink
+              {...(item.external ? { href: item.path, ...externalLinkProps } : { to: item.path })}
+              key={index}
+            >
               {item.icon}
               <SidebarLabel>{item.title}</SidebarLabel>
-            </DropdownLink>
+            </DropdownMenuLink>
           );
         })}
     </>
