@@ -52,10 +52,16 @@ export const SidebarData = () =>{
 
       subNav: [
         {
-          title: 'Administrar Flyers',
+          title: 'Creá tu gráfica',
           path: 'https://flyers.luz-azul.com.ar/?EstablecimientoGUID=' + establecimiento.EstablecimientoGUID,
           external: true,
           icon: <FaIcons.FaImage />
+        },
+        {
+          title: 'Material franquiciados',
+          path: 'https://bit.ly/material-franquiciado',
+          external: true,
+          icon: <FaIcons.FaGoogleDrive />
         }
       ]  
     });
