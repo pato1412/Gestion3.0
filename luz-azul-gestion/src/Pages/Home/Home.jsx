@@ -7,7 +7,7 @@ const Home = () => {
     <>
       <Sidebar title="Luz Azul Gestión" />
       <div className='container' >    
-      <img src="/images/fondo.png" alt="Logo Luz Azul Gestión" style={{width: '100%', marginTop: '20px' }} />
+      <img className='mb-2 mt-2'  src="/images/LAGestion_web.webp" alt="Logo Luz Azul Gestión" style={{width: '100%'}} />
     </div>
     </>
   )
