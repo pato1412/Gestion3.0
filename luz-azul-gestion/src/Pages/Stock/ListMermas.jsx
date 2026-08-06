@@ -1,110 +1,14 @@
-import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Sidebar from '../../components/Sidebar/Sidebar'
 import Loader from '../../components/Loader/Loader'
-import { apiFetch, API_URLS, GetDepositosUsuario } from '../../config/api'
 import './stock.css'
 import { Button, Nav, NavItem } from 'react-bootstrap'
-import {FaTrash, FaDownload, FaEye } from 'react-icons/fa'
-import { useModal } from '../../contexts/ModalContext'
-
-
-const formatDateTime = (value) => {
-  if (!value) return ''
-  const date = new Date(value)
-  if (Number.isNaN(date.getTime())) return value
-
-  const pad = (num) => String(num).padStart(2, '0')
-  const day = pad(date.getDate())
-  const month = pad(date.getMonth() + 1)
-  const year = date.getFullYear()
-  const hours = pad(date.getHours())
-  const minutes = pad(date.getMinutes())
-
-  return `${day}/${month} ${hours}:${minutes}`
-}
+import { FaTrash, FaEye } from 'react-icons/fa'
+import { useMermasPlanillas } from '../../hooks/useMermasPlanillas'
+import { formatDateTime } from '../../utils/dateTime'
 
 const ListMermas = () => {
-  const [planillas, setPlanillas] = useState([])
-  const [isLoading, setIsLoading] = useState(false)
-  const [MessageLoading, setMessageLoading] = useState('')
-  const [error, setError] = useState(null)
-  const [conceptos, setConceptos] = useState([]);
-  const { openModal } = useModal();
-
-    useEffect(() => {
-        const fetchPlanillas = async () => {
-          setMessageLoading('Cargando planillas...')
-          setIsLoading(true)
-          setError(null)
-          try {
-              const data = await apiFetch(API_URLS.GetPlanillasMermas)
-
-              /* Consultamos los depósitos del usuario para mostrar el nombre del depósito en la tabla de planillas */
-              const Depositos = await GetDepositosUsuario();
-
-              /* Consultamos los conceptos para mostrar el nombre del concepto en la tabla de planillas */
-              const conceptosAPI = await apiFetch( API_URLS.GetConceptosMermas, { method: 'GET'});
-
-              if (Depositos && Array.isArray(Depositos) && Depositos.length > 0) {
-
-                for (var n = 0; n < data.length; n++) {
-                    const planilla = data[n];
-                    const deposito = Depositos.find(d => d.DepositoId === planilla.DepositoId);
-                    if (deposito) {
-                    planilla.DepositoNombre = deposito.Descripcion;
-                    }
-                    const Concepto = conceptosAPI.find(c => c.ConfigId === planilla.ConfigId);
-                    if (Concepto) {
-                      planilla.Concepto = Concepto.Descripcion;
-                    }
-                }
-              }
-              setPlanillas(Array.isArray(data) ? data : [])
-          } catch (err) {
-              console.error('Error al cargar planillas de mermas:', err)
-              setError('No se pudieron cargar las planillas. Intente nuevamente más tarde.')
-          } finally {
-              setIsLoading(false)
-              setMessageLoading('')
-          }
-        }
-
-        const fetchConceptos = async () => {
-            setIsLoading(true);
-            setMessageLoading("Cargando todos los Conceptos...");
-            try {
-                const conceptosAPI = await apiFetch( API_URLS.GetConceptosMermas, { method: 'GET'});
-                setConceptos(conceptosAPI);
-                console.log('Conceptos cargados:', conceptosAPI);
-            } catch (error) {
-                showErrorAlert(`Error cargando conceptos: ${getErrorMessage(error)}`);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-
-        fetchPlanillas()
-    }, [])
-
-    const handleDeletePlanilla = async (planillaId) => {
-        openModal(
-        'Eliminar Planilla',
-        '¿Está seguro que desea eliminar esta planilla de inventario? Esta acción no se puede deshacer.',
-        async (value) => {
-            // Lógica para eliminar la planilla
-            const data = { InventarioId: planillaId};
-            const response = await apiFetch( API_URLS.DeletePlanillaInventario, { method: 'POST', body: JSON.stringify(data) });
-            if (response && response.bok === true) {
-            setPlanillas(prev => prev.filter(p => p.InventarioId !== planillaId));          
-            } else {
-            console.error('Error al eliminar la planilla:', planillaId);
-            setError('No se pudo eliminar la planilla. Intente nuevamente más tarde.');
-            }
-        }
-        );
-    }
+  const { planillas, isLoading, loadingMessage, error, deletePlanilla } = useMermasPlanillas()
 
 
     return (
@@ -169,7 +73,7 @@ const ListMermas = () => {
                               </Button>
                             </NavItem>  
                             <NavItem>
-                              <Button title='Eliminar' variant="outline-danger" size="sm" onClick={() => handleDeletePlanilla(planilla.InventarioId)}>
+                              <Button title='Eliminar' variant="outline-danger" size="sm" onClick={() => deletePlanilla(planilla.InventarioId)}>
                                 <FaTrash />
                               </Button>
                            </NavItem>  
@@ -184,7 +88,7 @@ const ListMermas = () => {
           </div>
         </div>
       </div>
-      <Loader visible={isLoading} message={MessageLoading} ShowProgress={false} />
+      <Loader visible={isLoading} message={loadingMessage} ShowProgress={false} />
     </>
 )
 }

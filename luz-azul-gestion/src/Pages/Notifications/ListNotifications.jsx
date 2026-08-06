@@ -1,113 +1,22 @@
-import { useEffect, useState } from 'react'
 import Sidebar from '../../components/Sidebar/Sidebar'
 import Loader from '../../components/Loader/Loader'
-import { apiFetch, API_URLS } from '../../config/api'
 import { Accordion, Button, Nav, NavItem } from 'react-bootstrap'
 import { FaTrash, FaEye } from 'react-icons/fa'
 import { useModal } from '../../contexts/ModalContext'
 import './notifications.css'
 import { Link } from 'react-router-dom'
-
-const formatDateTime = (value) => {
-  if (!value) return ''
-  const date = new Date(value)
-  if (Number.isNaN(date.getTime())) return value
-
-  const pad = (num) => String(num).padStart(2, '0')
-  const day = pad(date.getDate())
-  const month = pad(date.getMonth() + 1)
-  const year = date.getFullYear()
-  const hours = pad(date.getHours())
-  const minutes = pad(date.getMinutes())
-
-  return `${day}/${month} ${hours}:${minutes}`
-}
+import { formatDateTime } from '../../utils/dateTime'
+import { useNotificationsList } from '../../hooks/useNotificationsList'
 
 const ListNotifications = () => {
-  const [notificaciones, setNotificaciones] = useState([])
-  const [isLoading, setIsLoading] = useState(false)
-  const [MessageLoading, setMessageLoading] = useState('')
-  const [error, setError] = useState(null)
+  const { notificaciones, isLoading, loadingMessage, error, deleteNotificacion } = useNotificationsList()
   const { openModal } = useModal();
-  const [establecimientos, setEstablecimientos] = useState([]);
-
-  useEffect(() => {
-    const fetchNotificaciones = async (establecimientosData) => {
-      setMessageLoading('Cargando notificaciones...')
-      setIsLoading(true)
-      setError(null)
-      try {
-        const data = await apiFetch(API_URLS.GetNotificaciones)
-
-        data.forEach(notificacion => {
-          notificacion.Establecimientos.map(establecimiento => {
-            const establecimientoEncontrado = establecimientosData.find(d => d.EstablecimientoId === establecimiento.EstablecimientoId);
-            if (establecimientoEncontrado) {
-              establecimiento.Descripcion = establecimientoEncontrado.Descripcion;
-            }
-          });
-        });
-
-        setNotificaciones(Array.isArray(data) ? data : [])
-        console.log('Notificaciones cargadas:', data)
-
-      } catch (err) {
-        console.error('Error al cargar notificaciones:', err)
-        setError('No se pudieron cargar las notificaciones. Intente nuevamente más tarde.')
-      } finally {
-        setIsLoading(false)
-        setMessageLoading('')
-      }
-    }
-
-        const fetchEstablecimientos = async () => {
-            setIsLoading(true);
-            setMessageLoading("Cargando todos los establecimientos...");
-            try {
-                const data = {};
-                const establecimientos = await apiFetch( API_URLS.getEstablecimientos, { method: 'POST', body: JSON.stringify(data) });
-
-                setEstablecimientos(establecimientos);
-
-                fetchNotificaciones(establecimientos); // Llamamos a fetchNotificaciones pasando los establecimientos obtenidos
-            } catch (error) {
-                showErrorAlert(`Error cargando establecimientos: ${getErrorMessage(error)}`);
-            } finally {
-                setIsLoading(false);
-                setMessageLoading('');
-             }
-        };
-
-        fetchEstablecimientos();
-  }, [])
-
-  const handleDeleteNotificacion = async (notificacionId) => {
-    openModal(
-      'Eliminar Notificación',
-      '¿Está seguro que desea eliminar esta notificación? Esta acción no se puede deshacer.',
-      async (value) => {
-        try {
-          const data = { DocumentoId: notificacionId };
-          const response = await apiFetch(API_URLS.EliminarNotificacion, { method: 'POST', body: JSON.stringify(data) });
-          if (response && response.bok === true) {
-            setNotificaciones(prev => prev.filter(n => n.NotificacionId !== notificacionId));
-          } else {
-            console.error('Error al eliminar la notificación:', notificacionId);
-            setError('No se pudo eliminar la notificación. Intente nuevamente más tarde.');
-          }
-        } catch (err) {
-          console.error('Error al eliminar notificación:', err);
-          setError('Error al eliminar la notificación. Intente nuevamente más tarde.');
-        }
-      }
-    );
-  }
 
   const handleViewNotificacion = (notificacionId) => {
     const notificacion = notificaciones.find(n => n.NotificacionId === notificacionId)
 
     if (!notificacion) {
-      setError('No se encontró la notificación seleccionada.')
+      openModal('Error', 'No se encontro la notificacion seleccionada.', () => {})
       return
     }
 
@@ -256,7 +165,7 @@ const ListNotifications = () => {
                               <Button 
                                 variant="outline-danger" 
                                 size="sm" 
-                                onClick={() => handleDeleteNotificacion(notificacion.NotificacionId)}
+                                onClick={() => deleteNotificacion(notificacion.NotificacionId)}
                               >
                                 <FaTrash />
                               </Button>
@@ -272,7 +181,7 @@ const ListNotifications = () => {
           </div>
         </div>
       </div>
-      <Loader visible={isLoading} message={MessageLoading} ShowProgress={false} />
+      <Loader visible={isLoading} message={loadingMessage} ShowProgress={false} />
     </>
   )
 }
