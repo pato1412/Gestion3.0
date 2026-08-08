@@ -20,7 +20,13 @@ export const API_URLS = {
   GetNotificaciones: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_GET_NOTIFICACIONES_URL,
   InsertNotificaciones: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_INSERT_NOTIFICACION_URL,  
   EliminarNotificacion: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_ELIMINAR_NOTIFICACION_URL,
-  UploadNotificationImage: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_UPLOAD_NOTIFICATION_IMAGE_URL
+  UploadNotificationImage: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_UPLOAD_NOTIFICATION_IMAGE_URL,
+  GetPlanillasDevolucion: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_GET_PLANILLAS_DEVOLUCION_URL,
+  NewPlanillaDevolucion: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_NEW_PLANILLA_DEVOLUCION_URL,
+  DeletePlanillaDevolucion: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_DELETE_PLANILLA_DEVOLUCION_URL,
+  NewPlanillaDevolucionDetalle: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_NEW_PLANILLA_DEVOLUCION_DETALLE_URL,
+  GetPlanillaDevolucionDetalle: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_GET_PLANILLA_DEVOLUCION_DETALLE_URL,
+  DeletePlanillaDevolucionDetalle: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_DELETE_PLANILLA_DEVOLUCION_DETALLE_URL,
 };
 
 export async function apiFetch(url, options = {}) {

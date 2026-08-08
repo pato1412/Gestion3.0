@@ -35,6 +35,11 @@ export const SidebarData = () =>{
           icon: <IoIcons.IoIosPaper />
         },
         {
+          title: 'Devoluciones',
+          path: '/stock/listar-devoluciones',
+          icon: <IoIcons.IoIosPaper />
+        },
+        {
           title: 'Orden de producción',
           path: 'https://app.simpletempo.com/inventory/ProductionOrders/ProductionOrders/Create',
           icon: <IoIcons.IoIosPaper />,
