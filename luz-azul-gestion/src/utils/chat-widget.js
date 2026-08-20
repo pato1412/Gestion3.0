@@ -1,12 +1,13 @@
 /*
   Widget de chat de capacitación — embebible en cualquier web.
-  Uso: <script src="chat-widget.js" data-endpoint="https://TU-BACKEND.com/api/chat"></script>
-  No requiere ningún framework. Se auto-inyecta al cargar.
+  Uso desde React: import { initChatWidget } from './utils/chat-widget';
+    useEffect(() => initChatWidget({ endpoint, title }), []); // devuelve función de limpieza
+  No requiere ningún framework para funcionar internamente.
 */
-(function () {
-  const scriptTag = document.currentScript;
-  const ENDPOINT = scriptTag.dataset.endpoint || "/api/chat";
-  const TITLE = scriptTag.dataset.title || "Capacitación";
+export function initChatWidget({ endpoint = "/api/chat", title = "Capacitación" } = {}) {
+  const ENDPOINT = endpoint;
+  const TITLE = title;
+
 
   // Icono de auricular (SVG embebido) para identificar el widget como chat/soporte
   const LOGO_DATA_URI = "data:image/svg+xml;utf8," + encodeURIComponent(
@@ -271,4 +272,11 @@
     if ((!text && !imagenAdjunta) || !currentTopic) return;
     enviarMensaje(text);
   });
-})();
+
+  // Función de limpieza para desmontar el widget (uso desde useEffect de React)
+  return function destroyChatWidget() {
+    styleEl.remove();
+    bubble.remove();
+    panel.remove();
+  };
+}

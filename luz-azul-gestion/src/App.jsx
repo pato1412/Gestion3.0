@@ -27,6 +27,7 @@ import FrmSheetMermas from './Pages/Stock/frmMermas'
 import ViewMermas from './Pages/Stock/viewMermas'
 import FrmNotificacion from './Pages/Notifications/frmNotificacion'
 import ListDevoluciones from './Pages/Stock/ListDevoluciones'
+import ChatWidget from './components/ChatWidget/ChatWidget'
 
 function App() {
   const { establecimiento, loading } = useEstablecimiento();
@@ -67,6 +68,7 @@ function App() {
             <SelectEstablecimiento  />
           )}
       </ModalProvider>
+      <ChatWidget />
     </AuthProvider>
   )
 }

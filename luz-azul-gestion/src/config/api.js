@@ -27,6 +27,7 @@ export const API_URLS = {
   NewPlanillaDevolucionDetalle: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_NEW_PLANILLA_DEVOLUCION_DETALLE_URL,
   GetPlanillaDevolucionDetalle: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_GET_PLANILLA_DEVOLUCION_DETALLE_URL,
   DeletePlanillaDevolucionDetalle: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_DELETE_PLANILLA_DEVOLUCION_DETALLE_URL,
+  ChatWidget: import.meta.env.VITE_API_CHAT_WIDGET_URL,
 };
 
 export async function apiFetch(url, options = {}) {
@@ -37,7 +38,11 @@ export async function apiFetch(url, options = {}) {
     headers: {
       'Content-Type': 'application/json',
       'EstablecimientoGUID': guid,
-      'Access-Control-Allow-Origin': '*', // Permitir solicitudes desde cualquier origen
+      // El navegador ya envía el header 'Origin' real y no permite sobreescribirlo ni honra
+      // 'Access-Control-Allow-Origin' en el request (es un header de respuesta del servidor).
+      // Enviamos el origen actual en un header propio para que el backend lo valide y lo
+      // devuelva reflejado en su respuesta CORS en lugar de usar '*'.
+      'X-Site-Origin': window.location.origin,
       ...options.headers,
     },
     ...options,
@@ -69,7 +74,7 @@ export const downloadFile = async (url,fileName,  options = {}) => {
       headers: {
         'Content-Type': 'application/json',
         'EstablecimientoGUID': guid,
-        'Access-Control-Allow-Origin': '*', // Permitir solicitudes desde cualquier origen
+        'X-Site-Origin': window.location.origin,
         ...options.headers,
       },
       ...options,
