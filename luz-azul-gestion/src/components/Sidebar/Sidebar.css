@@ -1,0 +1,164 @@
+.sidebar-offcanvas {
+  width: min(360px, 92vw) !important;
+  background: var(--accent) !important;
+  color: #fff;
+}
+
+.sidebar-offcanvas .offcanvas-header,
+.sidebar-offcanvas .offcanvas-body {
+  background: var(--accent);
+  color: #fff;
+}
+
+.sidebar-offcanvas-header {
+  justify-content: flex-end;
+  padding: 1rem 1rem 0.5rem;
+  border-bottom: 0;
+}
+
+.sidebar-offcanvas-body {
+  padding: 0;
+  overflow-y: auto;
+}
+
+.sidebar-close-btn {
+  background: none;
+  border: 0;
+  color: #fff;
+  font-size: 1.7rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+}
+
+.sidebar-logout-wrap {
+  padding: 1rem;
+}
+
+.sidebar-logout-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sidebar-menu-item,
+.sidebar-subitem {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  border: 0 !important;
+  border-radius: 0 !important;
+}
+
+.sidebar-menu-item {
+  min-height: 56px;
+  background: var(--accent) !important;
+  color: #fff !important;
+  font-size: 1rem;
+}
+
+.sidebar-menu-item:hover,
+.sidebar-menu-item:focus {
+  background: #252831 !important;
+  color: #fff !important;
+  border-left: 4px solid #632ce4 !important;
+}
+
+.sidebar-menu-item.is-active {
+  background: #252831 !important;
+  color: #fff !important;
+  border-left: 4px solid #632ce4 !important;
+}
+
+.sidebar-subitem {
+  min-height: 52px;
+  padding-left: 2.6rem !important;
+  background: var(--accent) !important;
+  color: #fff !important;
+  font-size: 1rem;
+}
+
+.sidebar-subitem:hover,
+.sidebar-subitem:focus {
+  background: #632ce4 !important;
+  color: #fff !important;
+}
+
+.sidebar-subitem.is-active {
+  background: #632ce4 !important;
+  color: #fff !important;
+}
+
+.sidebar-accordion {
+  --bs-accordion-bg: var(--accent);
+  --bs-accordion-border-color: transparent;
+  --bs-accordion-btn-bg: var(--accent);
+  --bs-accordion-btn-color: #fff;
+  --bs-accordion-active-bg: #252831;
+  --bs-accordion-active-color: #fff;
+  --bs-accordion-btn-focus-box-shadow: none;
+  --bs-accordion-btn-icon-filter: brightness(0) invert(1);
+}
+
+.sidebar-accordion-item {
+  border: 0 !important;
+}
+
+.sidebar-accordion-button {
+  padding: 1rem 1.25rem;
+  font-size: 1rem;
+  background: var(--accent) !important;
+  color: #fff !important;
+  box-shadow: none !important;
+}
+
+.sidebar-accordion .accordion-body,
+.sidebar-accordion .accordion-collapse,
+.sidebar-accordion .list-group {
+  background: var(--accent) !important;
+}
+
+.sidebar-accordion-button:not(.collapsed) {
+  border-left: 4px solid #632ce4;
+}
+
+.sidebar-accordion-button.is-active {
+  background: #252831 !important;
+  color: #fff !important;
+  border-left: 4px solid #632ce4;
+}
+
+.sidebar-menu-icon {
+  display: inline-flex;
+  align-items: center;
+}
+
+.sidebar-menu-label {
+    margin-left: 0.5rem;
+    line-height: 1.2;
+}
+
+
+.sidebar-menu-item {
+  --bs-list-group-item-padding-y: 1rem;
+  --bs-list-group-item-padding-x: 1.25rem;
+  padding: var(--bs-list-group-item-padding-y) var(--bs-list-group-item-padding-x);
+}
+
+.accordion-button.collapsed::after {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+}
+
+.accordion-button:not(.collapsed)::after {
+/*    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff' stroke='%23052c65' stroke-linecap='round' stroke-linejoin='round'%3e%3cpath d='m2 5 6 6 6-6'/%3e%3c/svg%3e");*/
+}
+
+/* Color for the expanded (open) state icon */
+.accordion-button:not(.collapsed)::after {
+  --bs-accordion-btn-active-icon: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>");
+}

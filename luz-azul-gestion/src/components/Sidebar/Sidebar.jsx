@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import * as FaIcons from 'react-icons/fa';
 import * as AiIcons from 'react-icons/ai';
+import Offcanvas from 'react-bootstrap/Offcanvas';
 import { SidebarData } from './SidebarData';
 import { IconContext } from 'react-icons/lib';
 import SubMenu from './SubMenu';
 import { useAuth } from '../../contexts/AuthContext';
 import SidebarTitle from './SidebarTitle';
+import './Sidebar.css';
 
 const Nav = styled.div`
   background: var(--accent);
@@ -17,30 +19,17 @@ const Nav = styled.div`
   align-items: center;
 `;
 
-const NavIcon = styled(Link)`
+const MenuButton = styled.button`
+  background: none;
+  border: none;
   margin-left: 1.5rem;
   font-size: 1.5rem;
   height: 80px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
-`;
-
-const SidebarNav = styled.nav`
-  background: var(--accent);
-  width: 250px;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  position: fixed;
-  top: 0;
-  left: ${({ sidebar }) => (sidebar ? '0' : '-100%')};
-  transition: 350ms;
-  z-index: 10;
-`;
-
-const SidebarWrap = styled.div`
-  width: 100%;
+  color: #fff;
+  cursor: pointer;
 `;
 
 const Sidebar = ({title}) => {
@@ -48,7 +37,8 @@ const Sidebar = ({title}) => {
   const { logout } = useAuth();
   const navigate = useNavigate();
 
-  const showSidebar = () => setSidebar(!sidebar);
+  const showSidebar = () => setSidebar(true);
+  const closeSidebar = () => setSidebar(false);
 
   const handleLogout = () => {
     logout();
@@ -61,26 +51,33 @@ const Sidebar = ({title}) => {
     <>
       <IconContext.Provider value={{ color: '#fff' }}>
         <Nav>
-          <NavIcon to='#'>
-            <FaIcons.FaBars onClick={showSidebar} />
-          </NavIcon>
+          <MenuButton type='button' onClick={showSidebar} aria-label='Abrir menú'>
+            <FaIcons.FaBars />
+          </MenuButton>
           <SidebarTitle title={title} />
         </Nav>
-        <SidebarNav sidebar={sidebar}>
-          <SidebarWrap>
-            <NavIcon to='#'>
-              <AiIcons.AiOutlineClose onClick={showSidebar} />
-            </NavIcon>
+        <Offcanvas show={sidebar} onHide={closeSidebar} placement='start' className='sidebar-offcanvas'>
+          <Offcanvas.Header className='sidebar-offcanvas-header'>
+            <button
+              type='button'
+              className='sidebar-close-btn'
+              onClick={closeSidebar}
+              aria-label='Cerrar menú'
+            >
+              <AiIcons.AiOutlineClose />
+            </button>
+          </Offcanvas.Header>
+          <Offcanvas.Body className='sidebar-offcanvas-body'>
             {SidebarItems.map((item, index) => {
-              return <SubMenu item={item} key={index} />;
+              return <SubMenu item={item} key={index} onNavigate={closeSidebar} />;
             })}
-            <div style={{ padding: '1rem' }}>
-              <button onClick={handleLogout} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontSize: '1rem' }}>
+            <div className='sidebar-logout-wrap'>
+              <button type='button' onClick={handleLogout} className='sidebar-logout-btn'>
                 <AiIcons.AiOutlineLogout /> Cerrar Sesión
               </button>
             </div>
-          </SidebarWrap>
-        </SidebarNav>
+          </Offcanvas.Body>
+        </Offcanvas>
       </IconContext.Provider>
     </>
   );
