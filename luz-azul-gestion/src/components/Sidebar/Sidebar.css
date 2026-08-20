@@ -18,7 +18,15 @@
 
 .sidebar-offcanvas-body {
   padding: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sidebar-menu-scroll {
+  flex: 1 1 auto;
   overflow-y: auto;
+  min-height: 0;
 }
 
 .sidebar-close-btn {
@@ -33,6 +41,8 @@
 
 .sidebar-logout-wrap {
   padding: 1rem;
+  flex-shrink: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .sidebar-logout-btn {
@@ -142,7 +152,6 @@
     margin-left: 0.5rem;
     line-height: 1.2;
 }
-
 
 .sidebar-menu-item {
   --bs-list-group-item-padding-y: 1rem;

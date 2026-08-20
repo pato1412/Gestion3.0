@@ -68,9 +68,11 @@ const Sidebar = ({title}) => {
             </button>
           </Offcanvas.Header>
           <Offcanvas.Body className='sidebar-offcanvas-body'>
-            {SidebarItems.map((item, index) => {
-              return <SubMenu item={item} key={index} onNavigate={closeSidebar} />;
-            })}
+            <div className='sidebar-menu-scroll'>
+              {SidebarItems.map((item, index) => {
+                return <SubMenu item={item} key={index} onNavigate={closeSidebar} />;
+              })}
+            </div>
             <div className='sidebar-logout-wrap'>
               <button type='button' onClick={handleLogout} className='sidebar-logout-btn'>
                 <AiIcons.AiOutlineLogout /> Cerrar Sesión
