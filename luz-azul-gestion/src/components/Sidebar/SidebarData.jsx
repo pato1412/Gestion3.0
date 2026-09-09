@@ -4,9 +4,14 @@ import * as AiIcons from 'react-icons/ai';
 import * as IoIcons from 'react-icons/io';
 import * as RiIcons from 'react-icons/ri';
 import { useEstablecimiento } from '../../contexts/EstablecimientoContext';
+import { useAuth } from '../../contexts/AuthContext';
 
 export const SidebarData = () =>{
   const { establecimiento } = useEstablecimiento();
+  const { user } = useAuth()
+  console.log(user);
+  const usuarioEmail = user?.email
+  const usuarioNombre = user?.NombreCompleto || 'Usuario no disponible'
 
   const Items = [];
     Items.push(
@@ -58,7 +63,7 @@ export const SidebarData = () =>{
       subNav: [
         {
           title: 'Creá tu gráfica',
-          path: 'https://flyers.luz-azul.com.ar/?EstablecimientoGUID=' + establecimiento.EstablecimientoGUID,
+          path: 'https://flyers.luz-azul.com.ar/?EstablecimientoGUID=' + encodeURIComponent(establecimiento.EstablecimientoGUID) + "&email=" + encodeURIComponent(usuarioEmail) + "&nombre=" + encodeURIComponent(usuarioNombre),
           external: true,
           icon: <FaIcons.FaImage />
         },
