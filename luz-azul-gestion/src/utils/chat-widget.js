@@ -4,9 +4,11 @@
     useEffect(() => initChatWidget({ endpoint, title }), []); // devuelve función de limpieza
   No requiere ningún framework para funcionar internamente.
 */
-export function initChatWidget({ endpoint = "/api/chat", title = "Capacitación" } = {}) {
+export function initChatWidget({ endpoint = "/api/chat", title = "Capacitación", usuarioNombre = "Sin nombre", establecimientoDescripcion = "Sin establecimiento" } = {}) {
   const ENDPOINT = endpoint;
   const TITLE = title;
+  const usuario = usuarioNombre;
+  const establecimiento = establecimientoDescripcion;
 
 
   // Icono de auricular (SVG embebido) para identificar el widget como chat/soporte
@@ -252,6 +254,8 @@ export function initChatWidget({ endpoint = "/api/chat", title = "Capacitación"
           messages: history,
           topic: currentTopic,
           image: imgParaEnviar ? { media_type: imgParaEnviar.media_type, data: imgParaEnviar.data } : null,
+          usuario,
+          establecimiento,
         }),
       });
       const data = await res.json();
