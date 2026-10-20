@@ -6,7 +6,7 @@ import { useEstablecimiento } from '../../contexts/EstablecimientoContext';
 
 const ChatWidget = ({ endpoint = API_URLS.ChatWidget , title = 'Capacitación Luz Azul' }) => {
 
-  const { establecimiento, loading } = useEstablecimiento();
+  const { establecimiento } = useEstablecimiento();
   const { user } = useAuth()
   const usuarioNombre = user?.NombreCompleto || user?.email || 'Usuario no disponible'
   const establecimientoDescripcion = establecimiento?.Descripcion || "Sin establecimiento";

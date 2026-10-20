@@ -1,15 +1,14 @@
-import Cookies from 'js-cookie'
 import { useAuth } from '../../contexts/AuthContext'
 import './Footer.css'
 import { FaArrowsAltV } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
-import { use } from 'react'
 import { useDeposito } from '../../contexts/DepositoContext'
 import { useLocation } from 'react-router-dom'
 import { useEstablecimiento } from '../../contexts/EstablecimientoContext'
 
-const Footer = ({ depositoNombre }) => {
+const Footer = () => {
   const { user } = useAuth()
+  const location = useLocation()
   const { Deposito } = useDeposito()
   const { establecimiento } = useEstablecimiento()
   const establecimientoNombre = establecimiento?.Descripcion || 'Establecimiento no disponible'

@@ -35,6 +35,8 @@ export async function apiFetch(url, options = {}) {
   const guid = (EstablecimientoData) ? JSON.parse(EstablecimientoData).EstablecimientoGUID : null; // fallback
   const response = await fetch(url, {
     mode: 'cors', // petición en modo CORS (necesario para dominios externos desde el navegador)
+    // options va antes que headers: si options trae headers propios se suman a los por defecto en vez de reemplazarlos
+    ...options,
     headers: {
       'Content-Type': 'application/json',
       'EstablecimientoGUID': guid,
@@ -45,7 +47,6 @@ export async function apiFetch(url, options = {}) {
       'X-Site-Origin': window.location.origin,
       ...options.headers,
     },
-    ...options,
   });
    if (response.status === 204) {
     // Operation was successful, but there is no content to return.
@@ -71,13 +72,13 @@ export const downloadFile = async (url,fileName,  options = {}) => {
     const guid = (EstablecimientoData) ? JSON.parse(EstablecimientoData).EstablecimientoGUID : null; // fallback
     const response = await fetch(url, {
       mode: 'cors', // petición en modo CORS (necesario para dominios externos desde el navegador)
+      ...options,
       headers: {
         'Content-Type': 'application/json',
         'EstablecimientoGUID': guid,
         'X-Site-Origin': window.location.origin,
         ...options.headers,
       },
-      ...options,
     });
 
     if (!response.ok) throw new Error('Network response was not ok');

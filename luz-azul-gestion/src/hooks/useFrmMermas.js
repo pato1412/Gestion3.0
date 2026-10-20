@@ -127,7 +127,7 @@ export const useFrmMermas = () => {
     }
 
     inputRefCodigo.current?.focus()
-  }, [items, showErrorAlert, singleSelections])
+  }, [showErrorAlert, singleSelections])
 
   const eliminarItem = useCallback(
     (item) => {

@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState } from 'react';
 import Cookies from 'js-cookie';
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -13,24 +13,15 @@ export const useDeposito = () => {
 };
 
 export const DepositoProvider = ({ children }) => {
-  const [DepositoId, setDepositoId] = useState(null);
-  const [Deposito, setDeposito] = useState(null);
-  const [loading, setLoading] = useState(true);
+  // El depósito seleccionado se lee de las cookies al crear el estado (sin useEffect).
+  const [DepositoId, setDepositoId] = useState(() => Cookies.get('DepositoId') ?? null);
+  const [Deposito, setDeposito] = useState(() => {
+    const DepositoData = Cookies.get('DepositoData');
+    return DepositoData ? JSON.parse(DepositoData) : null;
+  });
+  const loading = false;
   const navigate = useNavigate();
   const location = useLocation();
-
-  useEffect(() => {
-    // Verificar si hay un token o sesión guardada
-    const cookieDepositoId = Cookies.get('DepositoId');
-    const DepositoData = Cookies.get('DepositoData');
-    if (cookieDepositoId) {
-      setDepositoId(cookieDepositoId);
-    }
-    if (DepositoData) {
-      setDeposito(JSON.parse(DepositoData));
-    }
-    setLoading(false);
-  }, []);
 
   const handleDepositoSelected = (deposito) => {
     /* Guardamos el depósito seleccionado en cookies para que esté disponible en toda la aplicación, incluso después de recargar la página */

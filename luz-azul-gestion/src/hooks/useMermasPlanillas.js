@@ -51,7 +51,7 @@ export const useMermasPlanillas = () => {
     (planillaId) => {
       openModal(
         'Eliminar Planilla',
-        'Esta seguro que desea eliminar esta planilla de inventario? Esta accion no se puede deshacer.',
+        'Esta seguro que desea eliminar esta planilla de mermas? Esta accion no se puede deshacer.',
         async () => {
           try {
             const data = { InventarioId: planillaId }

@@ -1,10 +1,8 @@
-import { useState, useEffect } from 'react'
-import { useNavigate, Route, Routes } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import Home from './Pages/Home/Home'
 import LoginPage from './Pages/Login/Login'
 import Page404 from './Pages/404/404'
 import SelectEstablecimiento from './Pages/SelectEstablecimiento/SelectEstablecimiento'
-import Cookies from 'js-cookie'
 import { AuthProvider } from './contexts/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import ConfigPage from './Pages/Config/ConfigPage'
@@ -30,7 +28,7 @@ import ListDevoluciones from './Pages/Stock/ListDevoluciones'
 import ChatWidget from './components/ChatWidget/ChatWidget'
 
 function App() {
-  const { establecimiento, loading } = useEstablecimiento();
+  const { establecimiento } = useEstablecimiento();
   
   return (
     <AuthProvider>

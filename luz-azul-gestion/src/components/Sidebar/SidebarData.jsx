@@ -9,7 +9,6 @@ import { useAuth } from '../../contexts/AuthContext';
 export const SidebarData = () =>{
   const { establecimiento } = useEstablecimiento();
   const { user } = useAuth()
-  console.log(user);
   const usuarioEmail = user?.email
   const usuarioNombre = user?.NombreCompleto || 'Usuario no disponible'
 

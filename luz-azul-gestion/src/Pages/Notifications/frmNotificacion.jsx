@@ -39,7 +39,8 @@ const FrmNotificacion = () => {
                 const establecimientos = await apiFetch( API_URLS.getEstablecimientos, { method: 'POST', body: JSON.stringify(data) });
                 setEstablecimientos(establecimientos);
             } catch (error) {
-                showErrorAlert(`Error cargando establecimientos: ${getErrorMessage(error)}`);
+                setErrorMessage(`Error cargando establecimientos: ${error?.message || 'Error inesperado'}`);
+                setShowError(true);
             } finally {
                 setIsLoading(false);
                 setMessageLoader('');

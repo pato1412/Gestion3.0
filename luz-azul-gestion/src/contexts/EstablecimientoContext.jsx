@@ -1,6 +1,5 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useCallback, useContext, useState } from 'react';
 import Cookies from 'js-cookie';
-import { useNavigate, useLocation } from 'react-router-dom';
 import { API_URLS, apiFetch } from '../config/api';
 
 const EstablecimientoContext = createContext();
@@ -14,41 +13,32 @@ export const useEstablecimiento = () => {
 };
 
 export const EstablecimientoProvider = ({ children }) => {
-  const [establecimientoId, setEstablecimientoId] = useState(null);
-  const [establecimiento, setEstablecimiento] = useState(null);
+  // El establecimiento seleccionado se lee de las cookies al crear el estado (sin useEffect).
+  const [establecimientoId, setEstablecimientoId] = useState(() => Cookies.get('EstablecimientoId') ?? null);
+  const [establecimiento, setEstablecimiento] = useState(() => {
+    const EstablecimientoData = Cookies.get('EstablecimientoData');
+    return EstablecimientoData ? JSON.parse(EstablecimientoData) : null;
+  });
   const [establecimientos, setEstablecimientos] = useState([]);
+  // loading indica la carga de la lista de establecimientos (fetchEstablecimientos)
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
-  const location = useLocation();
 
-    useEffect(() => {
-        // Verificar si hay un token o sesión guardada
-        const cookieEstablecimientoId = Cookies.get('EstablecimientoId');
-        const EstablecimientoData = Cookies.get('EstablecimientoData');
-        if (cookieEstablecimientoId) {
-            setEstablecimientoId(cookieEstablecimientoId);
-        }
-        if (EstablecimientoData) {
-            setEstablecimiento(JSON.parse(EstablecimientoData));
-        }
-        setLoading(false);
-    }, []);
-
-    const fetchEstablecimientos = async () => {
+    // useCallback: SelectEstablecimiento la usa como dependencia de su useEffect
+    const fetchEstablecimientos = useCallback(async () => {
         //console.log('fetchEstablecimientos - Iniciando carga de establecimientos...'); // Debug
       try {
         const data = await apiFetch(API_URLS.getEstablecimientos, {
         method: 'POST'
         });
         setEstablecimientos(data); // Asumiendo que data es un array de objetos con Id, GUID, Nombre, etc.
-      } catch (err) {
+      } catch {
         setError('Error al cargar establecimientos');
        // console.error('Error al cargar establecimientos:', err);
       } finally {
         setLoading(false);
       }
-    };
+    }, []);
 
   const handleEstablecimientoSelected = (establecimiento) => {
     /* Guardamos el establecimiento seleccionado en cookies para que esté disponible en toda la aplicación, incluso después de recargar la página */

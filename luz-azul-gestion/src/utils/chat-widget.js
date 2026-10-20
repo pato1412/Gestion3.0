@@ -262,7 +262,7 @@ export function initChatWidget({ endpoint = "/api/chat", title = "Capacitación"
       addMsg(data.reply || "No pude responder, probá de nuevo.", "bot");
       history.push({ role: "assistant", content: data.reply || "" });
       if (data.cortada) addContinueButton();
-    } catch (err) {
+    } catch {
       addMsg("Error de conexión. Probá de nuevo en un momento.", "bot");
     } finally {
       input.disabled = false;

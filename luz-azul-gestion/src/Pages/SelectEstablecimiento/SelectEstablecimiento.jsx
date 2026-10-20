@@ -1,6 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { API_URLS, apiFetch } from '../../config/api';
-import Cookies from 'js-cookie';
+import { useEffect } from 'react';
 import './SelectEstablecimiento.css';
 import Loader from '../../components/Loader/Loader';
 import { useEstablecimiento } from '../../contexts/EstablecimientoContext';
@@ -10,7 +8,7 @@ const SelectEstablecimiento = () => {
 
   useEffect(() => {
     fetchEstablecimientos();
-  }, []);
+  }, [fetchEstablecimientos]);
 
   const handleSelect = (e) => {
     const id = e.target.value;

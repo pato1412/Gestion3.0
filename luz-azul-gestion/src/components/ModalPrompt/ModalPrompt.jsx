@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
@@ -15,11 +15,11 @@ const ModalPrompt = ({
 }) => {
   const [inputValue, setInputValue] = useState('');
 
-  useEffect(() => {
-    if (!show) {
-      setInputValue('');
-    }
-  }, [show]);
+  // El input se limpia al cerrar o confirmar, así el próximo modal arranca vacío.
+  const handleHide = () => {
+    setInputValue('');
+    onHide();
+  };
 
   const handleConfirm = () => {
     if (showInput) {
@@ -27,6 +27,7 @@ const ModalPrompt = ({
     } else {
       onConfirm();
     }
+    setInputValue('');
   };
 
   const handleInputChange = (e) => {
@@ -36,7 +37,7 @@ const ModalPrompt = ({
   return (
     <Modal
       show={show}
-      onHide={onHide}
+      onHide={handleHide}
       backdrop="static"
       keyboard={false} 
       aria-labelledby="contained-modal-title-vcenter"
@@ -63,7 +64,7 @@ const ModalPrompt = ({
         )}
       </Modal.Body>
       <Modal.Footer className='justify-content-between'  >
-        <Button style={{ width: 'auto' }} variant="secondary" onClick={onHide}>
+        <Button style={{ width: 'auto' }} variant="secondary" onClick={handleHide}>
           Cerrar
         </Button>
         <Button style={{ width: 'auto' }} variant="primary" onClick={handleConfirm}>

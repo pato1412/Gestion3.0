@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 
 const externalLinkProps = {
@@ -12,13 +12,9 @@ const SubMenu = ({ item, onNavigate }) => {
     () => item.subNav?.some((subItem) => pathname === subItem.path || pathname.startsWith(`${subItem.path}/`)) ?? false,
     [item.subNav, pathname]
   );
-  const [subnav, setSubnav] = useState(false);
-
-  useEffect(() => {
-    if (hasActiveChild) {
-      setSubnav(true);
-    }
-  }, [hasActiveChild]);
+  // null = el usuario no lo tocó: queda abierto si alguna subruta está activa.
+  const [abierto, setAbierto] = useState(null);
+  const subnav = abierto ?? hasActiveChild;
 
   if (item.subNav) {
     return (
@@ -28,7 +24,7 @@ const SubMenu = ({ item, onNavigate }) => {
             <button
               className={`accordion-button sidebar-accordion-button ${subnav ? '' : 'collapsed'} ${hasActiveChild ? 'is-active' : ''}`}
               type='button'
-              onClick={() => setSubnav(!subnav)}
+              onClick={() => setAbierto(!subnav)}
               aria-expanded={subnav}
             >
               <span className='sidebar-menu-icon'>{item.icon}</span>

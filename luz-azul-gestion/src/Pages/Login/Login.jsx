@@ -72,13 +72,13 @@ const LoginPage = () => {
       } else {
         setServerError("Usuario o contraseña incorrectos. Por favor, verifica tus datos e intenta de nuevo.");
       }
-    } catch (err) {
+    } catch {
       setServerError('No se pudo iniciar sesión. Verifica tus datos e intenta de nuevo.');
     }
   };
 
   const handleChangeEmpresa = () => {
-      openModal('Cambiar Empresa', '¿Desea cambiar de empresa? Se cerrará la sesión actual y se eliminará la selección de establecimiento.', async (value) => {
+      openModal('Cambiar Empresa', '¿Desea cambiar de empresa? Se cerrará la sesión actual y se eliminará la selección de establecimiento.', () => {
         // Lógica para cerrar sesión y eliminar cookies
         clearCookies()
         window.location.reload();
