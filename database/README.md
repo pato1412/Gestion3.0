@@ -3,18 +3,45 @@
 Scripts de SQL Server que necesita Gestión, organizados como migraciones
 numeradas.
 
-## Cómo correrlos
+## Bases de datos
 
-Correr los archivos de `migrations/` **en orden**, conectado a la base de
-destino. Desde SSMS, abrí cada archivo y ejecutalo. Desde la terminal:
+| Base | Qué es | Uso |
+|------|--------|-----|
+| **ENSEMBLE** | Base propia de Luz Azul. | Acá se desarrollan todos los proyectos: las migraciones de esta carpeta se corren en ENSEMBLE. |
+| **EMP001** | Base del ERP viejo (TEMPO_ERP). | Tiene productos y algunas configuraciones. Desde ENSEMBLE se consulta, no se modifica. |
+
+## Conexión al servidor
+
+Los datos de conexión van en `conexion.env`, que **no se versiona** (está en
+`.gitignore`). Para crearlo, copiá `conexion.env.example` como `conexion.env`
+y completá servidor, usuario, clave y los nombres de las dos bases. Si algo
+cambia, se edita solo ese archivo.
+
+`sql.ps1` usa esos datos para correr consultas o scripts. La clave se le pasa
+a `sqlcmd` por variable de entorno, así que no queda en la línea de comandos
+ni en el historial. Las bases se indican por alias: `Ensemble` o `Tempo`
+(EMP001).
 
 ```powershell
-sqlcmd -S <servidor> -d <base> -E -b -i migrations\001_clasificaciones_tablas.sql
-sqlcmd -S <servidor> -d <base> -E -b -i migrations\002_clasificaciones_procedimientos.sql
+.\database\sql.ps1 -Base Tempo -Query "SELECT name FROM sys.tables ORDER BY name"
+.\database\sql.ps1 -Base Ensemble -Archivo .\database\migrations\001_clasificaciones_tablas.sql
 ```
 
-(`-E` usa autenticación de Windows; con usuario SQL reemplazalo por
-`-U <usuario> -P <clave>`. `-b` corta ante el primer error.)
+Si Windows no deja ejecutar el script por la política de ejecución:
+`powershell -ExecutionPolicy Bypass -File .\database\sql.ps1 ...`
+
+## Cómo correrlos
+
+Correr los archivos de `migrations/` **en orden**, conectado a **ENSEMBLE**.
+Desde SSMS, abrí cada archivo y ejecutalo. Desde la terminal:
+
+```powershell
+.\database\sql.ps1 -Base Ensemble -Archivo .\database\migrations\001_clasificaciones_tablas.sql
+.\database\sql.ps1 -Base Ensemble -Archivo .\database\migrations\002_clasificaciones_procedimientos.sql
+```
+
+El script corta ante el primer error. Para crear objetos hace falta un usuario
+con permisos de escritura: `claude_user` es solo de lectura.
 
 Todos los scripts se pueden **volver a correr sin error**: si un objeto ya
 existe, no se vuelve a crear. Si un script falla a la mitad, corregí el
