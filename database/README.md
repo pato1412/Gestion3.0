@@ -64,7 +64,8 @@ problema y corrélo de nuevo.
 | Archivo | Contenido |
 |---------|-----------|
 | `001_clasificaciones_tablas.sql` | `TiposClasificacion`, `Clasificaciones` (árbol con orden por usuario, segmentado por tipo), `ProductoClasificaciones`. |
-| `002_clasificaciones_procedimientos.sql` | `Clasificaciones_ObtenerArbol`, `_Insertar`, `_Reordenar`, `_Mover`, `_ObtenerProductos`; `ProductoClasificaciones_Guardar`, `_ObtenerPorProducto`. |
+| `002_clasificaciones_procedimientos.sql` | `Clasificaciones_ObtenerArbol`, `_Insertar`, `_Reordenar`, `_Mover`, `_ObtenerProductos`; `ProductoClasificaciones_Guardar`, `_ObtenerPorProducto`. **No se corrió y no hace falta**: esa lógica está en el webservice Ensemble (`ClasificacionesController`). Además usa `OPENJSON`, que necesita compatibilidad 130 y ENSEMBLE tiene 120. |
+| `003_calendario_recordatorios.sql` | `CalendarioRecordatorios`: recordatorios por establecimiento asociados a una clasificación (día, frecuencia y última fecha), con FK a `GWREstablecimientos` y `Clasificaciones`. |
 
 ## Bases externas
 
@@ -93,8 +94,8 @@ acceden siempre por el sinónimo `dbo.ProductosEmpresa`, creado en `001`.
 Árbol genérico para categorías, etiquetas, rubros, etc.
 
 - Cada clasificación tiene un `TipoClasificacion` (catálogo en
-  `TiposClasificacion`: 1 = Categorías de productos, 2 = Etiquetas de
-  productos). Un árbol nunca mezcla tipos: la base exige que la madre sea del
+  `TiposClasificacion`: 1 = Recordatorios, 2 = Aplicativo de pedidos,
+  3 = Aplicativo de precios). Un árbol nunca mezcla tipos: la base exige que la madre sea del
   mismo tipo que la hija.
 - Profundidad ilimitada, con `ClasificacionPadreId` (`NULL` = raíz).
 - `Orden` define el orden entre hermanos; lo cambia `Clasificaciones_Reordenar`
