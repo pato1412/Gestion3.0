@@ -66,6 +66,7 @@ problema y corrélo de nuevo.
 | `001_clasificaciones_tablas.sql` | `TiposClasificacion`, `Clasificaciones` (árbol con orden por usuario, segmentado por tipo), `ProductoClasificaciones`. |
 | `002_clasificaciones_procedimientos.sql` | `Clasificaciones_ObtenerArbol`, `_Insertar`, `_Reordenar`, `_Mover`, `_ObtenerProductos`; `ProductoClasificaciones_Guardar`, `_ObtenerPorProducto`. **No se corrió y no hace falta**: esa lógica está en el webservice Ensemble (`ClasificacionesController`). Además usa `OPENJSON`, que necesita compatibilidad 130 y ENSEMBLE tiene 120. |
 | `003_calendario_recordatorios.sql` | `CalendarioRecordatorios`: recordatorios por establecimiento asociados a una clasificación (día, frecuencia y última fecha), con FK a `GWREstablecimientos` y `Clasificaciones`. |
+| `004_datos_calendario_recordatorios.sql` | Carga inicial de los recordatorios que estaban configurados (658). Crea como raíz las clasificaciones del tipo 1 que falten (las busca sin distinguir mayúsculas ni acentos) y no toca recordatorios que ya existan para el mismo establecimiento, clasificación y día. Corta sin cambiar nada si falta un establecimiento o si una clasificación está repetida. |
 
 ## Bases externas
 
