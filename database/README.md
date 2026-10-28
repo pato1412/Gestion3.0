@@ -68,6 +68,7 @@ problema y corrélo de nuevo.
 | `003_calendario_recordatorios.sql` | `CalendarioRecordatorios`: recordatorios por establecimiento asociados a una clasificación (día, frecuencia y última fecha), con FK a `GWREstablecimientos` y `Clasificaciones`. |
 | `004_datos_calendario_recordatorios.sql` | Carga inicial de los recordatorios que estaban configurados (658). Crea como raíz las clasificaciones del tipo 1 que falten (las busca sin distinguir mayúsculas ni acentos) y no toca recordatorios que ya existan para el mismo establecimiento, clasificación y día. Corta sin cambiar nada si falta un establecimiento o si una clasificación está repetida. |
 | `005_productos_desde_emp001.sql` | `Productos`, `ListasPrecios`, `RelProductosListasPrecios` (+ vista `RelProductosListasPreciosView`), `UnidadesMedida` y `TipoUnidadesMedida`, con la misma estructura e IDs que en EMP001, y copia de sus datos. Proveedor y fórmula quedan como valores sin FK; las cuentas contables (`CuentaIdVtas`, `SubCuentaIdVtas`, `CuentaIdCpras`, `SubCuentaIdCpras`) no se pasan. Re-ejecutable: copia solo lo que falta y avisa cuántos registros difieren de EMP001 (no los pisa). Correrla en el corte del ERP. |
+| `006_devoluciones_fk_detalle.sql` | FK de `DevolucionesPlanillasDetalle` a `DevolucionesPlanillas` con `ON DELETE CASCADE` (borrar la planilla borra su detalle) e índice por `DevolucionId`. Corta sin cambiar nada si hay renglones huérfanos. |
 
 ## Bases externas
 
