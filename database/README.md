@@ -69,6 +69,7 @@ problema y corrélo de nuevo.
 | `004_datos_calendario_recordatorios.sql` | Carga inicial de los recordatorios que estaban configurados (658). Crea como raíz las clasificaciones del tipo 1 que falten (las busca sin distinguir mayúsculas ni acentos) y no toca recordatorios que ya existan para el mismo establecimiento, clasificación y día. Corta sin cambiar nada si falta un establecimiento o si una clasificación está repetida. |
 | `005_productos_desde_emp001.sql` | `Productos`, `ListasPrecios`, `RelProductosListasPrecios` (+ vista `RelProductosListasPreciosView`), `UnidadesMedida` y `TipoUnidadesMedida`, con la misma estructura e IDs que en EMP001, y copia de sus datos. Proveedor y fórmula quedan como valores sin FK; las cuentas contables (`CuentaIdVtas`, `SubCuentaIdVtas`, `CuentaIdCpras`, `SubCuentaIdCpras`) no se pasan. Re-ejecutable: copia solo lo que falta y avisa cuántos registros difieren de EMP001 (no los pisa). Correrla en el corte del ERP. |
 | `006_devoluciones_fk_detalle.sql` | FK de `DevolucionesPlanillasDetalle` a `DevolucionesPlanillas` con `ON DELETE CASCADE` (borrar la planilla borra su detalle) e índice por `DevolucionId`. Corta sin cambiar nada si hay renglones huérfanos. |
+| `007_token_api_largo.sql` | Agranda `GWREstablecimientos.TempoAPIToken` de `VARCHAR(100)` a `VARCHAR(2000)`: el token de Ayres POS tiene 242 caracteres y no se podía guardar. |
 | `008_devoluciones_fecha_recepcion.sql` | Agrega `DevolucionesPlanillas.FechaRecepcion` (NULL mientras el depósito no recibió la planilla). |
 
 ## Bases externas
