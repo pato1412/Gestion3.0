@@ -26,6 +26,10 @@ import ViewMermas from './Pages/Stock/viewMermas'
 import FrmNotificacion from './Pages/Notifications/frmNotificacion'
 import ListDevoluciones from './Pages/Stock/ListDevoluciones'
 import ChatWidget from './components/ChatWidget/ChatWidget'
+import FrmDevoluciones from './Pages/Stock/frmDevoluciones'
+import ViewDevolucion from './Pages/Stock/viewDevolucion'
+import ListRecepcionDevoluciones from './Pages/Stock/ListRecepcionDevoluciones'
+import FrmRecepcionDevolucion from './Pages/Stock/frmRecepcionDevolucion'
 
 function App() {
   const { establecimiento } = useEstablecimiento();
@@ -55,6 +59,11 @@ function App() {
                     <Route path='/notificaciones/listar-notificaciones' element={<ProtectedRoute><ProtectedDeposito><ListNotifications /></ProtectedDeposito></ProtectedRoute>} />
                     <Route path='/notificaciones/nueva-notificacion' element={<ProtectedRoute><ProtectedDeposito><FrmNotificacion /></ProtectedDeposito></ProtectedRoute>} /> 
                     <Route path='/stock/listar-devoluciones' element={<ProtectedRoute><ProtectedDeposito><ListDevoluciones /></ProtectedDeposito></ProtectedRoute>} />
+                    <Route path='/stock/nueva-devolucion' element={<ProtectedRoute><ProtectedDeposito><FrmDevoluciones /></ProtectedDeposito></ProtectedRoute>} />
+                    <Route path='/stock/planilla-devolucion/:id' element={<ProtectedRoute><ProtectedDeposito><ViewDevolucion /></ProtectedDeposito></ProtectedRoute>} />
+                    {/* Deposito: recepcion y aprobacion de las devoluciones de todos los locales (permisos pendientes) */}
+                    <Route path='/stock/recepcion-devoluciones' element={<ProtectedRoute><ProtectedDeposito><ListRecepcionDevoluciones /></ProtectedDeposito></ProtectedRoute>} />
+                    <Route path='/stock/recepcion-devoluciones/:id' element={<ProtectedRoute><ProtectedDeposito><FrmRecepcionDevolucion /></ProtectedDeposito></ProtectedRoute>} />
                     <Route path='*' element={<Page404 />} />
                   </Routes>
                 </div>

@@ -27,6 +27,13 @@ export const API_URLS = {
   NewPlanillaDevolucionDetalle: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_NEW_PLANILLA_DEVOLUCION_DETALLE_URL,
   GetPlanillaDevolucionDetalle: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_GET_PLANILLA_DEVOLUCION_DETALLE_URL,
   DeletePlanillaDevolucionDetalle: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_DELETE_PLANILLA_DEVOLUCION_DETALLE_URL,
+  GetPlanillaDevolucion: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_GET_PLANILLA_DEVOLUCION_URL,
+  DownloadPlanillaDevolucion: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_DOWNLOAD_PLANILLA_DEVOLUCION_URL,
+  GetPlanillasDevolucionRecepcion: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_GET_PLANILLAS_DEVOLUCION_RECEPCION_URL,
+  GetPlanillaDevolucionRecepcion: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_GET_PLANILLA_DEVOLUCION_RECEPCION_URL,
+  RecibirPlanillaDevolucion: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_RECIBIR_PLANILLA_DEVOLUCION_URL,
+  AprobarPlanillaDevolucionDetalle: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_APROBAR_PLANILLA_DEVOLUCION_DETALLE_URL,
+  DownloadPlanillaDevolucionRecepcion: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_DOWNLOAD_PLANILLA_DEVOLUCION_RECEPCION_URL,
   ChatWidget: import.meta.env.VITE_API_CHAT_WIDGET_URL,
 };
 

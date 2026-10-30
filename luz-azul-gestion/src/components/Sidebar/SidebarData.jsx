@@ -44,6 +44,12 @@ export const SidebarData = () =>{
           icon: <IoIcons.IoIosPaper />
         },
         {
+          // Para el deposito; cuando esten los permisos, mostrarlo solo a sus usuarios
+          title: 'Recepción de devoluciones',
+          path: '/stock/recepcion-devoluciones',
+          icon: <FaIcons.FaClipboardCheck />
+        },
+        {
           title: 'Orden de producción',
           path: 'https://app.simpletempo.com/inventory/ProductionOrders/ProductionOrders/Create',
           icon: <IoIcons.IoIosPaper />,

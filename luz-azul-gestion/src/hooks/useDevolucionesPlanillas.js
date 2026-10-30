@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { apiFetch, API_URLS, GetDepositosUsuario } from '../config/api'
+import { apiFetch, API_URLS, GetDepositosUsuario, downloadFile } from '../config/api'
 import { useModal } from '../contexts/ModalContext'
 
 
@@ -66,12 +66,13 @@ export const useDevolucionesPlanillas = () => {
               })
             })
 
-            if (response?.bok === true || response?.ok === true || response === null) {
+            if (response?.bok === true) {
               setPlanillas((prev) => prev.filter((p) => p.DevolucionId !== planillaId))
               return
             }
 
-            setError('No se pudo eliminar la planilla. Intente nuevamente mas tarde.')
+            // Por ejemplo, si el deposito la recibio mientras tanto
+            setError(response?.message || 'No se pudo eliminar la planilla. Intente nuevamente mas tarde.')
           } catch (err) {
             console.error('Error al eliminar la planilla:', err)
             setError('No se pudo eliminar la planilla. Intente nuevamente mas tarde.')
@@ -81,6 +82,24 @@ export const useDevolucionesPlanillas = () => {
     },
     [openModal]
   )
+
+  const descargarPlanilla = useCallback(async (planillaId) => {
+    try {
+      setLoadingMessage('Generando archivo excel...')
+      setIsLoading(true)
+
+      const config = { id: planillaId, NombreArchivo: `planilla_devolucion_${planillaId}.xlsx` }
+      await downloadFile(API_URLS.DownloadPlanillaDevolucion, config.NombreArchivo, {
+        method: 'POST',
+        body: JSON.stringify(config)
+      })
+    } catch (err) {
+      setError(`Error descargando el archivo: ${err.message}`)
+    } finally {
+      setIsLoading(false)
+      setLoadingMessage('')
+    }
+  }, [])
 
   useEffect(() => {
     loadPlanillas()
@@ -92,6 +111,7 @@ export const useDevolucionesPlanillas = () => {
     loadingMessage,
     error,
     loadPlanillas,
-    deletePlanilla
+    deletePlanilla,
+    descargarPlanilla
   }
 }
