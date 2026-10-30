@@ -5,7 +5,7 @@ import { apiFetch, API_URLS } from '../config/api'
 import { useDeposito } from '../contexts/DepositoContext'
 import { useModal } from '../contexts/ModalContext'
 import { useAuth } from '../contexts/AuthContext'
-import { usePlanillaDraftPersistence } from './usePlanillaDraftPersistence'
+import { clearPlanillaDraft, usePlanillaDraftPersistence } from './usePlanillaDraftPersistence'
 import {
   filterPlanillaItems,
   getErrorMessage,
@@ -13,6 +13,9 @@ import {
   removeItemOrLastCantidad,
   upsertItemCantidad
 } from '../utils/planillaItems'
+
+// Borrador propio: antes compartía planillaItems con inventario y un borrador aparecía en el otro formulario
+const STORAGE_KEY = 'mermaItems'
 
 export const useFrmMermas = () => {
   const [singleSelections, setSingleSelections] = useState([])
@@ -49,6 +52,7 @@ export const useFrmMermas = () => {
     setItems,
     setLastSavedTime,
     openModal,
+    storageKey: STORAGE_KEY,
     reloadConfirmMessage:
       'Hay datos cargados en la planilla. Si recarga la pagina, volvera a cargar todo y perdera los datos no guardados. Desea continuar?'
   })
@@ -191,8 +195,7 @@ export const useFrmMermas = () => {
           return
         }
 
-        Cookies.remove(`planillaItems_${DepositoId}`)
-        Cookies.remove(`planillaItemsTime_${DepositoId}`)
+        clearPlanillaDraft(STORAGE_KEY, DepositoId)
 
         openModal('Planilla guardada', 'La planilla de mermas se ha guardado correctamente.', () => {
           navigate('/stock/listar-mermas')
