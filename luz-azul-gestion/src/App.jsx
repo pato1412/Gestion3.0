@@ -27,6 +27,8 @@ import FrmDevoluciones from './Pages/Stock/frmDevoluciones'
 import ViewDevolucion from './Pages/Stock/viewDevolucion'
 import ListRecepcionDevoluciones from './Pages/Stock/ListRecepcionDevoluciones'
 import FrmRecepcionDevolucion from './Pages/Stock/frmRecepcionDevolucion'
+import { PermisosProvider } from './contexts/PermisosContext'
+import ProtectedPermiso from './components/ProtectedPermiso'
 
 function App() {
   const { establecimiento } = useEstablecimiento();
@@ -37,6 +39,7 @@ function App() {
           {establecimiento ? (
             <>
               <DepositoProvider >
+              <PermisosProvider>
                 <div className="app-main">
                   <Routes>
                     <Route path='/login' element={<LoginPage />} />
@@ -58,12 +61,13 @@ function App() {
                     <Route path='/stock/listar-devoluciones' element={<ProtectedRoute><ProtectedDeposito><ListDevoluciones /></ProtectedDeposito></ProtectedRoute>} />
                     <Route path='/stock/nueva-devolucion' element={<ProtectedRoute><ProtectedDeposito><FrmDevoluciones /></ProtectedDeposito></ProtectedRoute>} />
                     <Route path='/stock/planilla-devolucion/:id' element={<ProtectedRoute><ProtectedDeposito><ViewDevolucion /></ProtectedDeposito></ProtectedRoute>} />
-                    {/* Deposito: recepcion y aprobacion de las devoluciones de todos los locales (permisos pendientes) */}
-                    <Route path='/stock/recepcion-devoluciones' element={<ProtectedRoute><ProtectedDeposito><ListRecepcionDevoluciones /></ProtectedDeposito></ProtectedRoute>} />
-                    <Route path='/stock/recepcion-devoluciones/:id' element={<ProtectedRoute><ProtectedDeposito><FrmRecepcionDevolucion /></ProtectedDeposito></ProtectedRoute>} />
+                    {/* Deposito: recepcion y aprobacion de las devoluciones de todos los locales (permiso RecepcionDevoluciones) */}
+                    <Route path='/stock/recepcion-devoluciones' element={<ProtectedRoute><ProtectedDeposito><ProtectedPermiso permiso='RecepcionDevoluciones'><ListRecepcionDevoluciones /></ProtectedPermiso></ProtectedDeposito></ProtectedRoute>} />
+                    <Route path='/stock/recepcion-devoluciones/:id' element={<ProtectedRoute><ProtectedDeposito><ProtectedPermiso permiso='RecepcionDevoluciones'><FrmRecepcionDevolucion /></ProtectedPermiso></ProtectedDeposito></ProtectedRoute>} />
                     <Route path='*' element={<Page404 />} />
                   </Routes>
                 </div>
+              </PermisosProvider>
               </DepositoProvider>
               <GlobalModal />
             </>

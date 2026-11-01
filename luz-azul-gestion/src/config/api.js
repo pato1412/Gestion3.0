@@ -35,6 +35,14 @@ export const API_URLS = {
   AprobarPlanillaDevolucionDetalle: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_APROBAR_PLANILLA_DEVOLUCION_DETALLE_URL,
   DownloadPlanillaDevolucionRecepcion: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_DOWNLOAD_PLANILLA_DEVOLUCION_RECEPCION_URL,
   ChatWidget: import.meta.env.VITE_API_CHAT_WIDGET_URL,
+  GetPermisosUsuarios: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_GET_PERMISOS_USUARIOS_URL,
+};
+
+// Email del usuario de la sesión: Ensemble lo usa para validar sus permisos (header UsuarioEmail)
+const headerUsuario = () => {
+  const userData = Cookies.get('userData');
+  const email = userData ? JSON.parse(userData).email : null;
+  return email ? { UsuarioEmail: email } : {};
 };
 
 export async function apiFetch(url, options = {}) {
@@ -52,6 +60,7 @@ export async function apiFetch(url, options = {}) {
       // Enviamos el origen actual en un header propio para que el backend lo valide y lo
       // devuelva reflejado en su respuesta CORS en lugar de usar '*'.
       'X-Site-Origin': window.location.origin,
+      ...headerUsuario(),
       ...options.headers,
     },
   });
@@ -84,6 +93,7 @@ export const downloadFile = async (url,fileName,  options = {}) => {
         'Content-Type': 'application/json',
         'EstablecimientoGUID': guid,
         'X-Site-Origin': window.location.origin,
+        ...headerUsuario(),
         ...options.headers,
       },
     });

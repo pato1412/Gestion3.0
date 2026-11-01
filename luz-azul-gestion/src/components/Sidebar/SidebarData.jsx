@@ -5,10 +5,12 @@ import * as IoIcons from 'react-icons/io';
 import * as RiIcons from 'react-icons/ri';
 import { useEstablecimiento } from '../../contexts/EstablecimientoContext';
 import { useAuth } from '../../contexts/AuthContext';
+import { usePermisos } from '../../contexts/PermisosContext';
 
 export const SidebarData = () =>{
   const { establecimiento } = useEstablecimiento();
   const { user } = useAuth()
+  const { tienePermiso } = usePermisos()
   const usuarioEmail = user?.email
   const usuarioNombre = user?.NombreCompleto || 'Usuario no disponible'
 
@@ -43,12 +45,14 @@ export const SidebarData = () =>{
           path: '/stock/listar-devoluciones',
           icon: <IoIcons.IoIosPaper />
         },
-        {
-          // Para el deposito; cuando esten los permisos, mostrarlo solo a sus usuarios
-          title: 'Recepción de devoluciones',
-          path: '/stock/recepcion-devoluciones',
-          icon: <FaIcons.FaClipboardCheck />
-        },
+        // Solo para quien recibe las devoluciones en el depósito (o es administrador)
+        ...(tienePermiso('RecepcionDevoluciones')
+          ? [{
+              title: 'Recepción de devoluciones',
+              path: '/stock/recepcion-devoluciones',
+              icon: <FaIcons.FaClipboardCheck />
+            }]
+          : []),
         {
           title: 'Orden de producción',
           path: 'https://app.simpletempo.com/inventory/ProductionOrders/ProductionOrders/Create',
