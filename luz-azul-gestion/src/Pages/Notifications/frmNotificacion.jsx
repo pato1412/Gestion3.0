@@ -227,11 +227,11 @@ const FrmNotificacion = () => {
                 show={showError}
                 onClose={() => setShowError(false)}
             />  
-          <div className='Container-notifications-form mb-3'>
-            <div className='Container-notifications-header d-flex align-items-center justify-content-between'>
+          <div className='Container-form mb-3'>
+            <div className='Container-header header-red d-flex align-items-center justify-content-between'>
               <h5>Crear nueva notificación</h5>
             </div>
-            <div className='Container-notifications-content'>
+            <div className='Container-content notificaciones-content'>
               <Row className='mb-3'>
                 <Form.Group controlId="formCategory" className='col-md-6'>
                   <Form.Label>Categoría</Form.Label>
@@ -318,11 +318,11 @@ const FrmNotificacion = () => {
               </Row>
             </div>
           </div>
-          <div className='Container-notifications-form mb-3'>
-            <div className='Container-notifications-header d-flex align-items-center justify-content-between'>
+          <div className='Container-form mb-3'>
+            <div className='Container-header header-red d-flex align-items-center justify-content-between'>
               <h5>Establecimientos</h5>
             </div>
-            <div className='Container-notifications-content'>
+            <div className='Container-content notificaciones-content'>
               {establecimientos.length === 0 ? (
                 <div className='text-center'>No hay establecimientos disponibles.</div>
               ) : (

@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FaStore } from 'react-icons/fa';
 import './Login.css';
 import { API_URLS, apiFetch } from '../../config/api';
 import { useAuth } from '../../contexts/AuthContext';
-import {Row, Badge, Button } from 'react-bootstrap';
-import Cookies from 'js-cookie';
-import { FaArrowsAltV } from 'react-icons/fa';
 import { useModal } from '../../contexts/ModalContext';
 import { useEstablecimiento } from '../../contexts/EstablecimientoContext';
 
@@ -15,10 +13,11 @@ const LoginPage = () => {
   const [errors, setErrors] = useState({});
   const [serverError, setServerError] = useState(null);
   const [razonSocial, setRazonSocial] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { login } = useAuth();
   const { openModal } = useModal();
   const navigate = useNavigate();
-  const { clearCookies } = useEstablecimiento();
+  const { establecimiento, clearCookies } = useEstablecimiento();
 
   const validateForm = () => {
     const newErrors = {};
@@ -58,6 +57,7 @@ const LoginPage = () => {
 
     if (!validateForm()) return;
 
+    setIsSubmitting(true);
     try {
       const result = await apiFetch(API_URLS.login, {
         method: 'POST',
@@ -74,6 +74,8 @@ const LoginPage = () => {
       }
     } catch {
       setServerError('No se pudo iniciar sesión. Verifica tus datos e intenta de nuevo.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -87,12 +89,19 @@ const LoginPage = () => {
 
   return (
     <div className="login-container">
+      <div className="login-marca">
+        <div className="login-logo">
+          <img src="/images/logo-small.png" alt="Luz Azul" />
+        </div>
+        <h1 className="login-app">Gestión</h1>
+      </div>
       <div className="login-card">
-        <img src="/images/logo-small.png" alt="Logo" className="login-logo" />
-        <h2>Iniciar Sesión</h2>
+        <h2>Iniciar sesión</h2>
         <form onSubmit={handleSubmit} className="login-form">
-          <div className="form-group">
-            <label htmlFor="razonSocial"><a href='#' style={{textDecoration:'none'}}  onClick={handleChangeEmpresa} >Empresa: {razonSocial} </a></label>
+          <div className="login-empresa">
+            <FaStore />
+            <span>{razonSocial || establecimiento?.Descripcion}</span>
+            <button type="button" onClick={handleChangeEmpresa}>Cambiar</button>
           </div>
           <div className="form-group">
             <label htmlFor="email">Email</label>
@@ -106,7 +115,7 @@ const LoginPage = () => {
             />
             {errors.email && <span className="error-message">{errors.email}</span>}
           </div>
-          
+
           <div className="form-group">
             <label htmlFor="password">Contraseña</label>
             <input
@@ -119,9 +128,9 @@ const LoginPage = () => {
             />
             {errors.password && <span className="error-message">{errors.password}</span>}
           </div>
-          
-          <button type="submit" className="login-button">
-            Iniciar Sesión
+
+          <button type="submit" className="login-button" disabled={isSubmitting}>
+            {isSubmitting ? 'Ingresando...' : 'Ingresar'}
           </button>
           {serverError && <p className="error-message">{serverError}</p>}
         </form>

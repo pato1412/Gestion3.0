@@ -9,9 +9,6 @@ import ConfigPage from './Pages/Config/ConfigPage'
 import StockPage from './Pages/Stock/StockPage'
 import NewOrder from './Pages/Orders/NewOrder'
 import FrmSheetStock from './Pages/Stock/frmSheetStock'
-import Footer from './components/Footer/Footer'
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'react-bootstrap-typeahead/css/Typeahead.css'
 import { DepositoProvider } from './contexts/DepositoContext'
 import { ModalProvider } from './contexts/ModalContext'
 import SelectDeposito from './Pages/SelectDeposito/SelectDeposito'
@@ -67,7 +64,6 @@ function App() {
                     <Route path='*' element={<Page404 />} />
                   </Routes>
                 </div>
-                <Footer />
               </DepositoProvider>
               <GlobalModal />
             </>

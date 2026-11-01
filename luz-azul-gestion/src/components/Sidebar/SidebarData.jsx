@@ -93,6 +93,14 @@ export const SidebarData = () =>{
       );
     }   
 
+    // Al pie del menú, junto a "Cerrar sesión" (antes estaba en el footer)
+    Items.push({
+      title: 'Cambiar depósito',
+      path: '/select-deposito',
+      icon: <FaIcons.FaExchangeAlt />,
+      inferior: true
+    });
+
     return Items;
 } 
 

@@ -32,13 +32,16 @@ export function initChatWidget({ endpoint = "/api/chat", title = "Capacitación"
   const VERDE = "#8CC63F";      // verde (acento del logo)
   const CELESTE_CLARO = "#EAF6FC"; // celeste muy claro, para fondo de mensajes del bot
 
+  // Abajo a la derecha y por debajo del menú lateral (offcanvas de Bootstrap: z-index 1045).
+  // .app-main deja lugar abajo para que la burbuja no tape el último botón de la página.
   const css = `
-    .cw-bubble{position:fixed;top:15px;right:20px;width:58px;height:58px;border-radius:50%;
+    .app-main{padding-bottom:88px;}
+    .cw-bubble{position:fixed;bottom:20px;right:20px;width:58px;height:58px;border-radius:50%;
       background:${AZUL};color:#fff;border:1px solid ${CELESTE_CLARO};cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.25);
-      font-size:26px;z-index:999999;display:flex;align-items:center;justify-content:center;}
-    .cw-panel{position:fixed;bottom:60px;right:20px;width:340px;max-width:92vw;height:480px;max-height:75vh;
+      font-size:26px;z-index:1030;display:flex;align-items:center;justify-content:center;}
+    .cw-panel{position:fixed;bottom:90px;right:20px;width:340px;max-width:92vw;height:480px;max-height:75vh;
       background:#fff;border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,.22);display:none;
-      flex-direction:column;overflow:hidden;z-index:999999;font-family:system-ui,-apple-system,sans-serif;
+      flex-direction:column;overflow:hidden;z-index:1030;font-family:system-ui,-apple-system,sans-serif;
       border-top:3px solid ${VERDE};}
     .cw-panel.cw-open{display:flex;}
     .cw-head{background:${AZUL};color:#fff;padding:10px 16px;font-size:14px;font-weight:600;

@@ -67,14 +67,14 @@ const ListNotifications = () => {
     <>
       <Sidebar title={'Listado de notificaciones'} />
       <div className='container'>
-        <div className='Container-notifications-form mb-3'>
-          <div className='Container-notifications-header d-flex align-items-center justify-content-between'>
+        <div className='Container-form mb-3'>
+          <div className='Container-header header-red d-flex align-items-center justify-content-between'>
             <h5>Notificaciones</h5>
             <Link to='/notificaciones/nueva-notificacion' className='btn btn-primary'>
               Nueva Notificacion
             </Link>            
           </div>
-          <div className='Container-notifications-content'>
+          <div className='Container-content notificaciones-content'>
             {error && <div className='alert alert-danger'>{error}</div>}
             <div className='table-responsive'>
               <table className='table table-striped'>

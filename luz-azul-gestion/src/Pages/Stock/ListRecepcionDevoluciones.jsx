@@ -29,11 +29,11 @@ const ListRecepcionDevoluciones = () => {
     <>
       <Sidebar title={'Recepcion de devoluciones'} />
       <div className='container'>
-        <div className='Container-stock-form mb-3'>
-          <div className='Container-stock-header'>
+        <div className='Container-form mb-3'>
+          <div className='Container-header header-green'>
             <h5 className='mb-0'>Recepcion de devoluciones</h5>
           </div>
-          <div className='Container-stock-content'>
+          <div className='Container-content'>
             <Nav variant='tabs' activeKey={vista} onSelect={(key) => key && setVista(key)} className='mb-3'>
               {Object.entries(VISTAS_RECEPCION).map(([key, config]) => (
                 <Nav.Item key={key}>

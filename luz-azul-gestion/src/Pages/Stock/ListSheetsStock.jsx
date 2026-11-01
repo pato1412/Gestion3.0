@@ -15,14 +15,14 @@ const ListSheetsStock = () => {
     <>
       <Sidebar title={'Planillas de inventario'} />
       <div className='container'>
-        <div className='Container-stock-form mb-3'>
-          <div className='Container-stock-header d-flex align-items-center justify-content-between'>
+        <div className='Container-form mb-3'>
+          <div className='Container-header header-green d-flex align-items-center justify-content-between'>
             <h5>Planillas de inventario</h5>
             <Link to='/stock/nueva-planilla' className='btn btn-primary'>
               Nueva Planilla
             </Link>
           </div>
-          <div className='Container-stock-content'>
+          <div className='Container-content'>
             {error && <div className='alert alert-danger'>{error}</div>}
             <div className='table-responsive'>
               <table className='table table-striped'>

@@ -50,11 +50,11 @@ const FrmSheetStock = () => {
                         </span>
                     )}
                 </p>
-                <div className='Container-stock-form mb-3'>
-                    <div className='Container-stock-header'>
+                <div className='Container-form mb-3'>
+                    <div className='Container-header header-green'>
                         <h5>Seleccion de producto</h5>
                     </div>
-                    <div className='Container-stock-content'>
+                    <div className='Container-content'>
                     <Row >
                         <Col xs={12} md={6} className='mb-3'  >
                             <Form.Label htmlFor="txtCodigo">Codigo</Form.Label>
@@ -100,11 +100,11 @@ const FrmSheetStock = () => {
                     </Row>
                 </div>
             </div>
-            <div className='Container-stock-form mb-3'>
-                <div className='Container-stock-header'>
+            <div className='Container-form mb-3'>
+                <div className='Container-header header-green'>
                     <h5>Planilla de stock</h5>
                 </div>
-                <div className='Container-stock-content'>
+                <div className='Container-content'>
                     <Row className='mb-3'>
                         <Col xs={12} md={6}>
                             <Form.Control

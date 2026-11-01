@@ -46,11 +46,11 @@ const FrmDevoluciones = () => {
           {lastSavedTime && <span className='ms-3'>| Autoguardado: {formatDateTime(lastSavedTime)}</span>}
         </p>
 
-        <div className='Container-stock-form mb-3'>
-          <div className='Container-mermas-header'>
+        <div className='Container-form mb-3'>
+          <div className='Container-header header-orange'>
             <h5>Producto a devolver</h5>
           </div>
-          <div className='Container-stock-content'>
+          <div className='Container-content'>
             <Row>
               <Col xs={12} md={6} className='mb-3'>
                 <Form.Label htmlFor='txtCodigo'>Producto</Form.Label>
@@ -95,12 +95,12 @@ const FrmDevoluciones = () => {
           </div>
         </div>
 
-        <div className='Container-stock-form mb-3'>
-          <div className='Container-mermas-header d-flex align-items-center justify-content-between'>
+        <div className='Container-form mb-3'>
+          <div className='Container-header header-orange d-flex align-items-center justify-content-between'>
             <h5 className='mb-0'>Productos de la planilla</h5>
             <span className='text-muted'>{items.length} {items.length === 1 ? 'producto' : 'productos'}</span>
           </div>
-          <div className='Container-stock-content'>
+          <div className='Container-content'>
             <Row className='mb-3'>
               <Col xs={12} md={6}>
                 <Form.Control

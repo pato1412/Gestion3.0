@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { API_URLS, apiFetch } from '../../config/api';
 import Cookies from 'js-cookie';
+import { Form } from 'react-bootstrap';
 import Loader from '../../components/Loader/Loader';
-import './SelectDeposito.css';
+// Mismo diseño que el ingreso
+import '../Login/Login.css';
 import { useDeposito } from '../../contexts/DepositoContext';
 
 const SelectDeposito = () => {
@@ -52,25 +54,32 @@ const SelectDeposito = () => {
   };
 
   if (loading) return <Loader message='Cargando depositos...' />;
-  if (error) return <div>{error}</div>;
-
   return (
-    <div className="deposito-container">
-      <div className="deposito-card">
-        <img src="/images/logo-small.png" alt="Logo" className="login-logo" />
-        <h2>Selecciona un Depósito</h2>
-        <select value={selectedId} onChange={handleSelect}>
-          <option value="">Selecciona...</option>
-          {depositos.map((dep) => {
-            const value = dep.DepositoId;
-            const label = dep.Descripcion ?? `Depósito ${value}`;
-            return (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            );
-          })}
-        </select>
+    <div className='login-container'>
+      <div className='login-marca'>
+        <div className='login-logo'>
+          <img src='/images/logo-small.png' alt='Luz Azul' />
+        </div>
+        <h1 className='login-app'>Gestión</h1>
+      </div>
+      <div className='login-card'>
+        <h2>Seleccioná un depósito</h2>
+        {error ? (
+          <div className='alert alert-danger mb-0'>{error}</div>
+        ) : (
+          <Form.Select value={selectedId} onChange={handleSelect} aria-label='Depósito'>
+            <option value='' disabled>Seleccioná...</option>
+            {depositos.map((dep) => {
+              const value = dep.DepositoId;
+              const label = dep.Descripcion ?? `Depósito ${value}`;
+              return (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              );
+            })}
+          </Form.Select>
+        )}
       </div>
     </div>
   );

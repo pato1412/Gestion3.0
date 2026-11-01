@@ -20,22 +20,22 @@ const ViewDevolucion = () => {
         <ShowError message={errorMessage} show={showError} onClose={closeError} />
         {planilla && (
           <>
-            <div className='Container-stock-form mb-3'>
-              <div className='Container-mermas-header d-flex align-items-center justify-content-between'>
+            <div className='Container-form mb-3'>
+              <div className='Container-header header-orange d-flex align-items-center justify-content-between'>
                 <h5 className='mb-0'>Planilla de devolucion N° {planilla.DevolucionId}</h5>
                 <Button variant='outline-success' size='sm' onClick={descargarPlanilla}>
                   <FaDownload className='me-1' /> Excel
                 </Button>
               </div>
-              <div className='Container-stock-content'>
+              <div className='Container-content'>
                 <CabeceraDevolucion planilla={planilla} />
               </div>
             </div>
-            <div className='Container-stock-form mb-3'>
-              <div className='Container-mermas-header'>
+            <div className='Container-form mb-3'>
+              <div className='Container-header header-orange'>
                 <h5 className='mb-0'>Productos</h5>
               </div>
-              <div className='Container-stock-content'>
+              <div className='Container-content'>
                 <TablaDetalleDevolucion items={items} />
               </div>
             </div>

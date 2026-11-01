@@ -1,24 +1,7 @@
-.Container-stock-form, .Container-stock-grid {
-  background-color: var(--bg-claro);
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
+/* Las tarjetas (.Container-form / .Container-header / .Container-content) y las clases
+   xs-hide / xs-show vienen de index.css. Acá queda solo lo propio de las planillas. */
 
-.Container-mermas-header {
-    padding: 10px;
-    border-top: 2px solid var(--border-orange);
-}
-
-.Container-stock-header {
-    padding: 10px;
-    border-top: 2px solid var(--border-green);
-}
-
-.Container-stock-content{
-  border-top: 2px solid var(--border);
-  padding: 10px;
-}
-
+/* Cantidades cargadas de un producto (inventario y mermas) */
 .cantidades-container {
   display: flex;
   flex-direction: column;
@@ -33,9 +16,10 @@
 }
 
 .cantidades-total {
-  font-weight: bold;
+  font-weight: 700;
 }
 
+/* Datos del renglón que en el celular van debajo del producto */
 .item-inventario {
   display: flex;
   flex-direction: column;
@@ -44,22 +28,9 @@
 
 .item-inventario span {
   font-size: 0.9rem;
-  font-weight: bold;
+  font-weight: 700;
 }
 
-.form-select option{
+.form-select option {
   color: var(--text);
-}
-
-
-@media (max-width: 576px) {
-    .xs-hide {
-        display: none !important;
-    }
-}
-
-@media (min-width: 576px) {
-    .xs-show {
-        display: none !important;
-    }
 }

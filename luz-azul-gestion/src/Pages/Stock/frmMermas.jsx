@@ -46,11 +46,11 @@ const FrmMermas = () => {
                         </span>
                     )}
                 </p>
-                <div className='Container-stock-form mb-3'>                
-                    <div className='Container-mermas-header'>
+                <div className='Container-form mb-3'>                
+                    <div className='Container-header header-orange'>
                         <h5>Seleccion de concepto</h5>
                     </div>
-                    <div className='Container-stock-content'>
+                    <div className='Container-content'>
                         <Row>
                             <Col xs={12} md={6} className='mb-3'  >
                                 <Form.Select
@@ -72,11 +72,11 @@ const FrmMermas = () => {
                         </Row>
                     </div>
                 </div>
-                <div className='Container-stock-form mb-3'>                
-                    <div className='Container-mermas-header'>
+                <div className='Container-form mb-3'>                
+                    <div className='Container-header header-orange'>
                         <h5>Seleccion de producto</h5>
                     </div>
-                    <div className='Container-stock-content'>
+                    <div className='Container-content'>
                     <Row >
                         <Col xs={12} md={6} className='mb-3'  >
                             <Form.Label htmlFor="txtCodigo">Codigo</Form.Label>
@@ -113,11 +113,11 @@ const FrmMermas = () => {
                     </Row>
                 </div>
             </div>
-            <div className='Container-mermas-form mb-3'>
-                <div className='Container-mermas-header'>
+            <div className='Container-form mb-3'>
+                <div className='Container-header header-orange'>
                     <h5>Planilla de mermas</h5>
                 </div>
-                <div className='Container-stock-content'>
+                <div className='Container-content'>
                     <Row className='mb-3'>
                         <Col xs={12} md={6}>
                             <Form.Control

@@ -15,14 +15,14 @@ const ListMermas = () => {
     <>
       <Sidebar title={'Planillas de mermas'} />
       <div className='container'>
-        <div className='Container-mermas-form mb-3'>
-          <div className='Container-mermas-header d-flex align-items-center justify-content-between'>
+        <div className='Container-form mb-3'>
+          <div className='Container-header header-orange d-flex align-items-center justify-content-between'>
             <h5>Planillas de mermas</h5>
             <Link to='/stock/nueva-planilla-mermas' className='btn btn-primary'>
               Nueva Planilla
             </Link>
           </div>
-          <div className='Container-stock-content'>
+          <div className='Container-content'>
             {error && <div className='alert alert-danger'>{error}</div>}
             <div className='table-responsive'>
               <table className='table table-striped'>

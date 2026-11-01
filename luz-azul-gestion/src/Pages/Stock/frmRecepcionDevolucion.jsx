@@ -75,14 +75,14 @@ const FrmRecepcionDevolucion = () => {
         <ShowError message={errorMessage} show={showError} onClose={closeError} />
         {planilla && (
           <>
-            <div className='Container-stock-form mb-3'>
-              <div className='Container-stock-header d-flex align-items-center justify-content-between'>
+            <div className='Container-form mb-3'>
+              <div className='Container-header header-green d-flex align-items-center justify-content-between'>
                 <h5 className='mb-0'>Planilla de devolucion N° {planilla.DevolucionId}</h5>
                 <Button variant='outline-success' size='sm' onClick={descargarPlanilla}>
                   <FaDownload className='me-1' /> Excel
                 </Button>
               </div>
-              <div className='Container-stock-content'>
+              <div className='Container-content'>
                 <CabeceraDevolucion planilla={planilla} />
                 {!recibida && (
                   <Alert variant='warning' className='mb-0 mt-2 d-flex flex-wrap align-items-center justify-content-between gap-2'>
@@ -92,8 +92,8 @@ const FrmRecepcionDevolucion = () => {
                 )}
               </div>
             </div>
-            <div className='Container-stock-form mb-3'>
-              <div className='Container-stock-header d-flex align-items-center justify-content-between'>
+            <div className='Container-form mb-3'>
+              <div className='Container-header header-green d-flex align-items-center justify-content-between'>
                 <h5 className='mb-0'>Productos</h5>
                 {recibida && planilla.PendientesAprobacion > 0 && (
                   <Button variant='outline-success' size='sm' onClick={aprobarPendientes}>
@@ -101,7 +101,7 @@ const FrmRecepcionDevolucion = () => {
                   </Button>
                 )}
               </div>
-              <div className='Container-stock-content'>
+              <div className='Container-content'>
                 <TablaDetalleDevolucion items={items} renderRespuesta={renderRespuesta} />
               </div>
             </div>
