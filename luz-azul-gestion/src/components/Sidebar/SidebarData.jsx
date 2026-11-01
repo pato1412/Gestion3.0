@@ -45,14 +45,6 @@ export const SidebarData = () =>{
           path: '/stock/listar-devoluciones',
           icon: <IoIcons.IoIosPaper />
         },
-        // Solo para quien recibe las devoluciones en el depósito (o es administrador)
-        ...(tienePermiso('RecepcionDevoluciones')
-          ? [{
-              title: 'Recepción de devoluciones',
-              path: '/stock/recepcion-devoluciones',
-              icon: <FaIcons.FaClipboardCheck />
-            }]
-          : []),
         {
           title: 'Orden de producción',
           path: 'https://app.simpletempo.com/inventory/ProductionOrders/ProductionOrders/Create',
@@ -85,19 +77,32 @@ export const SidebarData = () =>{
       ]  
     });
 
-
-    if (establecimiento && establecimiento.EstablecimientoId === parseInt(import.meta.env.VITE_ST_ESTABLECIMIENTO_ID_EZEIZA)) 
+    // Casa Central: solo en el establecimiento de Ezeiza
+    if (establecimiento && establecimiento.EstablecimientoId === parseInt(import.meta.env.VITE_ST_ESTABLECIMIENTO_ID_EZEIZA))
     {
-      Items.push(
-        {
-          title: 'Notificaciones',
-          path: '/notificaciones/listar-notificaciones',
-          icon: <IoIcons.IoMdNotifications />
-        }
-      );
-    }   
+      Items.push({
+        title: 'Casa Central',
+        path: '#',
+        icon: <FaIcons.FaBuilding />,
+        subNav: [
+          // Solo para quien recibe las devoluciones en el depósito (o es administrador)
+          ...(tienePermiso('RecepcionDevoluciones')
+            ? [{
+                title: 'Recepción de devoluciones',
+                path: '/stock/recepcion-devoluciones',
+                icon: <FaIcons.FaClipboardCheck />
+              }]
+            : []),
+          {
+            title: 'Notificaciones',
+            path: '/notificaciones/listar-notificaciones',
+            icon: <IoIcons.IoMdNotifications />
+          }
+        ]
+      });
+    }
 
-    // Al pie del menú, junto a "Cerrar sesión" (antes estaba en el footer)
+    // Al pie del menú, junto a "Cerrar sesión"
     Items.push({
       title: 'Cambiar depósito',
       path: '/select-deposito',
