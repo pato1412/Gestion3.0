@@ -72,6 +72,7 @@ problema y corrélo de nuevo.
 | `007_token_api_largo.sql` | Agranda `GWREstablecimientos.TempoAPIToken` de `VARCHAR(100)` a `VARCHAR(2000)`: el token de Ayres POS tiene 242 caracteres y no se podía guardar. |
 | `008_devoluciones_fecha_recepcion.sql` | Agrega `DevolucionesPlanillas.FechaRecepcion` (NULL mientras el depósito no recibió la planilla). |
 | `009_wslogevents_indice_etiqueta.sql` | Índice de `WSlogEvents` por `EstablecimientoId` + `Etiqueta` (incluye `TipoError` y `Procesado`). Los UPDATE y DELETE de los logs de Hasar recorrían y bloqueaban la tabla entera. Online en Enterprise/Developer; corta a los 30 s si la tabla está bloqueada. |
+| `010_permisos_recepcion_administrador.sql` | Agrega a `PermisosGestion` los permisos `RecepcionDevoluciones` y `EsAdministrador` (`BIT NOT NULL DEFAULT 0`: todos los usuarios quedan sin el permiso). Correrla antes de publicar Ensemble. |
 
 ## Bases externas
 
