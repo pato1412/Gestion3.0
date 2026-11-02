@@ -6,8 +6,9 @@ import { Typeahead } from 'react-bootstrap-typeahead'
 import Loader from '../../components/Loader/Loader'
 import ShowError from '../../components/ShowError/ShowError'
 import { useFrmDevoluciones } from '../../hooks/useFrmDevoluciones'
-import { formatDate, formatNumber } from '../../utils/devoluciones'
-import { formatDateTime } from '../../utils/dateTime'
+import { formatNumber } from '../../utils/devoluciones'
+import { formatDate, formatFullDateTime } from '../../utils/dateTime'
+import { CampoFecha } from '../../components/CampoFecha/CampoFecha'
 
 const FrmDevoluciones = () => {
   const {
@@ -25,7 +26,8 @@ const FrmDevoluciones = () => {
     inputRefCodigo,
     inputRefUnidades,
     inputRefKilos,
-    inputRefVencimiento,
+    vencimiento,
+    setVencimiento,
     inputRefLote,
     inputRefCausa,
     handleProductSelection,
@@ -42,8 +44,8 @@ const FrmDevoluciones = () => {
       <div className='container'>
         <ShowError message={errorMessage} show={showError} onClose={closeError} />
         <p className='text-muted text-end'>
-          Fecha inicio: {formatDateTime(dateStart)}
-          {lastSavedTime && <span className='ms-3'>| Autoguardado: {formatDateTime(lastSavedTime)}</span>}
+          Fecha inicio: {formatFullDateTime(dateStart)}
+          {lastSavedTime && <span className='ms-3'>| Autoguardado: {formatFullDateTime(lastSavedTime)}</span>}
         </p>
 
         <div className='Container-form mb-3'>
@@ -84,7 +86,7 @@ const FrmDevoluciones = () => {
               </Col>
               <Col xs={6} md={3} className='mb-3'>
                 <Form.Label htmlFor='txtVencimiento'>Vencimiento</Form.Label>
-                <Form.Control ref={inputRefVencimiento} id='txtVencimiento' type='date' />
+                <CampoFecha id='txtVencimiento' value={vencimiento} onChange={setVencimiento} />
               </Col>
             </Row>
             <Row>
@@ -139,14 +141,14 @@ const FrmDevoluciones = () => {
                           {item.ProductoId} - {item.Descripcion}
                           <div className='xs-show'>
                             <div className='item-inventario'><span>Unidades / Kilos:</span> {formatNumber(item.Unidades) || '-'} / {formatNumber(item.Kilos) || '-'}</div>
-                            {item.Vencimiento && <div className='item-inventario'><span>Vencimiento:</span> {formatDate(`${item.Vencimiento}T00:00:00`)}</div>}
+                            {item.Vencimiento && <div className='item-inventario'><span>Vencimiento:</span> {formatDate(item.Vencimiento)}</div>}
                             {item.Lote && <div className='item-inventario'><span>Lote:</span> {item.Lote}</div>}
                             {item.Causa && <div className='item-inventario'><span>Causa:</span> {item.Causa}</div>}
                           </div>
                         </td>
                         <td className='text-end xs-hide'>{formatNumber(item.Unidades)}</td>
                         <td className='text-end xs-hide'>{formatNumber(item.Kilos)}</td>
-                        <td className='xs-hide'>{item.Vencimiento ? formatDate(`${item.Vencimiento}T00:00:00`) : ''}</td>
+                        <td className='xs-hide'>{formatDate(item.Vencimiento)}</td>
                         <td className='xs-hide'>{item.Lote}</td>
                         <td className='xs-hide'>{item.Causa}</td>
                         <td className='text-end'>

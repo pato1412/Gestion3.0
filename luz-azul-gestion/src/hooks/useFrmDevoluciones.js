@@ -34,11 +34,11 @@ export const useFrmDevoluciones = () => {
   const [showError, setShowError] = useState(false)
   const [messageLoader, setMessageLoader] = useState('Cargando, por favor espere...')
   const [lastSavedTime, setLastSavedTime] = useState(null)
+  const [vencimiento, setVencimiento] = useState('') // AAAA-MM-DD (CampoFecha)
 
   const inputRefCodigo = useRef(null)
   const inputRefUnidades = useRef(null)
   const inputRefKilos = useRef(null)
-  const inputRefVencimiento = useRef(null)
   const inputRefLote = useRef(null)
   const inputRefCausa = useRef(null)
 
@@ -120,7 +120,6 @@ export const useFrmDevoluciones = () => {
     const kilos = leerNumero(inputRefKilos)
     const lote = leerTexto(inputRefLote)
     const causa = leerTexto(inputRefCausa)
-    const vencimiento = inputRefVencimiento.current?.value || ''
 
     if ((unidades !== null && Number.isNaN(unidades)) || (kilos !== null && Number.isNaN(kilos))) {
       showErrorAlert('Las unidades y los kilos tienen que ser numeros.')
@@ -157,11 +156,12 @@ export const useFrmDevoluciones = () => {
     setItems((prevItems) => [...prevItems, nuevoItem])
 
     setSingleSelections([])
-    for (const ref of [inputRefUnidades, inputRefKilos, inputRefVencimiento, inputRefLote, inputRefCausa]) {
+    setVencimiento('')
+    for (const ref of [inputRefUnidades, inputRefKilos, inputRefLote, inputRefCausa]) {
       if (ref.current) ref.current.value = ''
     }
     inputRefCodigo.current?.focus()
-  }, [showErrorAlert, singleSelections])
+  }, [showErrorAlert, singleSelections, vencimiento])
 
   const eliminarItem = useCallback(
     (item) => {
@@ -288,7 +288,8 @@ export const useFrmDevoluciones = () => {
     inputRefCodigo,
     inputRefUnidades,
     inputRefKilos,
-    inputRefVencimiento,
+    vencimiento,
+    setVencimiento,
     inputRefLote,
     inputRefCausa,
     handleProductSelection,

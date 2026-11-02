@@ -1,0 +1,55 @@
+/* react-datepicker con los colores y la tipografía de la marca */
+.campo-fecha {
+  display: block;
+  width: 100%;
+}
+
+/* Por encima de los modales de Bootstrap (z-index 1055) */
+.campo-fecha-popper {
+  z-index: 1070;
+}
+
+.campo-fecha-popper .react-datepicker {
+  font-family: var(--sans);
+  color: var(--text);
+  border-color: var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.campo-fecha-popper .react-datepicker__header {
+  background: var(--bg-claro);
+  border-bottom-color: var(--border-soft);
+}
+
+.campo-fecha-popper .react-datepicker__current-month,
+.campo-fecha-popper .react-datepicker-time__header {
+  color: var(--text-h);
+  font-weight: 900;
+  text-transform: capitalize;
+}
+
+.campo-fecha-popper .react-datepicker__day-name {
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.campo-fecha-popper .react-datepicker__day:hover,
+.campo-fecha-popper .react-datepicker__time-list-item:hover {
+  background: var(--accent-bg) !important;
+}
+
+.campo-fecha-popper .react-datepicker__day--selected,
+.campo-fecha-popper .react-datepicker__day--keyboard-selected,
+.campo-fecha-popper .react-datepicker__time-list-item--selected {
+  background: var(--accent) !important;
+  color: #fff !important;
+}
+
+.campo-fecha-popper .react-datepicker__day--today {
+  font-weight: 900;
+}
+
+.campo-fecha-popper .react-datepicker__triangle {
+  display: none;
+}

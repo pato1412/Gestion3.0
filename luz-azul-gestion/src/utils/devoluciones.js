@@ -17,18 +17,7 @@ export const estadoRenglonDevolucion = (renglon) => {
   return { texto: 'Pendiente', variant: 'secondary' }
 }
 
-// Fecha sin hora (dd/mm/aaaa) para el vencimiento y los filtros
-export const formatDate = (value) => {
-  if (!value) return ''
-
-  const date = new Date(value)
-  if (Number.isNaN(date.getTime())) return value
-
-  const pad = (num) => String(num).padStart(2, '0')
-  return `${pad(date.getDate())}/${pad(date.getMonth() + 1)}/${date.getFullYear()}`
-}
-
-// aaaa-mm-dd en hora local (para inputs type="date")
+// aaaa-mm-dd en hora local (valor de CampoFecha)
 export const toInputDate = (date) => {
   const pad = (num) => String(num).padStart(2, '0')
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`

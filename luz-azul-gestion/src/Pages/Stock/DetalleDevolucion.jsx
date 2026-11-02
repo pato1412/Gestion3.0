@@ -1,6 +1,6 @@
 import { Badge, Col, Row } from 'react-bootstrap'
-import { formatDateTime } from '../../utils/dateTime'
-import { estadoRenglonDevolucion, formatDate, formatNumber } from '../../utils/devoluciones'
+import { formatDate, formatDateTime } from '../../utils/dateTime'
+import { estadoRenglonDevolucion, formatNumber } from '../../utils/devoluciones'
 import EstadoDevolucion from './EstadoDevolucion'
 
 const Dato = ({ titulo, children }) => (

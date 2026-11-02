@@ -2,8 +2,7 @@ import Sidebar from '../../components/Sidebar/Sidebar'
 import { Form, Row, Col, Button } from 'react-bootstrap'
 import { useState, useRef, useEffect } from 'react'
 import './notifications.css'
-import DatePicker from 'react-datepicker'
-import 'react-datepicker/dist/react-datepicker.css'
+import { CampoFechaHora } from '../../components/CampoFecha/CampoFecha'
 import { apiFetch, API_URLS } from '../../config/api'
 import ShowError from '../../components/ShowError/ShowError'
 import Loader from '../../components/Loader/Loader'
@@ -291,29 +290,11 @@ const FrmNotificacion = () => {
               <Row className='mb-3'>
                 <Form.Group controlId="formDate" className='col-md-6'> 
                   <Form.Label>Fecha Desde</Form.Label>
-                  <DatePicker
-                  showTimeSelect
-                  timeFormat="HH:mm"
-                  timeIntervals={30}
-                  timeCaption="Hora"
-                  dateFormat="d/MM/yyyy h:mm aa"
-                  selected={dateStart} 
-                  onChange={(date) => setDateStart(date)} 
-                  className="form-control" // Uses Bootstrap input styling
-                />
+                  <CampoFechaHora value={dateStart} onChange={setDateStart} />
                 </Form.Group>
                 <Form.Group controlId="formDateEnd" className='col-md-6'>
                   <Form.Label>Fecha Hasta</Form.Label>
-                  <DatePicker
-                  showTimeSelect
-                  timeFormat="HH:mm"
-                  timeIntervals={30}
-                  timeCaption="Hora"
-                  dateFormat="d/MM/yyyy h:mm aa"
-                  selected={dateEnd} 
-                  onChange={(date) => setDateEnd(date)} 
-                  className="form-control" // Uses Bootstrap input styling
-                />
+                  <CampoFechaHora value={dateEnd} onChange={setDateEnd} />
                 </Form.Group>
               </Row>
             </div>

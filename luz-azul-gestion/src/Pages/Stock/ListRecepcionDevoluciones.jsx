@@ -6,6 +6,7 @@ import Loader from '../../components/Loader/Loader'
 import './stock.css'
 import { useRecepcionDevoluciones, VISTAS_RECEPCION } from '../../hooks/useRecepcionDevoluciones'
 import { formatDateTime } from '../../utils/dateTime'
+import { CampoFecha } from '../../components/CampoFecha/CampoFecha'
 import EstadoDevolucion from './EstadoDevolucion'
 
 const ListRecepcionDevoluciones = () => {
@@ -47,11 +48,11 @@ const ListRecepcionDevoluciones = () => {
                 <>
                   <Col xs={6} md={3}>
                     <Form.Label htmlFor='txtDesde' className='small mb-1'>Enviadas desde</Form.Label>
-                    <Form.Control id='txtDesde' type='date' value={fechas.desde} onChange={(e) => setFechas((prev) => ({ ...prev, desde: e.target.value }))} />
+                    <CampoFecha id='txtDesde' value={fechas.desde} onChange={(desde) => setFechas((prev) => ({ ...prev, desde }))} />
                   </Col>
                   <Col xs={6} md={3}>
                     <Form.Label htmlFor='txtHasta' className='small mb-1'>Hasta</Form.Label>
-                    <Form.Control id='txtHasta' type='date' value={fechas.hasta} onChange={(e) => setFechas((prev) => ({ ...prev, hasta: e.target.value }))} />
+                    <CampoFecha id='txtHasta' value={fechas.hasta} onChange={(hasta) => setFechas((prev) => ({ ...prev, hasta }))} />
                   </Col>
                   <Col xs={12} md='auto'>
                     <Button variant='primary' onClick={buscar}>Buscar</Button>

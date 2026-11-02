@@ -1,6 +1,7 @@
 import {FaTrash } from 'react-icons/fa'
 import Sidebar from '../../components/Sidebar/Sidebar'
 import './stock.css'
+import { formatFullDateTime } from '../../utils/dateTime'
 import { Button, Row, Col, Form } from 'react-bootstrap'
 import { Typeahead } from 'react-bootstrap-typeahead'
 import Loader from '../../components/Loader/Loader'
@@ -43,10 +44,10 @@ const FrmSheetStock = () => {
                 onClose={closeError}
             />  
                 <p className='text-muted text-end'>
-                    Fecha inicio: {dateStart.getDate() }/{dateStart.getMonth() + 1}/{dateStart.getFullYear() } - {dateStart.getHours()}:{dateStart.getMinutes()}
+                    Fecha inicio: {formatFullDateTime(dateStart)}
                     {lastSavedTime && (
                         <span className='ms-3'>
-                            | Autoguardado: {lastSavedTime.getDate()}/{lastSavedTime.getMonth() + 1}/{lastSavedTime.getFullYear()} - {lastSavedTime.getHours()}:{String(lastSavedTime.getMinutes()).padStart(2, '0')}
+                            | Autoguardado: {formatFullDateTime(lastSavedTime)}
                         </span>
                     )}
                 </p>
