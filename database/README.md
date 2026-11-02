@@ -73,6 +73,7 @@ problema y corrélo de nuevo.
 | `008_devoluciones_fecha_recepcion.sql` | Agrega `DevolucionesPlanillas.FechaRecepcion` (NULL mientras el depósito no recibió la planilla). |
 | `009_wslogevents_indice_etiqueta.sql` | Índice de `WSlogEvents` por `EstablecimientoId` + `Etiqueta` (incluye `TipoError` y `Procesado`). Los UPDATE y DELETE de los logs de Hasar recorrían y bloqueaban la tabla entera. Online en Enterprise/Developer; corta a los 30 s si la tabla está bloqueada. |
 | `010_permisos_recepcion_administrador.sql` | Agrega a `PermisosGestion` los permisos `RecepcionDevoluciones` y `EsAdministrador` (`BIT NOT NULL DEFAULT 0`: todos los usuarios quedan sin el permiso). Correrla antes de publicar Ensemble. |
+| `011_productos_abm.sql` | Para el ABM de productos (después de la 005): `ProductoClasificaciones` acepta los tipos 2 (pedidos) y 3 (precios), una clasificación por tipo (índice único) y FK a `dbo.Productos`; el sinónimo `ProductosEmpresa` pasa a apuntar a `dbo.Productos` de ENSEMBLE. Corta sin cambiar nada si hay datos que lo impiden. |
 
 ## Bases externas
 
