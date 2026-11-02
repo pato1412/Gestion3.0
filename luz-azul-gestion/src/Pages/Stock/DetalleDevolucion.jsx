@@ -1,6 +1,6 @@
 import { Badge, Col, Row } from 'react-bootstrap'
 import { formatDate, formatDateTime } from '../../utils/dateTime'
-import { estadoRenglonDevolucion, formatNumber } from '../../utils/devoluciones'
+import { envioMercaderiaDevolucion, estadoRenglonDevolucion, formatNumber } from '../../utils/devoluciones'
 import EstadoDevolucion from './EstadoDevolucion'
 
 const Dato = ({ titulo, children }) => (
@@ -28,11 +28,20 @@ const EstadoRenglon = ({ renglon }) => {
   return <Badge bg={estado.variant}>{estado.texto}</Badge>
 }
 
+const EnvioRenglon = ({ renglon }) => {
+  const envio = envioMercaderiaDevolucion(renglon)
+  return (
+    <Badge bg={envio.variant} text={envio.variant === 'light' ? 'dark' : undefined} className={envio.variant === 'light' ? 'border' : undefined}>
+      {envio.texto}
+    </Badge>
+  )
+}
+
 /**
- * Renglones de la planilla. renderRespuesta permite reemplazar la columna Respuesta
- * (en recepción, el campo de texto y los botones para aprobar o rechazar).
+ * Renglones de la planilla. renderEnvio y renderRespuesta permiten reemplazar las columnas Envío y Respuesta
+ * (en recepción, los botones Enviar / Descartar y el campo de texto con los botones para aprobar o rechazar).
  */
-export const TablaDetalleDevolucion = ({ items, renderRespuesta }) => (
+export const TablaDetalleDevolucion = ({ items, renderEnvio, renderRespuesta }) => (
   <div className='table-responsive'>
     <table className='table table-striped align-middle'>
       <thead>
@@ -44,13 +53,14 @@ export const TablaDetalleDevolucion = ({ items, renderRespuesta }) => (
           <th className='xs-hide'>Lote</th>
           <th className='xs-hide'>Causa</th>
           <th className='xs-hide'>Estado</th>
+          <th className='xs-hide'>Envío</th>
           <th className='xs-hide' style={{ minWidth: renderRespuesta ? '260px' : undefined }}>Respuesta</th>
         </tr>
       </thead>
       <tbody>
         {items.length === 0 ? (
           <tr>
-            <td colSpan='8' className='text-center text-muted'>La planilla no tiene productos.</td>
+            <td colSpan='9' className='text-center text-muted'>La planilla no tiene productos.</td>
           </tr>
         ) : (
           items.map((item) => (
@@ -62,8 +72,12 @@ export const TablaDetalleDevolucion = ({ items, renderRespuesta }) => (
                   {item.Vencimiento && <div className='item-inventario'><span>Vencimiento:</span> {formatDate(item.Vencimiento)}</div>}
                   {item.Lote && <div className='item-inventario'><span>Lote:</span> {item.Lote}</div>}
                   {item.Causa && <div className='item-inventario'><span>Causa:</span> {item.Causa}</div>}
-                  <div className='mt-1'><EstadoRenglon renglon={item} /></div>
-                  {/* En el celular la respuesta va debajo del producto */}
+                  <div className='mt-1 d-flex flex-wrap gap-1'>
+                    <EstadoRenglon renglon={item} />
+                    {!renderEnvio && <EnvioRenglon renglon={item} />}
+                  </div>
+                  {/* En el celular el envío y la respuesta van debajo del producto */}
+                  {renderEnvio && <div className='mt-2'>{renderEnvio(item)}</div>}
                   {renderRespuesta
                     ? <div className='mt-2'>{renderRespuesta(item)}</div>
                     : item.Respuesta && <div className='item-inventario mt-1'><span>Respuesta:</span> {item.Respuesta}</div>}
@@ -75,6 +89,7 @@ export const TablaDetalleDevolucion = ({ items, renderRespuesta }) => (
               <td className='xs-hide'>{item.Lote}</td>
               <td className='xs-hide'>{item.Causa}</td>
               <td className='xs-hide'><EstadoRenglon renglon={item} /></td>
+              <td className='xs-hide'>{renderEnvio ? renderEnvio(item) : <EnvioRenglon renglon={item} />}</td>
               <td className='xs-hide'>{renderRespuesta ? renderRespuesta(item) : item.Respuesta}</td>
             </tr>
           ))

@@ -17,6 +17,13 @@ export const estadoRenglonDevolucion = (renglon) => {
   return { texto: 'Pendiente', variant: 'secondary' }
 }
 
+// Qué se hace con la mercadería del renglón (lo decide el depósito en la recepción)
+export const envioMercaderiaDevolucion = (renglon) => {
+  if (renglon?.EnvioMercaderia === true) return { texto: 'Enviar', variant: 'primary' }
+  if (renglon?.EnvioMercaderia === false) return { texto: 'Descartar', variant: 'dark' }
+  return { texto: 'Sin definir', variant: 'light' }
+}
+
 // aaaa-mm-dd en hora local (valor de CampoFecha)
 export const toInputDate = (date) => {
   const pad = (num) => String(num).padStart(2, '0')

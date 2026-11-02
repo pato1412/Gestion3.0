@@ -124,6 +124,28 @@ export const useFrmRecepcionDevolucion = (id) => {
     }
   }
 
+  // Enviar (true) o Descartar (false) la mercadería del renglón; se guarda al hacer clic
+  const elegirEnvio = async (item, envio) => {
+    if (item.EnvioMercaderia === envio) return
+    setGuardandoId(item.DevolucionDetalleId)
+    try {
+      const response = await apiFetch(API_URLS.EnvioMercaderiaPlanillaDevolucionDetalle, {
+        method: 'POST',
+        body: JSON.stringify({ DevolucionDetalleId: item.DevolucionDetalleId, EnvioMercaderia: envio })
+      })
+      if (!response?.bok) {
+        throw new Error(response?.message || 'No se pudo guardar el envio de la mercaderia.')
+      }
+      setItems((prev) =>
+        prev.map((current) => (current.DevolucionDetalleId === item.DevolucionDetalleId ? { ...current, EnvioMercaderia: envio } : current))
+      )
+    } catch (error) {
+      showErrorAlert(`${item.ProductoId}: ${getErrorMessage(error)}`)
+    } finally {
+      setGuardandoId(null)
+    }
+  }
+
   const aprobarPendientes = () => {
     const pendientes = items.filter((item) => item.Aprobado === null || item.Aprobado === undefined)
     if (pendientes.length === 0) return
@@ -180,6 +202,7 @@ export const useFrmRecepcionDevolucion = (id) => {
     guardandoId,
     recibirPlanilla,
     decidir,
+    elegirEnvio,
     aprobarPendientes,
     descargarPlanilla,
     isLoading,

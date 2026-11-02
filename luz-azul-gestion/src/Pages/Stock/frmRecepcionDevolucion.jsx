@@ -21,6 +21,7 @@ const FrmRecepcionDevolucion = () => {
     guardandoId,
     recibirPlanilla,
     decidir,
+    elegirEnvio,
     aprobarPendientes,
     descargarPlanilla,
     isLoading,
@@ -29,6 +30,34 @@ const FrmRecepcionDevolucion = () => {
     showError,
     closeError
   } = useFrmRecepcionDevolucion(id)
+
+  const renderEnvio = (item) => {
+    const deshabilitado = !recibida || guardandoId === item.DevolucionDetalleId
+    return (
+      <div className='d-flex gap-1'>
+        <Button
+          size='sm'
+          style={{ width: 'auto' }}
+          variant={item.EnvioMercaderia === true ? 'primary' : 'outline-primary'}
+          disabled={deshabilitado}
+          aria-pressed={item.EnvioMercaderia === true}
+          onClick={() => elegirEnvio(item, true)}
+        >
+          Enviar
+        </Button>
+        <Button
+          size='sm'
+          style={{ width: 'auto' }}
+          variant={item.EnvioMercaderia === false ? 'dark' : 'outline-dark'}
+          disabled={deshabilitado}
+          aria-pressed={item.EnvioMercaderia === false}
+          onClick={() => elegirEnvio(item, false)}
+        >
+          Descartar
+        </Button>
+      </div>
+    )
+  }
 
   const renderRespuesta = (item) => {
     const guardando = guardandoId === item.DevolucionDetalleId
@@ -102,7 +131,7 @@ const FrmRecepcionDevolucion = () => {
                 )}
               </div>
               <div className='Container-content'>
-                <TablaDetalleDevolucion items={items} renderRespuesta={renderRespuesta} />
+                <TablaDetalleDevolucion items={items} renderEnvio={renderEnvio} renderRespuesta={renderRespuesta} />
               </div>
             </div>
           </>
