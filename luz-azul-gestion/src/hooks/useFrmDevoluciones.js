@@ -223,8 +223,9 @@ export const useFrmDevoluciones = () => {
         clearPlanillaDraft(STORAGE_KEY, DepositoId)
         setItems([])
 
-        openModal('Planilla enviada', 'La planilla de devolucion se envio correctamente al deposito.', () => {
-          navigate('/stock/listar-devoluciones')
+        // Se va al detalle de la planilla, donde se le pueden adjuntar fotos de respaldo
+        openModal('Planilla enviada', 'La planilla de devolucion se envio correctamente al deposito. Ahora podes adjuntarle fotos de la mercaderia.', () => {
+          navigate(`/stock/planilla-devolucion/${devolucionId}`)
         })
       } catch (error) {
         // El detalle se graba todo o nada: si falló, se borra el encabezado para no dejar una planilla vacía

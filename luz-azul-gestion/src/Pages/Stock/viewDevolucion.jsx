@@ -7,6 +7,7 @@ import ShowError from '../../components/ShowError/ShowError'
 import './stock.css'
 import { useViewDevolucion } from '../../hooks/useViewDevolucion'
 import { CabeceraDevolucion, TablaDetalleDevolucion } from './DetalleDevolucion'
+import FotosDevolucion from './FotosDevolucion'
 
 const ViewDevolucion = () => {
   const navigate = useNavigate()
@@ -39,6 +40,12 @@ const ViewDevolucion = () => {
                 <TablaDetalleDevolucion items={items} />
               </div>
             </div>
+            <FotosDevolucion
+              devolucionId={planilla.DevolucionId}
+              puedeEditar={!planilla.FechaRecepcion}
+              headerClass='header-orange'
+              aviso={planilla.FechaRecepcion ? 'El deposito ya recibio la planilla: no se pueden agregar ni eliminar fotos.' : undefined}
+            />
           </>
         )}
         <div className='mb-3 d-flex justify-content-end'>

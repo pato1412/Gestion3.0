@@ -7,6 +7,7 @@ import ShowError from '../../components/ShowError/ShowError'
 import './stock.css'
 import { useFrmRecepcionDevolucion } from '../../hooks/useFrmRecepcionDevolucion'
 import { CabeceraDevolucion, TablaDetalleDevolucion } from './DetalleDevolucion'
+import FotosDevolucion from './FotosDevolucion'
 
 const FrmRecepcionDevolucion = () => {
   const navigate = useNavigate()
@@ -134,6 +135,7 @@ const FrmRecepcionDevolucion = () => {
                 <TablaDetalleDevolucion items={items} renderEnvio={renderEnvio} renderRespuesta={renderRespuesta} />
               </div>
             </div>
+            <FotosDevolucion devolucionId={planilla.DevolucionId} puedeEditar={false} headerClass='header-green' />
           </>
         )}
         <div className='mb-3 d-flex justify-content-end'>

@@ -35,6 +35,10 @@ export const API_URLS = {
   AprobarPlanillaDevolucionDetalle: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_APROBAR_PLANILLA_DEVOLUCION_DETALLE_URL,
   EnvioMercaderiaPlanillaDevolucionDetalle: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_ENVIO_MERCADERIA_PLANILLA_DEVOLUCION_DETALLE_URL,
   DownloadPlanillaDevolucionRecepcion: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_DOWNLOAD_PLANILLA_DEVOLUCION_RECEPCION_URL,
+  GetFotosDevolucion: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_GET_FOTOS_DEVOLUCION_URL,
+  DescargarFotoDevolucion: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_DESCARGAR_FOTO_DEVOLUCION_URL,
+  NewFotoDevolucion: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_NEW_FOTO_DEVOLUCION_URL,
+  DeleteFotoDevolucion: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_DELETE_FOTO_DEVOLUCION_URL,
   ChatWidget: import.meta.env.VITE_API_CHAT_WIDGET_URL,
   GetPermisosUsuarios: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_GET_PERMISOS_USUARIOS_URL,
 };
@@ -54,7 +58,8 @@ export async function apiFetch(url, options = {}) {
     // options va antes que headers: si options trae headers propios se suman a los por defecto en vez de reemplazarlos
     ...options,
     headers: {
-      'Content-Type': 'application/json',
+      // Con FormData (subir archivos) el navegador arma el Content-Type multipart con su boundary
+      ...(options.body instanceof FormData ? {} : { 'Content-Type': 'application/json' }),
       'EstablecimientoGUID': guid,
       // El navegador ya envía el header 'Origin' real y no permite sobreescribirlo ni honra
       // 'Access-Control-Allow-Origin' en el request (es un header de respuesta del servidor).
@@ -82,8 +87,46 @@ export async function apiFetch(url, options = {}) {
   return response.json();
 }
 
+// Como apiFetch, pero devuelve el contenido como Blob (por ejemplo una foto para mostrarla con URL.createObjectURL)
+export async function apiFetchBlob(url, options = {}) {
+  const EstablecimientoData = Cookies.get('EstablecimientoData');
+  const guid = (EstablecimientoData) ? JSON.parse(EstablecimientoData).EstablecimientoGUID : null;
+  const response = await fetch(url, {
+    mode: 'cors',
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      'EstablecimientoGUID': guid,
+      'X-Site-Origin': window.location.origin,
+      ...headerUsuario(),
+      ...options.headers,
+    },
+  });
 
-export const downloadFile = async (url,fileName,  options = {}) => {
+  if (!response.ok) {
+    const text = await response.text();
+    const error = new Error(text || `API request failed (${response.status})`);
+    error.status = response.status;
+    throw error;
+  }
+
+  return response.blob();
+}
+
+// Descarga en el navegador un Blob que ya está en memoria
+export const guardarBlob = (blob, fileName) => {
+  const blobUrl = window.URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = blobUrl;
+  link.setAttribute('download', fileName);
+  document.body.appendChild(link);
+  link.click();
+  link.parentNode.removeChild(link);
+  window.URL.revokeObjectURL(blobUrl);
+};
+
+
+export const downloadFile =async (url,fileName,  options = {}) => {
   try {
     const EstablecimientoData = Cookies.get('EstablecimientoData'); // fallback
     const guid = (EstablecimientoData) ? JSON.parse(EstablecimientoData).EstablecimientoGUID : null; // fallback

@@ -34,3 +34,85 @@
 .form-select option {
   color: var(--text);
 }
+
+/* Fotos de respaldo de las devoluciones: miniaturas cuadradas */
+.fotos-devolucion {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.foto-devolucion {
+  position: relative;
+  width: 110px;
+  height: 110px;
+}
+
+.foto-devolucion-ver {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-claro);
+  cursor: zoom-in;
+}
+
+.foto-devolucion-ver:disabled {
+  cursor: default;
+}
+
+.foto-devolucion-ver img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.foto-devolucion-borrar {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--danger);
+  font-size: 0.8rem;
+  box-shadow: var(--shadow);
+}
+
+.foto-devolucion-subiendo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.foto-devolucion-grande img {
+  max-width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
+}
+
+/* En el celular entran 3 miniaturas por fila */
+@media (max-width: 576px) {
+  .foto-devolucion {
+    width: calc((100% - 20px) / 3);
+    height: auto;
+    aspect-ratio: 1;
+  }
+}
