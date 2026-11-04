@@ -1,7 +1,10 @@
 import { apiFetch, API_URLS } from '../config/api'
 
-// Estado de la planilla según la recepción del depósito y la aprobación de sus renglones
+// Estado de la planilla según la recepción del depósito, la aprobación de sus renglones y la nota de crédito
 export const estadoPlanillaDevolucion = (planilla) => {
+  if (planilla?.NotaCredito) {
+    return { texto: 'Generada', variant: 'primary' }
+  }
   if (!planilla?.FechaRecepcion) {
     return { texto: 'Pendiente de recepción', variant: 'warning' }
   }
@@ -10,6 +13,16 @@ export const estadoPlanillaDevolucion = (planilla) => {
   }
   return { texto: 'Revisada', variant: 'success' }
 }
+
+// La nota de crédito se carga con la planilla recibida y todos sus productos aprobados o rechazados
+export const motivoSinNotaCredito = (planilla) => {
+  if (!planilla?.FechaRecepcion) return 'Primero hay que recibir la planilla'
+  if (planilla.PendientesAprobacion > 0) return 'Aprobá o rechazá todos los productos antes de cargar la nota de crédito'
+  return null
+}
+
+// Largo máximo del número de nota de crédito (DevolucionesPlanillas.NotaCredito VARCHAR(50))
+export const LARGO_NOTA_CREDITO = 50
 
 export const estadoRenglonDevolucion = (renglon) => {
   if (renglon?.Aprobado === true) return { texto: 'Aprobado', variant: 'success' }

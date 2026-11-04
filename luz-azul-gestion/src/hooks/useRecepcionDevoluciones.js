@@ -26,6 +26,9 @@ export const useRecepcionDevoluciones = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [loadingMessage, setLoadingMessage] = useState('')
   const [error, setError] = useState(null)
+  const [mensaje, setMensaje] = useState(null)
+  // Planilla con el popup de nota de crédito abierto
+  const [planillaNotaCredito, setPlanillaNotaCredito] = useState(null)
 
   const loadPlanillas = useCallback(async (vistaActual, rango) => {
     setLoadingMessage('Cargando planillas...')
@@ -87,10 +90,30 @@ export const useRecepcionDevoluciones = () => {
     if (!term) return planillas
 
     return planillas.filter((planilla) =>
-      [planilla.DevolucionId, planilla.Establecimiento, planilla.Usuario, planilla.Observaciones]
+      [planilla.DevolucionId, planilla.Establecimiento, planilla.Usuario, planilla.Observaciones, planilla.NotaCredito]
         .some((valor) => String(valor ?? '').toLowerCase().includes(term))
     )
   }, [planillas, searchTerm])
+
+  // Devuelve { ok, message } para el popup. Si sale bien, la planilla queda "Generada" en la lista sin recargar.
+  const guardarNotaCredito = async (numero) => {
+    const planilla = planillaNotaCredito
+    try {
+      const response = await apiFetch(API_URLS.NotaCreditoPlanillaDevolucion, {
+        method: 'POST',
+        body: JSON.stringify({ DevolucionId: planilla.DevolucionId, NotaCredito: numero })
+      })
+      if (!response?.bok) {
+        return { ok: false, message: response?.message || 'No se pudo guardar la nota de credito.' }
+      }
+      setPlanillas((prev) => prev.map((p) => (p.DevolucionId === planilla.DevolucionId ? { ...p, NotaCredito: numero } : p)))
+      setPlanillaNotaCredito(null)
+      setMensaje(`Planilla N° ${planilla.DevolucionId}: ${response.message}`)
+      return { ok: true }
+    } catch (err) {
+      return { ok: false, message: `No se pudo guardar la nota de credito: ${getErrorMessage(err)}` }
+    }
+  }
 
   return {
     planillas: filteredPlanillas,
@@ -105,6 +128,15 @@ export const useRecepcionDevoluciones = () => {
     isLoading,
     loadingMessage,
     error,
-    descargarPlanilla
+    mensaje,
+    cerrarMensaje: () => setMensaje(null),
+    descargarPlanilla,
+    planillaNotaCredito,
+    abrirNotaCredito: (planilla) => {
+      setMensaje(null)
+      setPlanillaNotaCredito(planilla)
+    },
+    cerrarNotaCredito: () => setPlanillaNotaCredito(null),
+    guardarNotaCredito
   }
 }

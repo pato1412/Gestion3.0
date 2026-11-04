@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
-import { Button, Col, Form, Nav, NavItem, Row } from 'react-bootstrap'
-import { FaClipboardCheck, FaDownload } from 'react-icons/fa'
+import { Alert, Button, Col, Form, Nav, NavItem, Row } from 'react-bootstrap'
+import { FaClipboardCheck, FaDownload, FaFileInvoiceDollar } from 'react-icons/fa'
 import Sidebar from '../../components/Sidebar/Sidebar'
 import Loader from '../../components/Loader/Loader'
 import './stock.css'
@@ -8,6 +8,8 @@ import { useRecepcionDevoluciones, VISTAS_RECEPCION } from '../../hooks/useRecep
 import { formatDateTime } from '../../utils/dateTime'
 import { CampoFecha } from '../../components/CampoFecha/CampoFecha'
 import EstadoDevolucion from './EstadoDevolucion'
+import NotaCreditoModal from './NotaCreditoModal'
+import { motivoSinNotaCredito } from '../../utils/devoluciones'
 
 const ListRecepcionDevoluciones = () => {
   const {
@@ -23,7 +25,13 @@ const ListRecepcionDevoluciones = () => {
     isLoading,
     loadingMessage,
     error,
-    descargarPlanilla
+    mensaje,
+    cerrarMensaje,
+    descargarPlanilla,
+    planillaNotaCredito,
+    abrirNotaCredito,
+    cerrarNotaCredito,
+    guardarNotaCredito
   } = useRecepcionDevoluciones()
 
   return (
@@ -63,7 +71,7 @@ const ListRecepcionDevoluciones = () => {
                 <Form.Control
                   id='txtBuscar'
                   type='text'
-                  placeholder='Filtrar por numero, establecimiento, usuario u observacion'
+                  placeholder='Filtrar por numero, establecimiento, usuario, observacion o nota de credito'
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -71,6 +79,9 @@ const ListRecepcionDevoluciones = () => {
             </Row>
 
             {error && <div className='alert alert-danger'>{error}</div>}
+            {mensaje && (
+              <Alert variant='success' dismissible onClose={cerrarMensaje}>{mensaje}</Alert>
+            )}
             <div className='table-responsive'>
               <table className='table table-striped align-middle'>
                 <thead>
@@ -108,7 +119,7 @@ const ListRecepcionDevoluciones = () => {
                         <td className='xs-hide text-end'>{planilla.Renglones}</td>
                         <td className='xs-hide'><EstadoDevolucion planilla={planilla} /></td>
                         <td>
-                          <Nav className='justify-content-center' style={{ gap: '10px', minWidth: '80px' }}>
+                          <Nav className='justify-content-center' style={{ gap: '10px', minWidth: '120px' }}>
                             <NavItem>
                               <Button
                                 title={planilla.FechaRecepcion ? 'Revisar' : 'Recibir'}
@@ -119,6 +130,20 @@ const ListRecepcionDevoluciones = () => {
                               >
                                 <FaClipboardCheck />
                               </Button>
+                            </NavItem>
+                            <NavItem>
+                              {/* El span lleva el title: un botón deshabilitado no muestra el tooltip */}
+                              <span title={motivoSinNotaCredito(planilla) ?? (planilla.NotaCredito ? 'Modificar nota de credito' : 'Cargar nota de credito')}>
+                                <Button
+                                  variant={planilla.NotaCredito ? 'primary' : 'outline-primary'}
+                                  size='sm'
+                                  aria-label={`Nota de credito de la planilla ${planilla.DevolucionId}`}
+                                  disabled={motivoSinNotaCredito(planilla) !== null}
+                                  onClick={() => abrirNotaCredito(planilla)}
+                                >
+                                  <FaFileInvoiceDollar />
+                                </Button>
+                              </span>
                             </NavItem>
                             <NavItem>
                               <Button title='Descargar' variant='outline-success' size='sm' onClick={() => descargarPlanilla(planilla.DevolucionId)}>
@@ -136,6 +161,14 @@ const ListRecepcionDevoluciones = () => {
           </div>
         </div>
       </div>
+      {planillaNotaCredito && (
+        <NotaCreditoModal
+          key={planillaNotaCredito.DevolucionId}
+          planilla={planillaNotaCredito}
+          onGuardar={guardarNotaCredito}
+          onCerrar={cerrarNotaCredito}
+        />
+      )}
       <Loader visible={isLoading} message={loadingMessage} ShowProgress={false} />
     </>
   )

@@ -32,6 +32,7 @@ export const API_URLS = {
   GetPlanillasDevolucionRecepcion: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_GET_PLANILLAS_DEVOLUCION_RECEPCION_URL,
   GetPlanillaDevolucionRecepcion: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_GET_PLANILLA_DEVOLUCION_RECEPCION_URL,
   RecibirPlanillaDevolucion: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_RECIBIR_PLANILLA_DEVOLUCION_URL,
+  NotaCreditoPlanillaDevolucion: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_NOTA_CREDITO_PLANILLA_DEVOLUCION_URL,
   AprobarPlanillaDevolucionDetalle: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_APROBAR_PLANILLA_DEVOLUCION_DETALLE_URL,
   EnvioMercaderiaPlanillaDevolucionDetalle: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_ENVIO_MERCADERIA_PLANILLA_DEVOLUCION_DETALLE_URL,
   DownloadPlanillaDevolucionRecepcion: import.meta.env.VITE_API_DOMAIN + import.meta.env.VITE_API_DOWNLOAD_PLANILLA_DEVOLUCION_RECEPCION_URL,
