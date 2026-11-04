@@ -76,6 +76,7 @@ problema y corrélo de nuevo.
 | `011_productos_abm.sql` | Para el ABM de productos (después de la 005): `ProductoClasificaciones` acepta los tipos 2 (pedidos) y 3 (precios), una clasificación por tipo (índice único) y FK a `dbo.Productos`; el sinónimo `ProductosEmpresa` pasa a apuntar a `dbo.Productos` de ENSEMBLE. Corta sin cambiar nada si hay datos que lo impiden. |
 | `012_devoluciones_envio_mercaderia.sql` | Agrega `DevolucionesPlanillasDetalle.EnvioMercaderia` (`BIT NULL`): en la recepción el depósito indica si la mercadería de cada renglón se envía (1) o se descarta (0). Correrla antes de publicar Ensemble. |
 | `013_devoluciones_nota_credito.sql` | Agrega `DevolucionesPlanillas.NotaCredito` (`VARCHAR(50) NULL`): el número de la nota de crédito que carga el depósito; con la nota cargada la planilla queda "Generada". Correrla antes de publicar Ensemble. |
+| `014_usuarios_gestion.sql` | Crea `UsuariosGestion` y `UsuariosGestionEstablecimientos`: usuarios propios de los establecimientos con `PlataformaTempo = 'AY'`, porque Ayres no tiene API de usuarios. La clave se guarda solo como hash con sal; los permisos siguen en `PermisosGestion`. |
 
 ## Bases externas
 
