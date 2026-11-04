@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaStore } from 'react-icons/fa';
 import './Login.css';
 import { API_URLS, apiFetch } from '../../config/api';
@@ -18,6 +18,8 @@ const LoginPage = () => {
   const { openModal } = useModal();
   const navigate = useNavigate();
   const { establecimiento, clearCookies } = useEstablecimiento();
+  // En Ayres los usuarios son propios: se registran y un administrador los aprueba
+  const esAyres = establecimiento?.PlataformaTempo === 'AY';
 
   const validateForm = () => {
     const newErrors = {};
@@ -65,12 +67,15 @@ const LoginPage = () => {
       });
       if (result && result.UsuarioId) {
         // Asumir que result tiene más datos, como token si existe
-        const userData = { id: result.UsuarioId, email, NombreCompleto: result.NombreCompleto };
+        const userData = { id: result.UsuarioId, email, NombreCompleto: result.NombreCompleto, DebeCambiarClave: Boolean(result.DebeCambiarClave) };
         const token = result.UsuarioId; 
         login(userData, token);
         navigate('/'); // Redirigir a home después de login
       } else {
-        setServerError("Usuario o contraseña incorrectos. Por favor, verifica tus datos e intenta de nuevo.");
+        // Por seguridad el servidor no dice qué falló: incluye a los usuarios todavía sin aprobar
+        setServerError(esAyres
+          ? 'Usuario o contraseña incorrectos, o tu cuenta todavía no fue aprobada.'
+          : 'Usuario o contraseña incorrectos. Por favor, verifica tus datos e intenta de nuevo.');
       }
     } catch {
       setServerError('No se pudo iniciar sesión. Verifica tus datos e intenta de nuevo.');
@@ -133,6 +138,7 @@ const LoginPage = () => {
             {isSubmitting ? 'Ingresando...' : 'Ingresar'}
           </button>
           {serverError && <p className="error-message">{serverError}</p>}
+          {esAyres && <Link to="/registro" className="login-enlace">Registrarme</Link>}
         </form>
       </div>
     </div>

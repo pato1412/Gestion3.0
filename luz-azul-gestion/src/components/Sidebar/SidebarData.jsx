@@ -102,6 +102,16 @@ export const SidebarData = () =>{
       });
     }
 
+    // Los usuarios de Ayres son propios: la contraseña se cambia acá y no en Simple Tempo
+    if (establecimiento?.PlataformaTempo === 'AY') {
+      Items.push({
+        title: 'Cambiar contraseña',
+        path: '/cambiar-clave',
+        icon: <FaIcons.FaKey />,
+        inferior: true
+      });
+    }
+
     // Al pie del menú, junto a "Cerrar sesión"
     Items.push({
       title: 'Cambiar depósito',

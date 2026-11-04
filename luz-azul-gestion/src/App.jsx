@@ -29,6 +29,8 @@ import ListRecepcionDevoluciones from './Pages/Stock/ListRecepcionDevoluciones'
 import FrmRecepcionDevolucion from './Pages/Stock/frmRecepcionDevolucion'
 import { PermisosProvider } from './contexts/PermisosContext'
 import ProtectedPermiso from './components/ProtectedPermiso'
+import RegistroPage from './Pages/Login/Registro'
+import CambiarClavePage from './Pages/Login/CambiarClave'
 
 function App() {
   const { establecimiento } = useEstablecimiento();
@@ -43,6 +45,8 @@ function App() {
                 <div className="app-main">
                   <Routes>
                     <Route path='/login' element={<LoginPage />} />
+                    <Route path='/registro' element={<RegistroPage />} />
+                    <Route path='/cambiar-clave' element={<ProtectedRoute><CambiarClavePage /></ProtectedRoute>} />
                     <Route path='/select-deposito' element={<SelectDeposito />} />
                     <Route path='/' element={<ProtectedRoute><Home /></ProtectedRoute>} />
                     <Route path='/configuraciones' element={<ProtectedRoute><ConfigPage /></ProtectedRoute>} />

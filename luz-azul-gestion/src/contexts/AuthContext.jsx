@@ -29,6 +29,13 @@ export const AuthProvider = ({ children }) => {
     Cookies.set('userData', JSON.stringify(userData), { expires: 7 });
   };
 
+  // Cambia datos del usuario de la sesión sin volver a iniciarla
+  const actualizarUsuario = (cambios) => {
+    const actualizado = { ...user, ...cambios };
+    setUser(actualizado);
+    Cookies.set('userData', JSON.stringify(actualizado), { expires: 7 });
+  };
+
   const logout = () => {
     setUser(null);
     Cookies.remove('authToken');
@@ -39,6 +46,7 @@ export const AuthProvider = ({ children }) => {
     isAuthenticated,
     user,
     login,
+    actualizarUsuario,
     logout,
     loading,
   };
