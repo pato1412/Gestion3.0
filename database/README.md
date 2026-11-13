@@ -77,6 +77,17 @@ problema y corrélo de nuevo.
 | `012_devoluciones_envio_mercaderia.sql` | Agrega `DevolucionesPlanillasDetalle.EnvioMercaderia` (`BIT NULL`): en la recepción el depósito indica si la mercadería de cada renglón se envía (1) o se descarta (0). Correrla antes de publicar Ensemble. |
 | `013_devoluciones_nota_credito.sql` | Agrega `DevolucionesPlanillas.NotaCredito` (`VARCHAR(50) NULL`): el número de la nota de crédito que carga el depósito; con la nota cargada la planilla queda "Generada". Correrla antes de publicar Ensemble. |
 | `014_usuarios_gestion.sql` | Crea `UsuariosGestion` y `UsuariosGestionEstablecimientos`: usuarios propios de los establecimientos con `PlataformaTempo = 'AY'`, porque Ayres no tiene API de usuarios. La clave se guarda solo como hash con sal; los permisos siguen en `PermisosGestion`. |
+| `015_sincronizar_productos_desde_emp001.sql` | Deja `Productos`, `RelProductosListasPrecios`, `ListasPrecios`, `UnidadesMedida` y `TipoUnidadesMedida` de ENSEMBLE iguales a EMP001: agrega lo que falta, actualiza lo que cambió y quita los precios que ya no están en EMP001. No toca lo que está solo en ENSEMBLE, pero **pisa los cambios hechos desde el ABM** en lo que también existe en EMP001 (hasta el corte el maestro es EMP001). Todo o nada. Se corre las veces que haga falta y por última vez el día del corte del ERP. |
+| `016_sincronizar_productos_procedimiento.sql` | Procedimiento `dbo.SincronizarProductosDesdeEMP001`: lo mismo que la 015, para correr solo cada pocos minutos mientras dure la migración a Ayres (los precios se siguen calculando en EMP001). No falla si EMP001 cambia mientras corre (informa lo pendiente para la próxima corrida), no deja correr dos a la vez y devuelve una fila con lo que hizo. Se programa con `jobs/sincronizar_productos_emp001.sql`. Cuando se apague EMP001, borrar el job y el procedimiento. |
+
+## Jobs
+
+En `jobs/` van los scripts que crean tareas programadas del Agente de SQL Server. No son migraciones:
+se corren una vez, en `msdb`, con un usuario que pueda crear jobs, y solo si el Agente está iniciado.
+
+| Script | Qué hace |
+|--------|----------|
+| `jobs/sincronizar_productos_emp001.sql` | Corre `dbo.SincronizarProductosDesdeEMP001` (016) cada 15 minutos. Temporal hasta la migración a Ayres. |
 
 ## Bases externas
 
