@@ -20,6 +20,8 @@
       - Devuelve una fila con lo que hizo (queda en el historial del job).
 
     Cuando se apague EMP001: deshabilitar el job y borrar el procedimiento.
+    ATENCIÓN: la 019 recrea el procedimiento para que además sincronice Productos.SincroPreciosFRQ.
+    Después de correr la 019, no volver a correr esta: dejaría la columna sin sincronizar.
     Se corre en ENSEMBLE, después de la 005. Se puede volver a correr (CREATE OR ALTER).
 */
 SET NOCOUNT ON;
