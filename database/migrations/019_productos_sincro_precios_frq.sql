@@ -20,6 +20,9 @@
 
     Se corre en ENSEMBLE, después de la 016. Se puede volver a correr: si la columna ya existe no la
     vuelve a cargar (la sincronización la mantiene) y el procedimiento se recrea igual.
+
+    ATENCIÓN: la 020 pasa todas las clasificaciones a ENSEMBLE y deja de sincronizar esta columna.
+    No volver a correr esta después de la 020: el procedimiento volvería a copiarla desde EMP001.
 */
 SET NOCOUNT ON;
 SET XACT_ABORT ON;
