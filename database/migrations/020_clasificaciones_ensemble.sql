@@ -45,6 +45,9 @@
 
     Se corre en ENSEMBLE, después de la 019. Corta sin cambiar nada si algo no empareja. Se puede volver a
     correr: si ya existe dbo.ClasificacionEmails no vuelve a cargar nada (solo recrea el procedimiento).
+
+    ATENCIÓN: no volver a correrla después de la 021 (corte del Tempo ERP): recrearía el procedimiento completo
+    y volvería a pisar con EMP001 los productos editados en el configurador.
 */
 SET NOCOUNT ON;
 SET XACT_ABORT ON;

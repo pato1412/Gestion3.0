@@ -20,8 +20,9 @@
       - Devuelve una fila con lo que hizo (queda en el historial del job).
 
     Cuando se apague EMP001: deshabilitar el job y borrar el procedimiento.
-    La 019 lo recreó para que además sincronizara Productos.SincroPreciosFRQ y la 020 lo vuelve a dejar como acá:
-    desde la 020 las clasificaciones se editan en ENSEMBLE y no se sincroniza ninguna.
+    La 019 lo recreó para que además sincronizara Productos.SincroPreciosFRQ y la 020 lo volvió a dejar como acá.
+    ATENCIÓN: la 021 (corte del Tempo ERP) lo deja trayendo solo los precios de las listas. No volver a correr
+    esta después de la 021: volvería a pisar con EMP001 los productos editados en el configurador.
     Se corre en ENSEMBLE, después de la 005. Se puede volver a correr (CREATE OR ALTER).
 */
 SET NOCOUNT ON;
