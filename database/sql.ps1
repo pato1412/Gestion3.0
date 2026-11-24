@@ -7,19 +7,29 @@
     terminar: no queda en la línea de comandos ni en el historial.
 
 .PARAMETER Base
-    Ensemble = base propia de Luz Azul (todos los proyectos).
-    Tempo    = EMP001, base del ERP viejo (TEMPO_ERP).
+    Ensemble = base propia (ENSEMBLE).
+    Tempo    = base del ERP viejo (EMP001, TEMPO_ERP).
+
+.PARAMETER Instancia
+    LuzAzul    = nuestra instancia (por defecto). Claves SQL_* de conexion.env.
+    Propionico = instancia del franquiciado Propionico. Claves PROPIONICO_SQL_* de conexion.env.
 
 .EXAMPLE
     .\database\sql.ps1 -Base Tempo -Query "SELECT name FROM sys.tables ORDER BY name"
 
 .EXAMPLE
     .\database\sql.ps1 -Base Ensemble -Archivo .\database\migrations\001_clasificaciones_tablas.sql
+
+.EXAMPLE
+    .\database\sql.ps1 -Instancia Propionico -Base Ensemble -Archivo .\database\diagnostico_ensemble.sql
 #>
 param(
     [Parameter(Mandatory = $true)]
     [ValidateSet('Ensemble', 'Tempo')]
     [string]$Base,
+
+    [ValidateSet('LuzAzul', 'Propionico')]
+    [string]$Instancia = 'LuzAzul',
 
     [string]$Query,
 
@@ -46,17 +56,20 @@ foreach ($linea in Get-Content $conexionPath -Encoding UTF8) {
     }
 }
 
+# Cada instancia tiene sus claves: SQL_* (LuzAzul) o PROPIONICO_SQL_* (Propionico)
+$prefijo = if ($Instancia -eq 'LuzAzul') { '' } else { $Instancia.ToUpper() + '_' }
+
 foreach ($clave in 'SQL_SERVER', 'SQL_USER', 'SQL_PASSWORD', 'SQL_DB_ENSEMBLE', 'SQL_DB_TEMPO') {
-    if ([string]::IsNullOrWhiteSpace($cfg[$clave])) {
-        throw "Falta completar $clave en conexion.env."
+    if ([string]::IsNullOrWhiteSpace($cfg[$prefijo + $clave])) {
+        throw "Falta completar $prefijo$clave en conexion.env."
     }
 }
 
-$baseDatos = if ($Base -eq 'Ensemble') { $cfg['SQL_DB_ENSEMBLE'] } else { $cfg['SQL_DB_TEMPO'] }
+$baseDatos = if ($Base -eq 'Ensemble') { $cfg[$prefijo + 'SQL_DB_ENSEMBLE'] } else { $cfg[$prefijo + 'SQL_DB_TEMPO'] }
 
 # -b: corta ante el primer error; -l: segundos de espera para conectar; -f 65001: archivos en UTF-8
-$sqlcmdArgs = @('-S', $cfg['SQL_SERVER'], '-U', $cfg['SQL_USER'], '-d', $baseDatos, '-b', '-l', '15', '-f', '65001')
-if ($cfg['SQL_TRUST_CERT'] -eq '1') { $sqlcmdArgs += '-C' }
+$sqlcmdArgs = @('-S', $cfg[$prefijo + 'SQL_SERVER'], '-U', $cfg[$prefijo + 'SQL_USER'], '-d', $baseDatos, '-b', '-l', '15', '-f', '65001')
+if ($cfg[$prefijo + 'SQL_TRUST_CERT'] -eq '1') { $sqlcmdArgs += '-C' }
 
 if ($Query) {
     $sqlcmdArgs += @('-Q', $Query)
@@ -64,7 +77,7 @@ if ($Query) {
     $sqlcmdArgs += @('-i', (Resolve-Path $Archivo).Path)
 }
 
-$env:SQLCMDPASSWORD = $cfg['SQL_PASSWORD']
+$env:SQLCMDPASSWORD = $cfg[$prefijo + 'SQL_PASSWORD']
 try {
     & sqlcmd @sqlcmdArgs
     exit $LASTEXITCODE

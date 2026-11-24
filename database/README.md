@@ -30,6 +30,24 @@ ni en el historial. Las bases se indican por alias: `Ensemble` o `Tempo`
 Si Windows no deja ejecutar el script por la política de ejecución:
 `powershell -ExecutionPolicy Bypass -File .\database\sql.ps1 ...`
 
+### Otras instancias
+
+Además de la nuestra, `sql.ps1 -Instancia Propionico` consulta la instancia del
+franquiciado Propionico (su propia ENSEMBLE y su EMP001, con sus productos). Sus
+datos van en `conexion.env` con el prefijo `PROPIONICO_` (ver
+`conexion.env.example`). Sin `-Instancia`, se usa la nuestra.
+
+```powershell
+.\database\sql.ps1 -Instancia Propionico -Base Ensemble -Archivo .\database\diagnostico_ensemble.sql
+```
+
+- `crear_usuario_lectura.sql`: crea en una instancia el usuario de solo lectura
+  (`claude_user`: lectura y definiciones en ENSEMBLE y EMP001, sin escritura).
+  Lo corre un administrador después de reemplazar `<CLAVE>`; la clave va solo a
+  `conexion.env`.
+- `diagnostico_ensemble.sql`: muestra qué migraciones tiene una ENSEMBLE (útil
+  para instancias copiadas de la nuestra en algún momento).
+
 ## Cómo correrlos
 
 Correr los archivos de `migrations/` **en orden**, conectado a **ENSEMBLE**.
